@@ -1,0 +1,84 @@
+config-version: 1
+
+plugin:
+  name: "SMP Core"
+  prefix: "§8[§6SMP§8]§r"
+  verbose: true
+
+messages:
+  welcome: "§aWelcome to the server!"
+  reload: "§aConfiguration reloaded successfully!"
+
+combat:
+  tag-duration: 15000
+
+bans:
+  enchantments:
+    enabled: false
+    list:
+      - PROTECTION
+      - SHARPNESS
+  effects:
+    enabled: false
+    list:
+      - INVISIBILITY
+      - SPEED
+      - STRENGTH
+
+enchantment-limits:
+  protection:
+    enabled: false
+    max-level: 4
+  sharpness:
+    enabled: false
+    max-level: 5
+
+features:
+  ban-mace:
+    enabled: false
+  ban-anchors:
+    enabled: false
+  ban-crystals:
+    enabled: false
+  ban-pearls:
+    enabled: false
+  ban-netherite:
+    enabled: false
+  combat-tag:
+    enabled: false
+  anti-restock:
+    enabled: false
+  anti-elytra-combat:
+    enabled: false
+  anti-naked-killing:
+    enabled: false
+  anti-afk-killing:
+    enabled: false
+  one-player-sleep:
+    enabled: false
+  infinite-restock:
+    enabled: false
+  pvp-toggle:
+    enabled: true
+  first-join-kit:
+    enabled: false
+  spectator-on-death:
+    enabled: false
+  ban-tipped-arrows:
+    enabled: false
+  prevent-bed-bombing:
+    enabled: false
+  restrict-tnt-minecart:
+    enabled: false
+  prevent-villager-killing:
+    enabled: false
+  dimension-nether:
+    enabled: true
+  dimension-end:
+    enabled: true
+  breach-swap-ban:
+    enabled: false
+  invisibility-qol:
+    enabled: false
+  item-limiter:
+    enabled: false

@@ -1,0 +1,7 @@
+*.class
+target/
+*.log
+*.tmp
+*.swp
+other-plugins/
+.vscode/
