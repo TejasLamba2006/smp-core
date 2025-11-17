@@ -64,15 +64,7 @@ public class ConfigManager {
         defaults.put("plugin.name", "SMP Core");
         defaults.put("plugin.prefix", "§8[§6SMP§8]§r");
         defaults.put("plugin.verbose", false);
-        defaults.put("messages.welcome", "§aWelcome to the server!");
         defaults.put("messages.reload", "§aConfiguration reloaded successfully!");
-        defaults.put("combat.tag-duration", 15000);
-        defaults.put("bans.enchantments.enabled", false);
-        defaults.put("bans.effects.enabled", false);
-        defaults.put("enchantment-limits.protection.enabled", false);
-        defaults.put("enchantment-limits.protection.max-level", 4);
-        defaults.put("enchantment-limits.sharpness.enabled", false);
-        defaults.put("enchantment-limits.sharpness.max-level", 5);
 
         String[] features = {
                 "ban-mace", "ban-anchors", "ban-crystals", "ban-pearls", "ban-netherite",
@@ -88,6 +80,26 @@ public class ConfigManager {
                     || feature.equals("dimension-end");
             defaults.put("features." + feature + ".enabled", defaultEnabled);
         }
+
+        defaults.put("features.custom-anvil-caps.enabled", false);
+        defaults.put("features.custom-anvil-caps.block-enchanting-table", true);
+        defaults.put("features.custom-anvil-caps.block-anvil", true);
+        defaults.put("features.custom-anvil-caps.keep-only-best-protection", true);
+        defaults.put("features.custom-anvil-caps.caps.sharpness", 4);
+        defaults.put("features.custom-anvil-caps.caps.protection", 3);
+        defaults.put("features.custom-anvil-caps.caps.fire_protection", 3);
+        defaults.put("features.custom-anvil-caps.caps.blast_protection", 3);
+        defaults.put("features.custom-anvil-caps.caps.projectile_protection", 3);
+        defaults.put("features.custom-anvil-caps.caps.feather_falling", 3);
+        defaults.put("features.custom-anvil-caps.caps.power", 4);
+        defaults.put("features.custom-anvil-caps.caps.unbreaking", 2);
+
+        defaults.put("features.enchantment-replacement.enabled", false);
+        defaults.put("features.enchantment-replacement.scan-on-join", true);
+        defaults.put("features.enchantment-replacement.scan-on-inventory-open", true);
+        defaults.put("features.enchantment-replacement.scan-on-villager-trade", true);
+        defaults.put("features.enchantment-replacement.scan-on-pickup", false);
+        defaults.put("features.enchantment-replacement.scan-on-craft", true);
 
         return defaults;
     }
