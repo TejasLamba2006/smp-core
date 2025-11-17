@@ -78,3 +78,13 @@ features:
     scan-on-villager-trade: true
     scan-on-pickup: false
     scan-on-craft: true
+    keep-only-best-protection: true
+    caps:
+      sharpness: 4
+      protection: 3
+      fire_protection: 3
+      blast_protection: 3
+      projectile_protection: 3
+      feather_falling: 3
+      power: 4
+      unbreaking: 2

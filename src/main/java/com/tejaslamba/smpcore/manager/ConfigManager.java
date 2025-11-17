@@ -100,6 +100,15 @@ public class ConfigManager {
         defaults.put("features.enchantment-replacement.scan-on-villager-trade", true);
         defaults.put("features.enchantment-replacement.scan-on-pickup", false);
         defaults.put("features.enchantment-replacement.scan-on-craft", true);
+        defaults.put("features.enchantment-replacement.keep-only-best-protection", true);
+        defaults.put("features.enchantment-replacement.caps.sharpness", 4);
+        defaults.put("features.enchantment-replacement.caps.protection", 3);
+        defaults.put("features.enchantment-replacement.caps.fire_protection", 3);
+        defaults.put("features.enchantment-replacement.caps.blast_protection", 3);
+        defaults.put("features.enchantment-replacement.caps.projectile_protection", 3);
+        defaults.put("features.enchantment-replacement.caps.feather_falling", 3);
+        defaults.put("features.enchantment-replacement.caps.power", 4);
+        defaults.put("features.enchantment-replacement.caps.unbreaking", 2);
 
         return defaults;
     }

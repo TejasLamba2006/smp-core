@@ -1,6 +1,7 @@
 package com.tejaslamba.smpcore.commands;
 
 import com.tejaslamba.smpcore.Main;
+import com.tejaslamba.smpcore.command.EnchantCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,12 @@ import java.util.List;
 
 public class SmpCommand implements CommandExecutor, TabCompleter {
 
+    private final EnchantCommand enchantCommand;
+
+    public SmpCommand() {
+        this.enchantCommand = new EnchantCommand(Main.getInstance());
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -21,6 +28,12 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
             }
             Main.getInstance().getMenuManager().openMainMenu(p);
             return true;
+        }
+
+        if (args[0].equalsIgnoreCase("enchant")) {
+            String[] enchantArgs = new String[args.length - 1];
+            System.arraycopy(args, 1, enchantArgs, 0, args.length - 1);
+            return enchantCommand.onCommand(sender, command, label, enchantArgs);
         }
 
         if (args[0].equalsIgnoreCase("menu")) {
@@ -45,7 +58,7 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage("§c[SMP] Unknown subcommand. Usage: /smp [menu|reload]");
+        sender.sendMessage("§c[SMP] Unknown subcommand. Usage: /smp [menu|reload|enchant]");
         return true;
     }
 
@@ -54,11 +67,19 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             List<String> completions = new ArrayList<>();
             completions.add("menu");
+            completions.add("enchant");
             if (sender.hasPermission("smpcore.reload")) {
                 completions.add("reload");
             }
             return completions;
         }
+
+        if (args.length >= 2 && args[0].equalsIgnoreCase("enchant")) {
+            String[] enchantArgs = new String[args.length - 1];
+            System.arraycopy(args, 1, enchantArgs, 0, args.length - 1);
+            return enchantCommand.onTabComplete(sender, command, alias, enchantArgs);
+        }
+
         return Collections.emptyList();
     }
 

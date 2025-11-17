@@ -6,7 +6,7 @@ softdepend: [ProtocolLib]
 commands:
   smp:
     description: SMP core command
-    usage: /smp [menu|reload]
+    usage: /smp [menu|reload|enchant]
     aliases: [smpcore]
 permissions:
   smpcore.reload:
@@ -14,4 +14,7 @@ permissions:
     default: op
   smpcore.menu:
     description: Open settings menu
+    default: op
+  smpcore.enchant:
+    description: Manage enchantment limits
     default: op

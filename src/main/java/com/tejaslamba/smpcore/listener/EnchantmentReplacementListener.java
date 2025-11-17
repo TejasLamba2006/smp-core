@@ -1,6 +1,7 @@
 package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
+import com.tejaslamba.smpcore.command.EnchantCommand;
 import com.tejaslamba.smpcore.utils.EnchantmentUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class EnchantmentReplacementListener implements Listener {
     private int getCap(Enchantment enchantment) {
         String key = enchantment.getKey().getKey();
         return plugin.getConfigManager().get()
-                .getInt("features.custom-anvil-caps.caps." + key, -1);
+                .getInt("features.enchantment-replacement.caps." + key, -1);
     }
 
     private boolean isScanJoinEnabled() {
@@ -59,7 +60,7 @@ public class EnchantmentReplacementListener implements Listener {
 
     private boolean isKeepBestProtection() {
         return plugin.getConfigManager().get()
-                .getBoolean("features.custom-anvil-caps.keep-only-best-protection", true);
+                .getBoolean("features.enchantment-replacement.keep-only-best-protection", true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -165,13 +166,19 @@ public class EnchantmentReplacementListener implements Listener {
 
         for (ItemStack item : contents) {
             if (item != null && item.hasItemMeta()) {
-                processItem(item, verbose);
+                if (!EnchantCommand.isWhitelisted(item)) {
+                    processItem(item, verbose);
+                }
             }
         }
     }
 
     private void processItem(ItemStack item, boolean verbose) {
         if (item == null) {
+            return;
+        }
+
+        if (EnchantCommand.isWhitelisted(item)) {
             return;
         }
 
