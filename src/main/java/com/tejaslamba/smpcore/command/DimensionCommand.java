@@ -2,6 +2,8 @@ package com.tejaslamba.smpcore.command;
 
 import com.tejaslamba.smpcore.Main;
 import com.tejaslamba.smpcore.features.DimensionLockFeature;
+import com.tejaslamba.smpcore.features.EndLockFeature;
+import com.tejaslamba.smpcore.features.NetherLockFeature;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,18 +31,9 @@ public class DimensionCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args.length == 0) {
-            sender.sendMessage("§eUsage: /" + dimension + " <open|close|status>");
-            return true;
-        }
-
-        String action = args[0].toLowerCase();
-
-        DimensionLockFeature feature = (DimensionLockFeature) plugin.getFeatureManager().getFeatures().stream()
-                .filter(f -> f instanceof DimensionLockFeature &&
-                        ((DimensionLockFeature) f).getDimension().equals(dimension))
-                .findFirst()
-                .orElse(null);
+        DimensionLockFeature feature = dimension.equals("end")
+                ? plugin.getFeatureManager().getFeature(EndLockFeature.class)
+                : plugin.getFeatureManager().getFeature(NetherLockFeature.class);
 
         if (feature == null) {
             sender.sendMessage("§cDimension Lock feature not found!");
@@ -50,6 +43,14 @@ public class DimensionCommand implements CommandExecutor, TabCompleter {
         String prefix = plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r");
         String dimensionName = dimension.substring(0, 1).toUpperCase() + dimension.substring(1);
 
+        if (args.length == 0) {
+            boolean isLocked = feature.isLocked();
+            sender.sendMessage(
+                    prefix + " §eThe " + dimensionName + " is currently " + (isLocked ? "§cLocked" : "§aOpen"));
+            return true;
+        }
+
+        String action = args[0].toLowerCase();
         boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
 
         switch (action) {

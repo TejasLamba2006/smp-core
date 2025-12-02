@@ -1,7 +1,8 @@
 package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
-import com.tejaslamba.smpcore.features.DimensionLockFeature;
+import com.tejaslamba.smpcore.features.EndLockFeature;
+import com.tejaslamba.smpcore.features.NetherLockFeature;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,22 +20,22 @@ public class DimensionLockListener implements Listener {
     @EventHandler
     public void onPlayerPortal(PlayerPortalEvent event) {
         Player player = event.getPlayer();
-
+        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
+        if (verbose) {
+            plugin.getLogger()
+                    .info("[VERBOSE] Dimension Lock - " + player.getName() + " is attempting to enter "
+                            + event.getTo().getWorld().getEnvironment().name());
+        }
         if (event.getTo() == null || event.getTo().getWorld() == null) {
             return;
         }
 
         World.Environment toEnvironment = event.getTo().getWorld().getEnvironment();
 
-        boolean hasBypass = player.hasPermission("smpcore.dimension.bypass");// || player.isOp();
+        boolean hasBypass = player.hasPermission("smpcore.dimension.bypass");
 
         if (toEnvironment == World.Environment.THE_END) {
-            DimensionLockFeature endLock = (DimensionLockFeature) plugin.getFeatureManager().getFeatures().stream()
-                    .filter(f -> f instanceof DimensionLockFeature &&
-                            ((DimensionLockFeature) f).getDimension().equals("end") &&
-                            f.isEnabled())
-                    .findFirst()
-                    .orElse(null);
+            EndLockFeature endLock = plugin.getFeatureManager().getFeature(EndLockFeature.class);
 
             if (endLock != null && endLock.isLocked() && !hasBypass
                     && !player.hasPermission("smpcore.dimension.bypass.end")) {
@@ -43,19 +44,13 @@ public class DimensionLockListener implements Listener {
                         .getString("features.dimension-lock-end.locked-message", "§cThe End is currently locked!");
                 player.sendMessage(message);
 
-                boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
                 if (verbose) {
                     plugin.getLogger()
                             .info("[VERBOSE] Dimension Lock - Blocked " + player.getName() + " from entering The End");
                 }
             }
         } else if (toEnvironment == World.Environment.NETHER) {
-            DimensionLockFeature netherLock = (DimensionLockFeature) plugin.getFeatureManager().getFeatures().stream()
-                    .filter(f -> f instanceof DimensionLockFeature &&
-                            ((DimensionLockFeature) f).getDimension().equals("nether") &&
-                            f.isEnabled())
-                    .findFirst()
-                    .orElse(null);
+            NetherLockFeature netherLock = plugin.getFeatureManager().getFeature(NetherLockFeature.class);
 
             if (netherLock != null && netherLock.isLocked() && !hasBypass
                     && !player.hasPermission("smpcore.dimension.bypass.nether")) {
@@ -65,7 +60,6 @@ public class DimensionLockListener implements Listener {
                                 "§cThe Nether is currently locked!");
                 player.sendMessage(message);
 
-                boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
                 if (verbose) {
                     plugin.getLogger().info(
                             "[VERBOSE] Dimension Lock - Blocked " + player.getName() + " from entering The Nether");

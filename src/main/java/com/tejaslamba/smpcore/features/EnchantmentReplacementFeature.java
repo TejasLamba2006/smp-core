@@ -28,8 +28,8 @@ public class EnchantmentReplacementFeature extends BaseFeature {
 
     @Override
     public void onEnable(Main plugin) {
-        super.onEnable(plugin);
         listener = new EnchantmentReplacementListener(plugin);
+        super.onEnable(plugin);
     }
 
     @Override

@@ -18,6 +18,8 @@ import java.util.Map;
 
 public class NetheriteDisablerFeature extends BaseFeature {
 
+    public static final String GUI_TITLE = "§8Netherite Item Manager";
+
     private final Map<Material, Boolean> disabledItems = new HashMap<>();
     private final Map<Integer, Material> slotMapping = new HashMap<>();
     private NetheriteDisablerListener listener;
@@ -40,8 +42,8 @@ public class NetheriteDisablerFeature extends BaseFeature {
 
     @Override
     public void onEnable(Main plugin) {
-        super.onEnable(plugin);
         listener = new NetheriteDisablerListener(plugin);
+        super.onEnable(plugin);
         loadDisabledItems();
 
         boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
@@ -102,7 +104,7 @@ public class NetheriteDisablerFeature extends BaseFeature {
     }
 
     public void openNetheriteGUI(Player player) {
-        Inventory gui = plugin.getServer().createInventory(null, 45, "§8Netherite Item Manager");
+        Inventory gui = plugin.getServer().createInventory(null, 45, GUI_TITLE);
 
         for (Map.Entry<Integer, Material> entry : slotMapping.entrySet()) {
             int slot = entry.getKey();

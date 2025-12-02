@@ -29,8 +29,8 @@ public class CustomAnvilCapsFeature extends BaseFeature {
 
     @Override
     public void onEnable(Main plugin) {
-        super.onEnable(plugin);
         listener = new CustomAnvilCapsListener(plugin);
+        super.onEnable(plugin);
     }
 
     @Override

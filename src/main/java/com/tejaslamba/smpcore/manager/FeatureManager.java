@@ -5,6 +5,7 @@ import com.tejaslamba.smpcore.feature.Feature;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.*;
 import java.util.jar.JarEntry;
@@ -33,7 +34,8 @@ public class FeatureManager {
             }
 
             for (Class<?> clazz : featureClasses) {
-                if (Feature.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
+                if (Feature.class.isAssignableFrom(clazz) && !clazz.isInterface()
+                        && !Modifier.isAbstract(clazz.getModifiers())) {
                     try {
                         Feature feature = (Feature) clazz.getDeclaredConstructor().newInstance();
                         features.put(feature.getName(), feature);
@@ -81,6 +83,16 @@ public class FeatureManager {
 
     public Feature getFeature(String name) {
         return features.get(name);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Feature> T getFeature(Class<T> featureClass) {
+        for (Feature feature : features.values()) {
+            if (featureClass.isInstance(feature)) {
+                return (T) feature;
+            }
+        }
+        return null;
     }
 
     public List<ItemStack> getMenuItems() {

@@ -1,59 +1,49 @@
+# ============================================
+# SMP Core Configuration
+# ============================================
+# A comprehensive SMP plugin for PvP balance,
+# custom mechanics, and server management.
+# ============================================
+
+# Do not change the config-version unless instructed or config would reset.
 config-version: 1
 
+# ============================================
+# Plugin Settings
+# ============================================
 plugin:
   name: "SMP Core"
   prefix: "§8[§6SMP§8]§r"
+  # Enable verbose logging for debugging (shows detailed info in console)
   verbose: true
 
+# ============================================
+# Messages
+# ============================================
 messages:
   reload: "§aConfiguration reloaded successfully!"
 
+# ============================================
+# Features
+# ============================================
 features:
-  ban-anchors:
-    enabled: false
-  ban-crystals:
-    enabled: false
-  ban-pearls:
-    enabled: false
-  combat-tag:
-    enabled: false
-  anti-restock:
-    enabled: false
-  anti-elytra-combat:
-    enabled: false
-  anti-naked-killing:
-    enabled: false
-  anti-afk-killing:
-    enabled: false
-  one-player-sleep:
-    enabled: false
-  infinite-restock:
-    enabled: false
-  pvp-toggle:
-    enabled: true
-  first-join-kit:
-    enabled: false
-  spectator-on-death:
-    enabled: false
-  ban-tipped-arrows:
-    enabled: false
-  prevent-bed-bombing:
-    enabled: false
-  restrict-tnt-minecart:
-    enabled: false
-  prevent-villager-killing:
-    enabled: false
-  breach-swap-ban:
-    enabled: false
-  invisibility-qol:
-    enabled: false
-  item-limiter:
-    enabled: false
+  # ------------------------------------------
+  # Custom Anvil Caps
+  # ------------------------------------------
+  # Prevents enchantments from exceeding set levels
+  # when using anvils or enchanting tables.
+  # Items with higher levels will be blocked.
   custom-anvil-caps:
     enabled: false
+    # Block enchanting table from giving higher enchants
     block-enchanting-table: true
+    # Block anvil from combining to higher enchants
     block-anvil: true
+    # When item has multiple protection types, keep only the highest level one
+    # (removes protection stacking exploits)
     keep-only-best-protection: true
+    # Maximum enchantment levels allowed
+    # Add any enchantment name in lowercase with underscores
     caps:
       sharpness: 4
       protection: 3
@@ -63,14 +53,24 @@ features:
       feather_falling: 3
       power: 4
       unbreaking: 2
+
+  # ------------------------------------------
+  # Enchantment Replacement
+  # ------------------------------------------
+  # Automatically scans items and reduces enchantments
+  # that exceed the configured caps. Unlike Custom Anvil Caps,
+  # this actively modifies existing items.
   enchantment-replacement:
     enabled: false
+    # When to scan player inventories for illegal enchants
     scan-on-join: true
     scan-on-inventory-open: true
     scan-on-villager-trade: true
     scan-on-pickup: false
     scan-on-craft: true
+    # Keep only the best protection enchantment on armor
     keep-only-best-protection: true
+    # Maximum enchantment levels (same format as anvil caps)
     caps:
       sharpness: 4
       protection: 3
@@ -80,21 +80,70 @@ features:
       feather_falling: 3
       power: 4
       unbreaking: 2
+
+  # ------------------------------------------
+  # Mace Limiter
+  # ------------------------------------------
+  # Limits how many maces can be crafted server-wide.
+  # Announces when a mace is crafted.
   mace-limiter:
     enabled: false
-    mace-crafted: false
-    broadcast-enabled: true
-    broadcast-message: "§6{player} §ehas crafted the only Mace on the server!"
+    # Maximum number of maces that can be crafted (server-wide)
+    max-maces: 1
+    # Current count of maces crafted (managed by plugin, don't edit)
+    maces-crafted: 0
+    # Title announcement settings
+    title:
+      enabled: true
+      title: "§6⚔ MACE CRAFTED ⚔"
+      # {player} = crafter name, {count} = mace number
+      subtitle: "§e{player} §7has crafted mace §e#§6{count}"
+      fade-in: 10 # ticks (20 ticks = 1 second)
+      stay: 70 # ticks
+      fade-out: 20 # ticks
+    # Chat announcement settings
+    chat:
+      enabled: true
+      # {player} = crafter name, {count} = mace number
+      message: "§6{player} §ehas crafted mace #§6{count}§e!"
+    # Sound played to all players when mace is crafted
+    sound:
+      enabled: true
+      # Sound name (see Bukkit Sound enum)
+      sound: "ENTITY_ENDER_DRAGON_GROWL"
+      volume: 1.0
+      pitch: 1.0
+
+  # ------------------------------------------
+  # Dimension Lock - End
+  # ------------------------------------------
+  # Prevents players from entering The End dimension.
   dimension-lock-end:
     enabled: false
+    # Whether the dimension is currently locked
     locked: false
+    # Message shown when trying to enter locked dimension
     locked-message: "§cThe End is currently locked!"
+
+  # ------------------------------------------
+  # Dimension Lock - Nether
+  # ------------------------------------------
+  # Prevents players from entering The Nether dimension.
   dimension-lock-nether:
     enabled: false
+    # Whether the dimension is currently locked
     locked: false
+    # Message shown when trying to enter locked dimension
     locked-message: "§cThe Nether is currently locked!"
+
+  # ------------------------------------------
+  # Netherite Disabler
+  # ------------------------------------------
+  # Prevents players from using netherite items.
+  # Disabled items will be removed/blocked from use.
   netherite-disabler:
     enabled: false
+    # Which netherite items to disable
     disabled-items:
       sword: true
       axe: true
@@ -105,3 +154,60 @@ features:
       chestplate: true
       leggings: true
       boots: true
+
+  # ------------------------------------------
+  # Invisible Kills
+  # ------------------------------------------
+  # When a player with invisibility potion kills someone,
+  # their name is hidden in the death message.
+  invisible-kills:
+    enabled: false
+    # Death message format
+    # {victim} = killed player's name
+    # Use §k for obfuscated text (minecraft formatting)
+    death-message: "{victim} was killed by §k?????????"
+
+  # ------------------------------------------
+  # Item Explosion Immunity
+  # ------------------------------------------
+  # Protects dropped items from being destroyed by explosions.
+  # Useful for preventing item loss from TNT, creepers, etc.
+  item-explosion-immunity:
+    enabled: false
+
+  # ------------------------------------------
+  # Infinite Restock
+  # ------------------------------------------
+  # Villagers will never run out of trades and prices
+  # won't increase from demand. Trades reset immediately.
+  infinite-restock:
+    enabled: false
+
+  # ------------------------------------------
+  # Item Limiter
+  # ------------------------------------------
+  # Limits how many of specific items a player can carry.
+  # Excess items are dropped with a pickup delay.
+  item-limiter:
+    enabled: false
+    # When to check inventory for excess items:
+    # "on-hit" - When player gets hit by another player (PvP focused)
+    # "on-move" - When player moves (more aggressive, higher performance cost)
+    check-method: "on-hit"
+    # Item limits (material_name: max_amount)
+    # Use Bukkit material names in lowercase with underscores
+    # Examples: golden_apple, diamond_sword, ender_pearl
+    limits:
+      golden_apple: 4
+      enchanted_golden_apple: 1
+      totem_of_undying: 1
+      end_crystal: 2
+      ender_pearl: 8
+
+  # ------------------------------------------
+  # One Player Sleep
+  # ------------------------------------------
+  # Only one player needs to sleep to skip the night.
+  # Uses the playersSleepingPercentage gamerule.
+  one-player-sleep:
+    enabled: false

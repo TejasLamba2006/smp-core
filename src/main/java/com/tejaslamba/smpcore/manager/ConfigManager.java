@@ -67,17 +67,11 @@ public class ConfigManager {
         defaults.put("messages.reload", "§aConfiguration reloaded successfully!");
 
         String[] features = {
-                "ban-anchors", "ban-crystals", "ban-pearls",
-                "combat-tag", "anti-restock", "anti-elytra-combat", "anti-naked-killing",
-                "anti-afk-killing", "one-player-sleep", "infinite-restock", "pvp-toggle",
-                "first-join-kit", "spectator-on-death", "ban-tipped-arrows", "prevent-bed-bombing",
-                "restrict-tnt-minecart", "prevent-villager-killing",
-                "breach-swap-ban", "invisibility-qol", "item-limiter"
+
         };
 
         for (String feature : features) {
-            boolean defaultEnabled = feature.equals("pvp-toggle");
-            defaults.put("features." + feature + ".enabled", defaultEnabled);
+            defaults.put("features." + feature + ".enabled", false);
         }
 
         defaults.put("features.custom-anvil-caps.enabled", false);

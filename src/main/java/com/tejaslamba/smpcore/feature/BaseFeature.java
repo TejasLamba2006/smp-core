@@ -45,22 +45,10 @@ public abstract class BaseFeature implements Feature {
             plugin.getLogger().info("[VERBOSE]   - Was Enabled: " + wasEnabled);
             plugin.getLogger().info("[VERBOSE]   - Now Enabled: " + enabled);
         }
-
-        if (wasEnabled && !enabled) {
-            if (verbose) {
-                plugin.getLogger().info("[VERBOSE]   - Action: Unregistering listener");
-            }
-            unregisterListener();
-        } else if (!wasEnabled && enabled) {
-            if (verbose) {
-                plugin.getLogger().info("[VERBOSE]   - Action: Registering listener");
-            }
-            registerListenerIfNeeded();
-        }
     }
 
     private void registerListenerIfNeeded() {
-        if (enabled && !listenerRegistered && getListener() != null) {
+        if (!listenerRegistered && getListener() != null) {
             plugin.getServer().getPluginManager().registerEvents(getListener(), plugin);
             listenerRegistered = true;
 

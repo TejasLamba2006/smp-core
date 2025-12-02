@@ -96,17 +96,14 @@ public class MaceCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        MaceLimiterFeature feature = (MaceLimiterFeature) plugin.getFeatureManager().getFeatures().stream()
-                .filter(f -> f instanceof MaceLimiterFeature)
-                .findFirst()
-                .orElse(null);
+        MaceLimiterFeature feature = plugin.getFeatureManager().getFeature(MaceLimiterFeature.class);
 
         if (feature == null) {
             sender.sendMessage("§cMace Limiter feature not found!");
             return true;
         }
 
-        feature.setMaceCrafted(false);
+        feature.resetCraftCount();
 
         boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         if (verbose) {
@@ -114,29 +111,27 @@ public class MaceCommand implements CommandExecutor, TabCompleter {
         }
 
         String prefix = plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r");
-        sender.sendMessage(prefix + " §aReset mace limiter! Mace can now be crafted again.");
+        sender.sendMessage(prefix + " §aReset mace craft count! Maces can now be crafted again.");
 
         return true;
     }
 
     private boolean handleStatus(CommandSender sender) {
-        MaceLimiterFeature feature = (MaceLimiterFeature) plugin.getFeatureManager().getFeatures().stream()
-                .filter(f -> f instanceof MaceLimiterFeature)
-                .findFirst()
-                .orElse(null);
+        MaceLimiterFeature feature = plugin.getFeatureManager().getFeature(MaceLimiterFeature.class);
 
         if (feature == null) {
             sender.sendMessage("§cMace Limiter feature not found!");
             return true;
         }
 
-        String prefix = plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r");
         boolean enabled = feature.isEnabled();
-        boolean crafted = feature.isMaceCrafted();
+        int crafted = feature.getMacesCrafted();
+        int max = feature.getMaxMaces();
 
         sender.sendMessage("§6§l=== Mace Limiter Status ===");
         sender.sendMessage("§eFeature Enabled: " + (enabled ? "§aYes" : "§cNo"));
-        sender.sendMessage("§eMace Crafted: " + (crafted ? "§aYes" : "§cNo"));
+        sender.sendMessage("§eMaces Crafted: §a" + crafted + "§e/§a" + max);
+        sender.sendMessage("§eCan Craft More: " + (feature.canCraftMace() ? "§aYes" : "§cNo"));
 
         return true;
     }
@@ -157,9 +152,9 @@ public class MaceCommand implements CommandExecutor, TabCompleter {
 
     private void sendHelp(CommandSender sender) {
         sender.sendMessage("§6§l=== Mace Commands ===");
-        sender.sendMessage("§e/mace whitelist §7- Toggle whitelist on held mace");
-        sender.sendMessage("§e/mace reset §7- Reset mace limiter (admin)");
-        sender.sendMessage("§e/mace status §7- Check mace limiter status");
+        sender.sendMessage("§e/smp mace whitelist §7- Toggle whitelist on held mace");
+        sender.sendMessage("§e/smp mace reset §7- Reset mace limiter (admin)");
+        sender.sendMessage("§e/smp mace status §7- Check mace limiter status");
     }
 
     @Override

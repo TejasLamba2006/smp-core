@@ -20,6 +20,7 @@ public class CommandManager {
         registerCommand("smp", new SmpCommand());
 
         registerCommand("nether", new DimensionCommand((Main) plugin, "nether"));
+        registerCommand("end", new DimensionCommand((Main) plugin, "end"));
     }
 
     public void registerCommand(String name, org.bukkit.command.CommandExecutor executor) {

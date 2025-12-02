@@ -5,32 +5,42 @@ import com.tejaslamba.smpcore.feature.BaseFeature;
 import com.tejaslamba.smpcore.listener.MaceLimiterListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class MaceLimiterFeature extends BaseFeature {
 
+    public static final String GUI_TITLE = "§8Mace Limiter Settings";
+
     private MaceLimiterListener listener;
-    private boolean maceCrafted = false;
+    private int macesCrafted = 0;
+    private int maxMaces = 1;
 
     @Override
     public void onEnable(Main plugin) {
-        super.onEnable(plugin);
         listener = new MaceLimiterListener(plugin);
-        maceCrafted = plugin.getConfigManager().get().getBoolean("features.mace-limiter.mace-crafted", false);
+        super.onEnable(plugin);
+        macesCrafted = plugin.getConfigManager().get().getInt("features.mace-limiter.maces-crafted", 0);
+        maxMaces = plugin.getConfigManager().get().getInt("features.mace-limiter.max-maces", 1);
 
         boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         if (verbose) {
-            plugin.getLogger().info("[VERBOSE] Mace Limiter - Loaded state: maceCrafted=" + maceCrafted);
+            plugin.getLogger().info(
+                    "[VERBOSE] Mace Limiter - Loaded state: macesCrafted=" + macesCrafted + ", maxMaces=" + maxMaces);
         }
 
-        if (maceCrafted) {
+        if (macesCrafted >= maxMaces) {
             removeAllMaceRecipes();
             if (verbose) {
-                plugin.getLogger().info("[VERBOSE] Mace Limiter - Removed mace recipes on enable");
+                plugin.getLogger().info("[VERBOSE] Mace Limiter - Removed mace recipes on enable (limit reached)");
             }
         }
     }
@@ -38,7 +48,8 @@ public class MaceLimiterFeature extends BaseFeature {
     @Override
     public void onDisable() {
         super.onDisable();
-        plugin.getConfigManager().get().set("features.mace-limiter.mace-crafted", maceCrafted);
+        plugin.getConfigManager().get().set("features.mace-limiter.maces-crafted", macesCrafted);
+        plugin.getConfigManager().get().set("features.mace-limiter.max-maces", maxMaces);
         plugin.getConfigManager().save();
     }
 
@@ -60,25 +71,159 @@ public class MaceLimiterFeature extends BaseFeature {
     @Override
     public ItemStack getMenuItem() {
         return createMenuItem(Material.MACE, "§5Mace Limiter",
-                "§7Allows only one mace to be crafted");
+                "§7Limit the number of maces craftable");
     }
 
-    public boolean isMaceCrafted() {
-        return maceCrafted;
+    @Override
+    public List<String> getMenuLore() {
+        List<String> lore = new ArrayList<>();
+        lore.add(enabled ? "§aEnabled" : "§cDisabled");
+        lore.add("§7Crafted: §e" + macesCrafted + "§7/§e" + maxMaces);
+        lore.add("");
+        lore.add("§eLeft Click: Toggle");
+        lore.add("§eRight Click: Open Settings");
+        return lore;
     }
 
-    public void setMaceCrafted(boolean crafted) {
-        this.maceCrafted = crafted;
-        plugin.getConfigManager().get().set("features.mace-limiter.mace-crafted", crafted);
+    @Override
+    public void onLeftClick(Player player) {
+        toggleDefault(player);
+    }
+
+    @Override
+    public void onRightClick(Player player) {
+        openMaceGUI(player);
+    }
+
+    public void openMaceGUI(Player player) {
+        Inventory gui = plugin.getServer().createInventory(null, 27, GUI_TITLE);
+
+        ItemStack decreaseItem = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemMeta decreaseMeta = decreaseItem.getItemMeta();
+        if (decreaseMeta != null) {
+            decreaseMeta.setDisplayName("§c- Decrease Max Maces");
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add("§7Current Max: §e" + maxMaces);
+            lore.add("");
+            lore.add("§eLeft Click: §7-1");
+            lore.add("§eShift Click: §7-5");
+            decreaseMeta.setLore(lore);
+            decreaseItem.setItemMeta(decreaseMeta);
+        }
+        gui.setItem(10, decreaseItem);
+
+        ItemStack displayItem = new ItemStack(Material.MACE);
+        ItemMeta displayMeta = displayItem.getItemMeta();
+        if (displayMeta != null) {
+            displayMeta.setDisplayName("§5Mace Limit");
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add("§7Max Maces: §e" + maxMaces);
+            lore.add("§7Maces Crafted: §e" + macesCrafted);
+            lore.add("");
+            if (macesCrafted >= maxMaces) {
+                lore.add("§c⚠ Limit Reached!");
+            } else {
+                lore.add("§a" + (maxMaces - macesCrafted) + " maces remaining");
+            }
+            displayMeta.setLore(lore);
+            displayItem.setItemMeta(displayMeta);
+        }
+        gui.setItem(13, displayItem);
+
+        ItemStack increaseItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+        ItemMeta increaseMeta = increaseItem.getItemMeta();
+        if (increaseMeta != null) {
+            increaseMeta.setDisplayName("§a+ Increase Max Maces");
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add("§7Current Max: §e" + maxMaces);
+            lore.add("");
+            lore.add("§eLeft Click: §7+1");
+            lore.add("§eShift Click: §7+5");
+            increaseMeta.setLore(lore);
+            increaseItem.setItemMeta(increaseMeta);
+        }
+        gui.setItem(16, increaseItem);
+
+        ItemStack resetItem = new ItemStack(Material.BARRIER);
+        ItemMeta resetMeta = resetItem.getItemMeta();
+        if (resetMeta != null) {
+            resetMeta.setDisplayName("§cReset Craft Count");
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add("§7Resets maces crafted to 0");
+            lore.add("§7and re-enables mace recipes");
+            lore.add("");
+            lore.add("§eClick to reset");
+            resetMeta.setLore(lore);
+            resetItem.setItemMeta(resetMeta);
+        }
+        gui.setItem(22, resetItem);
+
+        ItemStack backItem = new ItemStack(Material.ARROW);
+        ItemMeta backMeta = backItem.getItemMeta();
+        if (backMeta != null) {
+            backMeta.setDisplayName("§eBack to Main Menu");
+            backItem.setItemMeta(backMeta);
+        }
+        gui.setItem(18, backItem);
+
+        player.openInventory(gui);
+    }
+
+    public int getMacesCrafted() {
+        return macesCrafted;
+    }
+
+    public int getMaxMaces() {
+        return maxMaces;
+    }
+
+    public boolean canCraftMace() {
+        return macesCrafted < maxMaces;
+    }
+
+    public void incrementMacesCrafted() {
+        macesCrafted++;
+        plugin.getConfigManager().get().set("features.mace-limiter.maces-crafted", macesCrafted);
         plugin.getConfigManager().save();
 
         boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         if (verbose) {
-            plugin.getLogger().info("[VERBOSE] Mace Limiter - State changed: maceCrafted=" + crafted);
+            plugin.getLogger().info("[VERBOSE] Mace Limiter - Maces crafted: " + macesCrafted + "/" + maxMaces);
         }
 
-        if (crafted) {
+        if (macesCrafted >= maxMaces) {
             removeAllMaceRecipes();
+        }
+    }
+
+    public void setMaxMaces(int max) {
+        this.maxMaces = Math.max(1, max);
+        plugin.getConfigManager().get().set("features.mace-limiter.max-maces", maxMaces);
+        plugin.getConfigManager().save();
+
+        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
+        if (verbose) {
+            plugin.getLogger().info("[VERBOSE] Mace Limiter - Max maces set to: " + maxMaces);
+        }
+    }
+
+    public void resetCraftCount() {
+        macesCrafted = 0;
+        plugin.getConfigManager().get().set("features.mace-limiter.maces-crafted", macesCrafted);
+        plugin.getConfigManager().save();
+
+        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
+        if (verbose) {
+            plugin.getLogger().info("[VERBOSE] Mace Limiter - Craft count reset to 0");
+        }
+
+        Bukkit.resetRecipes();
+        if (verbose) {
+            plugin.getLogger().info("[VERBOSE] Mace Limiter - Recipes reset, mace crafting re-enabled");
         }
     }
 
@@ -95,7 +240,14 @@ public class MaceLimiterFeature extends BaseFeature {
         }
 
         if (recipesRemoved > 0 && plugin.getConfigManager().get().getBoolean("plugin.verbose", false)) {
-            plugin.getLogger().info("Removed " + recipesRemoved + " Mace recipe(s).");
+            plugin.getLogger().info("[VERBOSE] Mace Limiter - Removed " + recipesRemoved + " Mace recipe(s)");
         }
+    }
+
+    @Override
+    public void reload() {
+        super.reload();
+        macesCrafted = plugin.getConfigManager().get().getInt("features.mace-limiter.maces-crafted", 0);
+        maxMaces = plugin.getConfigManager().get().getInt("features.mace-limiter.max-maces", 1);
     }
 }

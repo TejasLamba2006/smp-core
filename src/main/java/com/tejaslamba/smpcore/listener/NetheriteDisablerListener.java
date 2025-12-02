@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.SmithingInventory;
 
 public class NetheriteDisablerListener implements Listener {
 
@@ -20,16 +19,6 @@ public class NetheriteDisablerListener implements Listener {
 
     @EventHandler
     public void onPrepareSmithing(PrepareSmithingEvent event) {
-        NetheriteDisablerFeature feature = (NetheriteDisablerFeature) plugin.getFeatureManager().getFeatures().stream()
-                .filter(f -> f instanceof NetheriteDisablerFeature && f.isEnabled())
-                .findFirst()
-                .orElse(null);
-
-        if (feature == null) {
-            return;
-        }
-
-        SmithingInventory inventory = event.getInventory();
         ItemStack result = event.getResult();
 
         if (result == null || result.getType() == Material.AIR) {
@@ -37,6 +26,16 @@ public class NetheriteDisablerListener implements Listener {
         }
 
         Material resultType = result.getType();
+
+        if (!resultType.name().startsWith("NETHERITE_")) {
+            return;
+        }
+
+        NetheriteDisablerFeature feature = plugin.getFeatureManager().getFeature(NetheriteDisablerFeature.class);
+
+        if (feature == null || !feature.isEnabled()) {
+            return;
+        }
 
         if (feature.isDisabled(resultType)) {
             Player player = (Player) event.getView().getPlayer();

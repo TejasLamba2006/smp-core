@@ -26,7 +26,7 @@ public class MenuClickListener implements Listener {
 
         String title = event.getView().getTitle();
 
-        if (title.equals("§8Netherite Item Manager")) {
+        if (title.equals(NetheriteDisablerFeature.GUI_TITLE)) {
             event.setCancelled(true);
             handleNetheriteGUI(event, player);
             return;
@@ -59,10 +59,9 @@ public class MenuClickListener implements Listener {
         }
 
         if (clickedType == Material.ARROW) {
-            player.closeInventory();
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 MainMenu mainMenu = new MainMenu(plugin);
-                player.openInventory(mainMenu.getInventory());
+                mainMenu.open(player);
             });
             return;
         }
