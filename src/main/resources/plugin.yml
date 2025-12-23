@@ -6,7 +6,7 @@ softdepend: [ProtocolLib]
 commands:
   smp:
     description: SMP core command
-    usage: /smp [menu|reload|enchant|mace|netherite]
+    usage: /smp [menu|reload|enchant|mace|netherite|infiniterestock]
     aliases: [smpcore]
   end:
     description: End dimension lock commands
@@ -47,6 +47,9 @@ permissions:
     default: false
   smpcore.netherite:
     description: Manage netherite disabler
+    default: op
+  smpcore.infiniterestock:
+    description: Manage Infinite Restock feature and open GUI
     default: op
   smpcore.netherite.craft.*:
     description: Bypass netherite crafting restrictions

@@ -134,6 +134,11 @@ public class ConfigManager {
         defaults.put("features.item-explosion-immunity.enabled", false);
 
         defaults.put("features.infinite-restock.enabled", false);
+        defaults.put("features.infinite-restock.max-trades", 0);
+        defaults.put("features.infinite-restock.disable-price-penalty", true);
+        defaults.put("features.infinite-restock.allow-wandering-traders", true);
+        defaults.put("features.infinite-restock.uninstall-mode", false);
+        defaults.put("features.infinite-restock.villager-blacklist", new java.util.ArrayList<String>());
 
         defaults.put("features.item-limiter.enabled", false);
         defaults.put("features.item-limiter.check-method", "on-hit");
@@ -144,9 +149,6 @@ public class ConfigManager {
         defaults.put("features.item-limiter.limits.ender_pearl", 8);
 
         defaults.put("features.one-player-sleep.enabled", false);
-
-        defaults.put("bans.items.enabled", false);
-        defaults.put("bans.effects.enabled", false);
 
         return defaults;
     }

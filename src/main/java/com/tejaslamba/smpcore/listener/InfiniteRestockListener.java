@@ -2,11 +2,16 @@ package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
 import com.tejaslamba.smpcore.features.InfiniteRestockFeature;
+import com.tejaslamba.smpcore.infiniterestock.InfiniteRestockManager;
 import org.bukkit.entity.AbstractVillager;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -44,7 +49,8 @@ public class InfiniteRestockListener implements Listener {
             return;
         }
 
-        setInfiniteTrades(villager);
+        InfiniteRestockManager manager = ((InfiniteRestockFeature) feature).getManager();
+        manager.applyOnMerchantOpen(villager);
 
         boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         if (verbose) {
@@ -78,29 +84,37 @@ public class InfiniteRestockListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
+        InfiniteRestockManager manager = ((InfiniteRestockFeature) feature).getManager();
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            setInfiniteTrades(villager);
+            manager.applyOnMerchantOpen(villager);
             player.updateInventory();
         }, 1L);
     }
 
-    private void setInfiniteTrades(AbstractVillager villager) {
-        List<MerchantRecipe> newRecipes = new ArrayList<>();
-
-        for (MerchantRecipe oldRecipe : villager.getRecipes()) {
-            MerchantRecipe newRecipe = new MerchantRecipe(
-                    oldRecipe.getResult(),
-                    0,
-                    Integer.MAX_VALUE,
-                    oldRecipe.hasExperienceReward(),
-                    oldRecipe.getVillagerExperience(),
-                    oldRecipe.getPriceMultiplier(),
-                    0,
-                    0);
-            newRecipe.setIngredients(oldRecipe.getIngredients());
-            newRecipes.add(newRecipe);
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onInteractVillager(PlayerInteractAtEntityEvent event) {
+        Entity clicked = event.getRightClicked();
+        if (!(clicked instanceof AbstractVillager villager)) {
+            return;
         }
 
-        villager.setRecipes(newRecipes);
+        InfiniteRestockFeature feature = plugin.getFeatureManager().getFeature(InfiniteRestockFeature.class);
+        if (feature == null || !feature.isEnabled()) {
+            return;
+        }
+
+        InfiniteRestockManager manager = feature.getManager();
+        manager.applyOnInteract(villager);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onVillagerAcquireTrade(org.bukkit.event.entity.VillagerAcquireTradeEvent event) {
+        InfiniteRestockFeature feature = plugin.getFeatureManager().getFeature(InfiniteRestockFeature.class);
+        if (feature == null || !feature.isEnabled()) {
+            return;
+        }
+        AbstractVillager villager = event.getEntity();
+        InfiniteRestockManager manager = feature.getManager();
+        manager.applyOnVillagerAcquireTrade(villager);
     }
 }

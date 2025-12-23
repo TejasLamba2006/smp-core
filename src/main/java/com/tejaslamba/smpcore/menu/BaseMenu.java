@@ -84,7 +84,6 @@ public abstract class BaseMenu implements InventoryHolder {
         plugin.getConfigManager().get().set(configPath, !current);
         plugin.getConfigManager().save();
         plugin.getConfigManager().load();
-        plugin.getBanManager().load();
 
         plugin.getFeatureManager().getFeatures().forEach(feature -> {
             if (configPath.equals(feature.getConfigPath() + ".enabled")) {

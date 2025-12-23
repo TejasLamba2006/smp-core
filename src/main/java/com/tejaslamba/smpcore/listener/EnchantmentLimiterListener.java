@@ -1,0 +1,121 @@
+package com.tejaslamba.smpcore.listener;
+
+import com.tejaslamba.smpcore.Main;
+import com.tejaslamba.smpcore.enchantlimiter.EnchantmentLimiterManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.ItemStack;
+
+public class EnchantmentLimiterListener implements Listener {
+
+    private final Main plugin;
+    private final EnchantmentLimiterManager manager;
+
+    public EnchantmentLimiterListener(Main plugin, EnchantmentLimiterManager manager) {
+        this.plugin = plugin;
+        this.manager = manager;
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEnchantItem(EnchantItemEvent event) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            manager.checkItemEnchantments(event.getEnchanter(), event.getItem());
+        }, 1L);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPrepareAnvil(PrepareAnvilEvent event) {
+        ItemStack result = event.getResult();
+        if (result == null) {
+            return;
+        }
+
+        if (event.getViewers().isEmpty()) {
+            return;
+        }
+
+        boolean exceedsLimit = manager.checkItemEnchantments(event.getViewers().get(0), result);
+
+        if (exceedsLimit) {
+            event.setResult(null);
+            for (var viewer : event.getViewers()) {
+                if (viewer instanceof Player player) {
+                    player.updateInventory();
+                }
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInventoryClick(InventoryClickEvent event) {
+        ItemStack item = event.getCurrentItem();
+        if (item == null || item.getType() == Material.AIR) {
+            return;
+        }
+
+        if (!item.hasItemMeta() || item.getEnchantments().isEmpty()) {
+            if (item.getItemMeta() instanceof org.bukkit.inventory.meta.EnchantmentStorageMeta bookMeta) {
+                if (bookMeta.getStoredEnchants().isEmpty()) {
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        boolean modified = manager.checkItemEnchantments(player, item);
+
+        if (modified && event.getInventory() instanceof AnvilInventory && event.getRawSlot() == 2) {
+            player.updateInventory();
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPlayerPickup(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        Item itemEntity = event.getItem();
+        if (itemEntity == null || !itemEntity.isValid()) {
+            return;
+        }
+
+        ItemStack item = itemEntity.getItemStack();
+        if (item == null || item.getType() == Material.AIR) {
+            return;
+        }
+
+        if (!item.hasItemMeta()) {
+            return;
+        }
+
+        boolean hasEnchants = !item.getEnchantments().isEmpty();
+        if (!hasEnchants && item.getItemMeta() instanceof org.bukkit.inventory.meta.EnchantmentStorageMeta bookMeta) {
+            hasEnchants = !bookMeta.getStoredEnchants().isEmpty();
+        }
+
+        if (!hasEnchants) {
+            return;
+        }
+
+        boolean modified = manager.checkItemEnchantments(player, item);
+        if (modified) {
+            itemEntity.setItemStack(item);
+        }
+    }
+}

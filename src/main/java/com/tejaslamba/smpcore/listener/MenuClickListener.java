@@ -1,16 +1,20 @@
 package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
+import com.tejaslamba.smpcore.features.ItemLimiterFeature;
 import com.tejaslamba.smpcore.features.MobSpawningFeature;
 import com.tejaslamba.smpcore.features.NetheriteDisablerFeature;
+import com.tejaslamba.smpcore.features.InfiniteRestockFeature;
 import com.tejaslamba.smpcore.menu.MainMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 public class MenuClickListener implements Listener {
@@ -21,13 +25,42 @@ public class MenuClickListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onMenuClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
 
         String title = event.getView().getTitle();
+
+        if (title.equals(ItemLimiterFeature.MAIN_GUI_TITLE)) {
+            event.setCancelled(true);
+            handleItemLimiterMainGUI(event, player);
+            return;
+        }
+
+        if (title.equals(ItemLimiterFeature.ADD_GUI_TITLE)) {
+            handleItemLimiterAddGUI(event, player);
+            return;
+        }
+
+        if (title.equals(ItemLimiterFeature.VIEW_GUI_TITLE)) {
+            event.setCancelled(true);
+            handleItemLimiterViewGUI(event, player);
+            return;
+        }
+
+        if (title.equals(ItemLimiterFeature.BANNED_GUI_TITLE)) {
+            event.setCancelled(true);
+            handleItemLimiterBannedGUI(event, player);
+            return;
+        }
+
+        if (title.equals(InfiniteRestockFeature.GUI_TITLE)) {
+            event.setCancelled(true);
+            handleInfiniteRestockGUI(event, player);
+            return;
+        }
 
         if (title.equals(NetheriteDisablerFeature.GUI_TITLE)) {
             event.setCancelled(true);
@@ -51,6 +84,116 @@ public class MenuClickListener implements Listener {
         if (holder instanceof MainMenu mainMenu) {
             mainMenu.handleClick(event);
         }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!(event.getPlayer() instanceof Player player)) {
+            return;
+        }
+
+        String title = event.getView().getTitle();
+
+        if (title.equals(ItemLimiterFeature.MAIN_GUI_TITLE) ||
+                title.equals(ItemLimiterFeature.ADD_GUI_TITLE) ||
+                title.equals(ItemLimiterFeature.VIEW_GUI_TITLE) ||
+                title.equals(ItemLimiterFeature.BANNED_GUI_TITLE)) {
+
+            ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+            if (feature != null) {
+                feature.handleInventoryClose(player, title);
+            }
+        }
+    }
+
+    private void handleItemLimiterMainGUI(InventoryClickEvent event, Player player) {
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+            return;
+        }
+
+        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        if (feature == null) {
+            player.closeInventory();
+            return;
+        }
+
+        feature.handleMainMenuClick(event.getSlot(), player);
+    }
+
+    private void handleItemLimiterAddGUI(InventoryClickEvent event, Player player) {
+        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        if (feature == null) {
+            player.closeInventory();
+            return;
+        }
+
+        if (event.getRawSlot() >= event.getView().getTopInventory().getSize()) {
+            return;
+        }
+
+        feature.handleAddItemClick(event, player);
+    }
+
+    private void handleItemLimiterViewGUI(InventoryClickEvent event, Player player) {
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+            return;
+        }
+
+        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        if (feature == null) {
+            player.closeInventory();
+            return;
+        }
+
+        Material clickedType = event.getCurrentItem().getType();
+        if (clickedType == Material.GRAY_STAINED_GLASS_PANE) {
+            return;
+        }
+
+        feature.handleViewLimitsClick(
+                event.getSlot(),
+                event.getInventory().getSize(),
+                event.isShiftClick(),
+                event.isLeftClick(),
+                player);
+    }
+
+    private void handleItemLimiterBannedGUI(InventoryClickEvent event, Player player) {
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+            return;
+        }
+
+        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        if (feature == null) {
+            player.closeInventory();
+            return;
+        }
+
+        Material clickedType = event.getCurrentItem().getType();
+        if (clickedType == Material.GRAY_STAINED_GLASS_PANE) {
+            return;
+        }
+
+        feature.handleBannedItemsClick(
+                event.getSlot(),
+                event.getInventory().getSize(),
+                event.isShiftClick(),
+                event.isLeftClick(),
+                player);
+    }
+
+    private void handleInfiniteRestockGUI(InventoryClickEvent event, Player player) {
+        if (event.getCurrentItem() == null) {
+            return;
+        }
+
+        InfiniteRestockFeature feature = plugin.getFeatureManager().getFeature(InfiniteRestockFeature.class);
+        if (feature == null) {
+            player.closeInventory();
+            return;
+        }
+
+        feature.handleRestockGUIClick(event, player);
     }
 
     private void handleNetheriteGUI(InventoryClickEvent event, Player player) {
@@ -213,5 +356,4 @@ public class MenuClickListener implements Listener {
             }
         }
     }
-
 }

@@ -105,12 +105,7 @@ public abstract class BaseFeature implements Feature {
         plugin.getConfigManager().get().set(getConfigPath() + ".enabled", !current);
         plugin.getConfigManager().save();
         plugin.getConfigManager().load();
-        plugin.getBanManager().load();
         reload();
-
-        if (verbose) {
-            plugin.getLogger().info("[VERBOSE]   - BanManager reloaded");
-        }
 
         String displayName = plugin.getMenuConfigManager().getDisplayNameForConfig(getConfigPath() + ".enabled");
         player.sendMessage("§6[SMP] §7Toggled " + displayName + " §7to §" + (!current ? "aEnabled" : "cDisabled"));

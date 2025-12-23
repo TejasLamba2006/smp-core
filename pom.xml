@@ -11,6 +11,9 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Set to true to enable obfuscation, false for development -->
+        <obfuscate>true</obfuscate>
     </properties>
 
     <repositories>
@@ -50,6 +53,72 @@
                     <target>21</target>
                 </configuration>
             </plugin>
+
+            <!-- Standard JAR packaging -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Built-By>SMP Core Team</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Obfuscation Profile - Use with: mvn package -Pobfuscate -->
+        <profile>
+            <id>obfuscate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.6.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <proguardVersion>7.4.2</proguardVersion>
+                            <injar>${project.build.finalName}.jar</injar>
+                            <outjar>${project.build.finalName}-final.jar</outjar>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <proguardInclude>${project.basedir}/proguard.conf</proguardInclude>
+                            <libs>
+                                <lib>${java.home}/jmods/java.base.jmod</lib>
+                                <lib>${java.home}/jmods/java.logging.jmod</lib>
+                                <lib>${java.home}/jmods/java.desktop.jmod</lib>
+                                <lib>${java.home}/jmods/java.sql.jmod</lib>
+                            </libs>
+                            <options>
+                                <option>-dontnote **</option>
+                            </options>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.guardsquare</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>7.4.2</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.guardsquare</groupId>
+                                <artifactId>proguard-core</artifactId>
+                                <version>9.1.1</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

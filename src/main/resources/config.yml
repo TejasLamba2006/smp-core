@@ -15,7 +15,7 @@ plugin:
   name: "SMP Core"
   prefix: "§8[§6SMP§8]§r"
   # Enable verbose logging for debugging (shows detailed info in console)
-  verbose: true
+  verbose: false
 
 # ============================================
 # Messages
@@ -55,23 +55,31 @@ features:
       unbreaking: 2
 
   # ------------------------------------------
-  # Enchantment Replacement
+  # Enchantment Limiter
   # ------------------------------------------
-  # Automatically scans items and reduces enchantments
-  # that exceed the configured caps. Unlike Custom Anvil Caps,
-  # this actively modifies existing items.
-  enchantment-replacement:
+  # Limits enchantments on items by checking and modifying them
+  # when players pick up, craft, or receive items.
+  # Uses efficient caching and cross-version enchantment name support.
+  enchantment-limiter:
     enabled: false
-    # When to scan player inventories for illegal enchants
-    scan-on-join: true
-    scan-on-inventory-open: true
-    scan-on-villager-trade: true
-    scan-on-pickup: false
-    scan-on-craft: true
-    # Keep only the best protection enchantment on armor
-    keep-only-best-protection: true
-    # Maximum enchantment levels (same format as anvil caps)
-    caps:
+    # Check items at enchanting table
+    block-enchanting-table: true
+    # Check anvil results
+    block-anvil: true
+    # Check items when players pick them up
+    check-on-pickup: true
+    # Check items when clicking in inventory
+    check-on-inventory-click: true
+    # Notify player when enchantments are limited
+    notify-player: true
+    # Message when enchantments are limited
+    # {enchant} = enchantment name, {limit} = max level
+    limit-message: "&cEnchantment {enchant} has been limited to level {limit}!"
+    # Enchantment limits (name: max_level)
+    # Set to 0 to completely ban an enchantment
+    # Use -1 or remove from list to allow unlimited
+    # Supports both key names (sharpness) and internal names (damage_all)
+    limits:
       sharpness: 4
       protection: 3
       fire_protection: 3
@@ -180,29 +188,68 @@ features:
   # ------------------------------------------
   # Villagers will never run out of trades and prices
   # won't increase from demand. Trades reset immediately.
+  # Manage settings via GUI with /smp infiniterestock
   infinite-restock:
     enabled: false
+    # Maximum trades per villager (0 = unlimited)
+    max-trades: 0
+    # Remove price penalty (sets demand to 0)
+    disable-price-penalty: true
+    # Apply to wandering traders as well
+    allow-wandering-traders: true
+    # Restore original trade limits (for uninstalling)
+    uninstall-mode: false
+    # Villager professions to exclude (uppercase)
+    # Example: ["LIBRARIAN", "CLERIC"]
+    villager-blacklist: []
 
   # ------------------------------------------
   # Item Limiter
   # ------------------------------------------
-  # Limits how many of specific items a player can carry.
-  # Excess items are dropped with a pickup delay.
+  # Advanced item limiting system with support for:
+  # - Basic material limits
+  # - Custom model data matching
+  # - Display name matching
+  # - Potion type matching
+  # Manage limits via GUI with /smp menu -> Item Limiter -> Right Click
   item-limiter:
     enabled: false
-    # When to check inventory for excess items:
-    # "on-hit" - When player gets hit by another player (PvP focused)
-    # "on-move" - When player moves (more aggressive, higher performance cost)
-    check-method: "on-hit"
-    # Item limits (material_name: max_amount)
-    # Use Bukkit material names in lowercase with underscores
-    # Examples: golden_apple, diamond_sword, ender_pearl
+    # Item limits configuration
+    # Simple format: material_name: limit
+    # Advanced format with sections for custom items:
+    #   custom_key:
+    #     material: MATERIAL_NAME
+    #     limit: number
+    #     customModelData: number (optional)
+    #     displayName: "§cCustom Name" (optional)
+    #     potionType: POTION_TYPE (optional, for potions only)
     limits:
-      golden_apple: 4
-      enchanted_golden_apple: 1
-      totem_of_undying: 1
-      end_crystal: 2
-      ender_pearl: 8
+      GOLDEN_APPLE:
+        material: GOLDEN_APPLE
+        limit: 96
+      COBWEB:
+        material: COBWEB
+        limit: 64
+      TOTEM_OF_UNDYING:
+        material: TOTEM_OF_UNDYING
+        limit: 2
+      EXPERIENCE_BOTTLE:
+        material: EXPERIENCE_BOTTLE
+        limit: 128
+      WIND_CHARGE:
+        material: WIND_CHARGE
+        limit: 64
+      BREEZE_ROD:
+        material: BREEZE_ROD
+        limit: 64
+      SPLASH_POTION_STRONG_STRENGTH:
+        material: SPLASH_POTION
+        limit: 0
+        potionType: STRONG_STRENGTH
+      SPLASH_POTION_STRONG_SWIFTNESS:
+        material: SPLASH_POTION
+        limit: 0
+        potionType: STRONG_SWIFTNESS
 
   # ------------------------------------------
   # One Player Sleep
@@ -236,35 +283,7 @@ features:
       - SPAWNER_EGG
       - CUSTOM
       - COMMAND
-
 # ============================================
-# Bans
+# Note: Item bans can be done via Item Limiter
+# by setting an item's limit to 0
 # ============================================
-# Ban specific items, enchantments, or potion effects.
-# Banned items are removed/blocked from use.
-bans:
-  # ------------------------------------------
-  # Item Bans
-  # ------------------------------------------
-  # Ban specific items entirely.
-  items:
-    enabled: false
-    # List of material names to ban (lowercase with underscores)
-    # See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
-    list:
-      - mace
-      - respawn_anchor
-      - end_crystal
-
-  # ------------------------------------------
-  # Effect Bans
-  # ------------------------------------------
-  # Ban specific potion effects.
-  # Banned effects are cancelled when applied.
-  effects:
-    enabled: false
-    # List of effect names to ban (lowercase with underscores)
-    # See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
-    list:
-      - invisibility
-      - strength

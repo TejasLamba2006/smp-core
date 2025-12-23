@@ -1,9 +1,11 @@
 package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
-import com.tejaslamba.smpcore.utils.EnchantmentUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,13 +14,21 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class CustomAnvilCapsListener implements Listener {
 
     private final Main plugin;
+    private static final Enchantment[] PROTECTION_ENCHANTS = {
+            Enchantment.PROTECTION,
+            Enchantment.FIRE_PROTECTION,
+            Enchantment.BLAST_PROTECTION,
+            Enchantment.PROJECTILE_PROTECTION
+    };
 
     public CustomAnvilCapsListener(Main plugin) {
         this.plugin = plugin;
@@ -51,33 +61,35 @@ public class CustomAnvilCapsListener implements Listener {
             return;
         }
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         Map<Enchantment, Integer> toAdd = event.getEnchantsToAdd();
+        boolean hadViolations = false;
 
-        boolean hadViolations = toAdd.entrySet().removeIf(entry -> {
+        for (var entry : new HashSet<>(toAdd.entrySet())) {
             Enchantment enchant = entry.getKey();
             int level = entry.getValue();
             int cap = getCap(enchant);
 
-            if (cap == -1) {
-                return false;
-            }
-
-            if (cap == 0 || level > cap) {
-                if (verbose) {
-                    plugin.getLogger().info("[VERBOSE] Blocked enchantment " + enchant.getKey().getKey()
-                            + " level " + level + " at enchanting table (cap: " + cap + ")");
+            if (cap == 0) {
+                toAdd.remove(enchant);
+                hadViolations = true;
+                if (plugin.isVerbose()) {
+                    plugin.getLogger().info("[VERBOSE] Blocked banned enchantment " + enchant.getKey().getKey()
+                            + " at enchanting table");
                 }
-                return true;
+            } else if (cap > 0 && level > cap) {
+                toAdd.put(enchant, cap);
+                hadViolations = true;
+                if (plugin.isVerbose()) {
+                    plugin.getLogger().info("[VERBOSE] Capped enchantment " + enchant.getKey().getKey()
+                            + " from " + level + " to " + cap + " at enchanting table");
+                }
             }
-
-            return false;
-        });
+        }
 
         if (hadViolations) {
-            Player player = event.getEnchanter();
-            player.sendMessage(plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r")
-                    + " §cSome enchantments exceed the allowed limit!");
+            String prefix = plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r");
+            event.getEnchanter().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    prefix + " &cSome enchantments were limited!"));
         }
     }
 
@@ -87,162 +99,100 @@ public class CustomAnvilCapsListener implements Listener {
             return;
         }
 
-        ItemStack left = event.getInventory().getItem(0);
-        ItemStack right = event.getInventory().getItem(1);
-
-        if (left == null || right == null) {
+        ItemStack result = event.getResult();
+        if (result == null || result.getType() == Material.AIR) {
             return;
         }
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-
-        ItemStack result = combineItems(left, right, verbose);
-
-        if (result != null) {
-            event.setResult(result);
+        if (!result.hasItemMeta()) {
+            return;
         }
-    }
 
-    private ItemStack combineItems(ItemStack left, ItemStack right, boolean verbose) {
-        boolean leftBook = left.getType() == Material.ENCHANTED_BOOK;
-        boolean rightBook = right.getType() == Material.ENCHANTED_BOOK;
+        boolean modified = false;
+        ItemMeta meta = result.getItemMeta();
 
-        ItemStack result;
-        if (leftBook && rightBook) {
-            result = combineBooks(left, right, verbose);
-        } else if (leftBook || rightBook) {
-            result = combineBookWithItem(left, right, leftBook, verbose);
-        } else if (left.getType() == right.getType()) {
-            result = combineSameTypeItems(left, right, verbose);
+        if (meta instanceof EnchantmentStorageMeta bookMeta) {
+            Map<Enchantment, Integer> enchants = new HashMap<>(bookMeta.getStoredEnchants());
+            modified = checkAndFixEnchantments(enchants);
+
+            if (modified) {
+                for (Enchantment e : bookMeta.getStoredEnchants().keySet()) {
+                    bookMeta.removeStoredEnchant(e);
+                }
+                for (var entry : enchants.entrySet()) {
+                    if (entry.getValue() > 0) {
+                        bookMeta.addStoredEnchant(entry.getKey(), entry.getValue(), true);
+                    }
+                }
+                result.setItemMeta(bookMeta);
+            }
         } else {
-            return null;
-        }
+            Map<Enchantment, Integer> enchants = new HashMap<>(result.getEnchantments());
+            modified = checkAndFixEnchantments(enchants);
 
-        return result;
-    }
-
-    private ItemStack combineBooks(ItemStack left, ItemStack right, boolean verbose) {
-        ItemStack result = new ItemStack(Material.ENCHANTED_BOOK);
-        EnchantmentStorageMeta resultMeta = (EnchantmentStorageMeta) result.getItemMeta();
-
-        Map<Enchantment, Integer> leftEnchants = EnchantmentUtils.getAllEnchantments(left);
-        Map<Enchantment, Integer> rightEnchants = EnchantmentUtils.getAllEnchantments(right);
-        Map<Enchantment, Integer> merged = mergeEnchantments(leftEnchants, rightEnchants, verbose);
-
-        if (isKeepBestProtection()) {
-            merged = filterProtections(merged);
-        }
-
-        for (Map.Entry<Enchantment, Integer> entry : merged.entrySet()) {
-            if (entry.getValue() > 0) {
-                resultMeta.addStoredEnchant(entry.getKey(), entry.getValue(), true);
+            if (modified) {
+                for (Enchantment e : result.getEnchantments().keySet()) {
+                    meta.removeEnchant(e);
+                }
+                for (var entry : enchants.entrySet()) {
+                    if (entry.getValue() > 0) {
+                        meta.addEnchant(entry.getKey(), entry.getValue(), true);
+                    }
+                }
+                result.setItemMeta(meta);
             }
         }
 
-        result.setItemMeta(resultMeta);
-        return result;
-    }
+        if (modified) {
+            event.setResult(result);
 
-    private ItemStack combineBookWithItem(ItemStack left, ItemStack right, boolean isLeftBook, boolean verbose) {
-        ItemStack base = isLeftBook ? right.clone() : left.clone();
-        ItemStack book = isLeftBook ? left : right;
-
-        Map<Enchantment, Integer> baseEnchants = EnchantmentUtils.getAllEnchantments(base);
-        Map<Enchantment, Integer> bookEnchants = EnchantmentUtils.getAllEnchantments(book);
-        Map<Enchantment, Integer> merged = mergeEnchantments(baseEnchants, bookEnchants, verbose);
-
-        if (isKeepBestProtection()) {
-            merged = filterProtections(merged);
+            for (HumanEntity viewer : event.getViewers()) {
+                if (viewer instanceof Player player) {
+                    player.updateInventory();
+                }
+            }
         }
-
-        merged.entrySet().removeIf(entry -> !entry.getKey().canEnchantItem(base));
-
-        EnchantmentUtils.setEnchantments(base, merged);
-        return base;
     }
 
-    private ItemStack combineSameTypeItems(ItemStack left, ItemStack right, boolean verbose) {
-        ItemStack result = left.clone();
+    private boolean checkAndFixEnchantments(Map<Enchantment, Integer> enchants) {
+        boolean modified = false;
 
-        Map<Enchantment, Integer> leftEnchants = EnchantmentUtils.getAllEnchantments(left);
-        Map<Enchantment, Integer> rightEnchants = EnchantmentUtils.getAllEnchantments(right);
-        Map<Enchantment, Integer> merged = mergeEnchantments(leftEnchants, rightEnchants, verbose);
-
-        if (isKeepBestProtection()) {
-            merged = filterProtections(merged);
-        }
-
-        merged.entrySet().removeIf(entry -> !entry.getKey().canEnchantItem(result));
-
-        EnchantmentUtils.setEnchantments(result, merged);
-        return result;
-    }
-
-    private Map<Enchantment, Integer> mergeEnchantments(Map<Enchantment, Integer> left,
-            Map<Enchantment, Integer> right,
-            boolean verbose) {
-        Map<Enchantment, Integer> merged = new HashMap<>();
-
-        for (Map.Entry<Enchantment, Integer> entry : left.entrySet()) {
+        for (var entry : new HashSet<>(enchants.entrySet())) {
             Enchantment enchant = entry.getKey();
             int level = entry.getValue();
             int cap = getCap(enchant);
 
             if (cap == 0) {
-                if (verbose) {
-                    plugin.getLogger().info("[VERBOSE] Removed banned enchantment: "
-                            + enchant.getKey().getKey());
+                enchants.remove(enchant);
+                modified = true;
+            } else if (cap > 0 && level > cap) {
+                enchants.put(enchant, cap);
+                modified = true;
+            }
+        }
+
+        if (isKeepBestProtection()) {
+            Enchantment best = null;
+            int bestLevel = 0;
+
+            for (Enchantment prot : PROTECTION_ENCHANTS) {
+                Integer level = enchants.get(prot);
+                if (level != null && level > bestLevel) {
+                    best = prot;
+                    bestLevel = level;
                 }
-                continue;
             }
 
-            int finalLevel = (cap != -1) ? Math.min(level, cap) : level;
-            merged.put(enchant, finalLevel);
-        }
-
-        for (Map.Entry<Enchantment, Integer> entry : right.entrySet()) {
-            Enchantment enchant = entry.getKey();
-            int rightLevel = entry.getValue();
-            int leftLevel = merged.getOrDefault(enchant, 0);
-
-            int combinedLevel;
-            if (leftLevel == rightLevel && leftLevel > 0) {
-                combinedLevel = leftLevel + 1;
-            } else {
-                combinedLevel = Math.max(leftLevel, rightLevel);
-            }
-
-            int cap = getCap(enchant);
-            if (cap == 0) {
-                if (verbose) {
-                    plugin.getLogger().info("[VERBOSE] Blocked banned enchantment: "
-                            + enchant.getKey().getKey());
+            if (best != null) {
+                for (Enchantment prot : PROTECTION_ENCHANTS) {
+                    if (prot != best && enchants.containsKey(prot)) {
+                        enchants.remove(prot);
+                        modified = true;
+                    }
                 }
-                continue;
-            }
-
-            int finalLevel = (cap != -1) ? Math.min(combinedLevel, cap) : combinedLevel;
-            merged.put(enchant, finalLevel);
-        }
-
-        return merged;
-    }
-
-    private Map<Enchantment, Integer> filterProtections(Map<Enchantment, Integer> enchants) {
-        Enchantment highest = EnchantmentUtils.getHighestProtection(enchants);
-
-        if (highest == null) {
-            return enchants;
-        }
-
-        Map<Enchantment, Integer> filtered = new HashMap<>();
-        for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-            if (!EnchantmentUtils.isProtectionEnchantment(entry.getKey()) ||
-                    entry.getKey() == highest) {
-                filtered.put(entry.getKey(), entry.getValue());
             }
         }
 
-        return filtered;
+        return modified;
     }
 }

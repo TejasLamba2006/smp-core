@@ -5,12 +5,9 @@ import com.tejaslamba.smpcore.manager.CommandManager;
 import com.tejaslamba.smpcore.manager.ConfigManager;
 import com.tejaslamba.smpcore.manager.MenuManager;
 import com.tejaslamba.smpcore.manager.MenuConfigManager;
-import com.tejaslamba.smpcore.manager.BanManager;
 import com.tejaslamba.smpcore.manager.CooldownManager;
 import com.tejaslamba.smpcore.manager.ChatInputManager;
 import com.tejaslamba.smpcore.manager.FeatureManager;
-import com.tejaslamba.smpcore.listener.ItemBanListener;
-import com.tejaslamba.smpcore.listener.EffectBanListener;
 
 public class Main extends JavaPlugin {
 
@@ -19,11 +16,9 @@ public class Main extends JavaPlugin {
     private ConfigManager configManager;
     private MenuManager menuManager;
     private MenuConfigManager menuConfigManager;
-    private BanManager banManager;
     private CooldownManager cooldownManager;
     private ChatInputManager chatInputManager;
     private FeatureManager featureManager;
-    private ItemBanListener sharedItemBanListener;
     private boolean verboseLogging = false;
 
     @Override
@@ -34,11 +29,8 @@ public class Main extends JavaPlugin {
         refreshVerbose();
         menuConfigManager = new MenuConfigManager(this);
         menuConfigManager.load();
-        banManager = new BanManager(this);
-        banManager.load();
         cooldownManager = new CooldownManager();
         chatInputManager = new ChatInputManager();
-        sharedItemBanListener = new ItemBanListener(this);
         featureManager = new FeatureManager(this);
         featureManager.loadFeatures();
         menuManager = new MenuManager(this);
@@ -49,8 +41,6 @@ public class Main extends JavaPlugin {
                 this);
         getServer().getPluginManager().registerEvents(new com.tejaslamba.smpcore.listener.ChatInputListener(this),
                 this);
-        getServer().getPluginManager().registerEvents(new EffectBanListener(this), this);
-        getServer().getPluginManager().registerEvents(sharedItemBanListener, this);
 
         getLogger().info("SMP Core has been enabled!");
     }
@@ -97,10 +87,6 @@ public class Main extends JavaPlugin {
         return menuConfigManager;
     }
 
-    public BanManager getBanManager() {
-        return banManager;
-    }
-
     public CooldownManager getCooldownManager() {
         return cooldownManager;
     }
@@ -111,10 +97,6 @@ public class Main extends JavaPlugin {
 
     public FeatureManager getFeatureManager() {
         return featureManager;
-    }
-
-    public ItemBanListener getSharedItemBanListener() {
-        return sharedItemBanListener;
     }
 
 }

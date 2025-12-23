@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Enchantment Limiter**: Completely rewritten from EnchantLimiter plugin approach
+  - Efficient enchantment caching with cross-version name support
+  - Handles both item enchantments and enchanted book stored enchants
+  - Triggers: enchanting table, anvil, inventory click, item pickup
+  - Enchantment name mapping for compatibility (sharpness ↔ damage_all, etc.)
+  - Set limit to 0 to completely ban an enchantment
+- **ProGuard Obfuscation**: Build-time code obfuscation for distribution protection
+  - Run `mvn package -Pobfuscate` to create obfuscated JAR
+  - Produces `smp-core-x.x.x-obfuscated.jar` in target folder
+  - Mapping file saved to `target/proguard_map.txt` for debugging
+- **Item Limiter GUI System**: Complete GUI-based item limit management
+  - Main menu with view, add, banned items, and reload options
+  - Add item limits by dragging items and setting quantities
+  - **Ban Mode toggle**: One-click option to ban items (sets limit to 0)
+  - **Banned Items section**: Separate view for items with limit = 0
+  - View and edit existing limits with visual item display
+  - Delete limits with shift+click
+  - Supports custom model data, display names, and potion types
+- **Advanced Item Matching**: Item limits now support:
+  - Custom model data matching for modded/custom items
+  - Display name matching for named items
+  - Potion type matching for specific potion variants
+- **Real-time Item Enforcement**: Continuous background task checks player inventories
+- **Pickup Prevention**: Prevents picking up items that would exceed limits
+- **Inventory Click Prevention**: Blocks taking items from containers if it exceeds limits
 - **Mob Spawning Feature**: Control mob spawning with configurable mob type blacklist
 - **Mace Limiter GUI**: New settings GUI accessible via right-click in main menu
   - Increase/decrease max maces with click and shift-click
@@ -16,20 +41,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Visual display of current limit status
 - **Verbose Logging**: Optional debug logging for all features (`plugin.verbose` in config)
 - **Dynamic Recipe Management**: Mace recipes automatically removed when limit reached
+- **Infinite Restock GUI**: Full GUI-based control for villager trading
+  - Set max trades per villager (0 = unlimited)
+  - Toggle price penalty removal (demand = 0)
+  - Toggle applying to wandering traders
+  - Uninstall mode to restore original trade limits
+  - Command: `/smp infiniterestock` opens the manager (permission `smpcore.infiniterestock`)
+
+### Changed
+
+- **Enchantment Replacement → Enchantment Limiter**: Renamed and completely rewritten
+  - Now uses efficient caching system from EnchantLimiter plugin
+  - Cross-version enchantment name mapping
+  - Simplified event handling with direct item modification
+  - Separate config from Custom Anvil Caps
+- **Custom Anvil Caps Listener**: Simplified implementation
+  - Removed dependency on EnchantmentUtils for merging
+  - Direct enchantment capping at anvil/enchanting table
+  - Better protection enchantment filtering
+- **Item Limiter Rewrite**: Completely rewritten item limiting system
+  - New `ItemLimiterManager` for centralized limit management
+  - New `ItemLimit` class for advanced item matching
+  - Removed check-method config (now uses continuous background checking)
+  - Added proper listener unregistration when feature is disabled
+- **Config Default**: Verbose logging now defaults to `false`
+- Version bump to 1.1.0
+- Improved feature toggle system with better state management
+- Enhanced reload functionality across all features
+- **Infinite Restock Rewrite**: Ported from InstantRestock with persistence
+  - Back up original trade limits in PDC and restore on uninstall
+  - Apply on interact, merchant open, and trade acquisition
+
+### Removed
+
+- **Enchantment Replacement Feature**: Replaced by Enchantment Limiter
+  - Removed `EnchantmentReplacementFeature.java`
+  - Removed `EnchantmentReplacementListener.java`
+- **Item Bans Feature**: Removed separate item ban system (use Item Limiter with limit=0 instead)
+- **Effect Bans Feature**: Removed potion effect ban system (to be reimplemented later)
+- **BanManager**: Removed as item/effect bans are now handled by Item Limiter
 
 ### Fixed
 
+- **Feature Unload**: Listeners are now properly unregistered when features are disabled
+- **Memory Management**: Proper cleanup of sessions and caches on feature disable
 - **Mace Limiter**: Recipes are now properly restored when the feature is disabled
 - **Mace Limiter**: Recipes are now automatically disabled when the craft limit is reached
 - **Mace Limiter**: Adjusting max maces now properly updates recipe availability
 - **Commands**: Added permission checks to `/smp` command - menu now requires `smpcore.menu` permission
 - **Commands**: Tab completion now only shows subcommands the player has permission for
-
-### Changed
-
-- Version bump to 1.1.0
-- Improved feature toggle system with better state management
-- Enhanced reload functionality across all features
+- **Villager Trades**: Consistent application after trade clicks and profession upgrades
 
 ---
 

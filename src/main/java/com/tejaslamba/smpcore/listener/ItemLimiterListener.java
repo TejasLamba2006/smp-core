@@ -2,182 +2,184 @@ package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
 import com.tejaslamba.smpcore.features.ItemLimiterFeature;
-import org.bukkit.Material;
-import org.bukkit.entity.Item;
+import com.tejaslamba.smpcore.itemlimiter.ItemLimit;
+import com.tejaslamba.smpcore.itemlimiter.ItemLimiterManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ItemLimiterListener implements Listener {
 
     private final Main plugin;
-    private final Map<UUID, Long> checkCooldowns = new ConcurrentHashMap<>();
-    private static final long CHECK_COOLDOWN_MS = 500;
+    private final ItemLimiterManager manager;
 
-    public ItemLimiterListener(Main plugin) {
+    public ItemLimiterListener(Main plugin, ItemLimiterManager manager) {
         this.plugin = plugin;
+        this.manager = manager;
     }
 
-    private boolean isOnCooldown(Player player) {
-        long now = System.currentTimeMillis();
-        Long lastCheck = checkCooldowns.get(player.getUniqueId());
-        if (lastCheck != null && now - lastCheck < CHECK_COOLDOWN_MS) {
-            return true;
-        }
-        checkCooldowns.put(player.getUniqueId(), now);
-        return false;
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.getTo() == null) {
-            return;
-        }
-
-        if (event.getFrom().getBlockX() == event.getTo().getBlockX()
-                && event.getFrom().getBlockY() == event.getTo().getBlockY()
-                && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityPickupItem(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
         ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
-
         if (feature == null || !feature.isEnabled()) {
             return;
         }
 
-        if (!feature.getCheckMethod().equalsIgnoreCase("on-move")) {
+        if (player.hasPermission("smpcore.itemlimiter.bypass")) {
             return;
         }
 
-        if (isOnCooldown(event.getPlayer())) {
+        ItemStack pickedUpItem = event.getItem().getItemStack();
+        String itemKey = manager.findMatchingItemKey(pickedUpItem);
+
+        if (itemKey == null) {
             return;
         }
 
-        checkAndLimitItems(event.getPlayer(), feature);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerHit(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player victim)) {
+        ItemLimit itemLimit = manager.getItemLimit(itemKey);
+        if (itemLimit == null) {
             return;
         }
 
-        if (!(event.getDamager() instanceof Player)) {
+        int limit = itemLimit.getLimit();
+
+        if (limit == 0) {
+            event.setCancelled(true);
+            manager.sendCooldownMessage(player, "§c[SMP Core] §7This item is completely banned");
             return;
         }
 
-        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        int currentCount = manager.getPlayerItemCount(player, pickedUpItem);
+        int totalAfterPickup = currentCount + pickedUpItem.getAmount();
 
-        if (feature == null || !feature.isEnabled()) {
-            return;
-        }
+        if (totalAfterPickup > limit) {
+            int canPickup = Math.max(0, limit - currentCount);
 
-        if (!feature.getCheckMethod().equalsIgnoreCase("on-hit")) {
-            return;
-        }
+            if (canPickup <= 0) {
+                event.setCancelled(true);
+                manager.sendCooldownMessage(player,
+                        "§c[SMP Core] §7You have reached the limit of " + limit + " for this item");
+            } else if (canPickup < pickedUpItem.getAmount()) {
+                event.setCancelled(true);
 
-        checkAndLimitItems(victim, feature);
-    }
+                ItemStack partialItem = pickedUpItem.clone();
+                partialItem.setAmount(canPickup);
+                Map<Integer, ItemStack> leftover = player.getInventory().addItem(partialItem);
 
-    private void checkAndLimitItems(Player player, ItemLimiterFeature feature) {
-        PlayerInventory inv = player.getInventory();
-        Map<Material, Integer> limits = feature.getItemLimits();
-
-        for (Map.Entry<Material, Integer> entry : limits.entrySet()) {
-            Material material = entry.getKey();
-            int limit = entry.getValue();
-
-            int totalAmount = countMaterial(inv, material);
-
-            if (totalAmount > limit) {
-                int excess = totalAmount - limit;
-                removeExcess(player, material, excess);
-
-                String itemName = material.name().toLowerCase().replace("_", " ");
-                player.sendMessage(
-                        "§c[SMP Core] §7You exceeded the item limit for §e" + itemName + " §7(max: §e" + limit + "§7)");
-
-                boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-                if (verbose) {
-                    plugin.getLogger().info("[VERBOSE] Item Limiter - " + player.getName() + " exceeded limit for "
-                            + material.name() + " (had " + totalAmount + ", limit " + limit + ")");
+                for (ItemStack item : leftover.values()) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), item);
                 }
+
+                ItemStack originalItem = event.getItem().getItemStack();
+                int newAmount = originalItem.getAmount() - canPickup;
+
+                if (newAmount <= 0) {
+                    event.getItem().remove();
+                } else {
+                    originalItem.setAmount(newAmount);
+                    event.getItem().setItemStack(originalItem);
+                }
+
+                manager.sendCooldownMessage(player, "§e[SMP Core] §7You can only pick up " + canPickup
+                        + " more of this item (limit: " + limit + ")");
             }
         }
     }
 
-    private int countMaterial(PlayerInventory inv, Material material) {
-        int total = 0;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
 
-        for (ItemStack item : inv.getStorageContents()) {
-            if (item != null && item.getType() == material) {
-                total += item.getAmount();
+        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        if (feature == null || !feature.isEnabled()) {
+            return;
+        }
+
+        if (player.hasPermission("smpcore.itemlimiter.bypass")) {
+            return;
+        }
+
+        String inventoryTitle = event.getView().getTitle();
+        if (inventoryTitle.equals(ItemLimiterFeature.MAIN_GUI_TITLE) ||
+                inventoryTitle.equals(ItemLimiterFeature.ADD_GUI_TITLE) ||
+                inventoryTitle.equals(ItemLimiterFeature.VIEW_GUI_TITLE)) {
+            return;
+        }
+
+        if (event.getInventory().getType() == InventoryType.PLAYER || event.getCurrentItem() == null) {
+            return;
+        }
+
+        ItemStack clickedItem = event.getCurrentItem();
+
+        if (event.getRawSlot() >= event.getInventory().getSize()) {
+            return;
+        }
+
+        String itemKey = manager.findMatchingItemKey(clickedItem);
+        if (itemKey == null) {
+            return;
+        }
+
+        ItemLimit itemLimit = manager.getItemLimit(itemKey);
+        if (itemLimit == null) {
+            return;
+        }
+
+        int limit = itemLimit.getLimit();
+
+        if (limit == 0) {
+            event.setCancelled(true);
+            manager.sendCooldownMessage(player, "§c[SMP Core] §7This item is completely banned");
+            return;
+        }
+
+        int currentCount = manager.getPlayerItemCount(player, clickedItem);
+
+        if (event.isShiftClick()) {
+            if (currentCount + clickedItem.getAmount() > limit) {
+                event.setCancelled(true);
+                manager.sendCooldownMessage(player,
+                        "§c[SMP Core] §7This would exceed your limit of " + limit + " for this item");
+            }
+        } else {
+            int amountToAdd = event.isLeftClick() ? clickedItem.getAmount() : (clickedItem.getAmount() + 1) / 2;
+            if (currentCount + amountToAdd > limit) {
+                event.setCancelled(true);
+                manager.sendCooldownMessage(player,
+                        "§c[SMP Core] §7This would exceed your limit of " + limit + " for this item");
             }
         }
-
-        ItemStack offhand = inv.getItemInOffHand();
-        if (offhand != null && offhand.getType() == material) {
-            total += offhand.getAmount();
-        }
-
-        return total;
     }
 
-    private void removeExcess(Player player, Material material, int excess) {
-        PlayerInventory inv = player.getInventory();
-        int remaining = excess;
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
 
-        for (int i = 0; i < inv.getSize() && remaining > 0; i++) {
-            ItemStack item = inv.getItem(i);
-
-            if (item == null || item.getType() != material) {
-                continue;
-            }
-
-            int amount = item.getAmount();
-            int toRemove = Math.min(amount, remaining);
-
-            ItemStack dropStack = item.clone();
-            dropStack.setAmount(toRemove);
-
-            Item droppedItem = player.getWorld().dropItem(player.getEyeLocation(), dropStack);
-            droppedItem.setPickupDelay(40);
-
-            if (toRemove >= amount) {
-                inv.setItem(i, null);
-            } else {
-                item.setAmount(amount - toRemove);
-            }
-
-            remaining -= toRemove;
+        ItemLimiterFeature feature = plugin.getFeatureManager().getFeature(ItemLimiterFeature.class);
+        if (feature == null || !feature.isEnabled()) {
+            return;
         }
 
-        ItemStack offhand = inv.getItemInOffHand();
-        if (remaining > 0 && offhand.getType() == material) {
-            int amount = offhand.getAmount();
-            int toRemove = Math.min(amount, remaining);
-
-            ItemStack dropStack = offhand.clone();
-            dropStack.setAmount(toRemove);
-
-            Item droppedItem = player.getWorld().dropItem(player.getEyeLocation(), dropStack);
-            droppedItem.setPickupDelay(40);
-
-            if (toRemove >= amount) {
-                inv.setItemInOffHand(null);
-            } else {
-                offhand.setAmount(amount - toRemove);
-            }
+        if (player.hasPermission("smpcore.itemlimiter.bypass")) {
+            return;
         }
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> manager.checkAndEnforceLimits(player), 20L);
     }
 }

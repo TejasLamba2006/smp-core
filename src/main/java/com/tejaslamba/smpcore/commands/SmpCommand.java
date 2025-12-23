@@ -18,11 +18,13 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
     private final EnchantCommand enchantCommand;
     private final MaceCommand maceCommand;
     private final NetheriteCommand netheriteCommand;
+    private final com.tejaslamba.smpcore.command.InfiniteRestockCommand infiniteRestockCommand;
 
     public SmpCommand() {
         this.enchantCommand = new EnchantCommand(Main.getInstance());
         this.maceCommand = new MaceCommand(Main.getInstance());
         this.netheriteCommand = new NetheriteCommand(Main.getInstance());
+        this.infiniteRestockCommand = new com.tejaslamba.smpcore.command.InfiniteRestockCommand(Main.getInstance());
     }
 
     @Override
@@ -70,6 +72,16 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
             return netheriteCommand.onCommand(sender, command, label, netheriteArgs);
         }
 
+        if (args[0].equalsIgnoreCase("infiniterestock")) {
+            if (!sender.hasPermission("smpcore.infiniterestock")) {
+                sender.sendMessage("§c[SMP] You don't have permission to manage Infinite Restock!");
+                return true;
+            }
+            String[] irArgs = new String[args.length - 1];
+            System.arraycopy(args, 1, irArgs, 0, args.length - 1);
+            return infiniteRestockCommand.onCommand(sender, command, label, irArgs);
+        }
+
         if (args[0].equalsIgnoreCase("menu")) {
             if (!(sender instanceof Player p)) {
                 sender.sendMessage("§c[SMP] Menu can only be opened by a player");
@@ -89,13 +101,13 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             Main.getInstance().getConfigManager().load();
-            Main.getInstance().getBanManager().load();
             Main.getInstance().getMenuConfigManager().load();
             sender.sendMessage("§a[SMP] Configuration reloaded successfully!");
             return true;
         }
 
-        sender.sendMessage("§c[SMP] Unknown subcommand. Usage: /smp [menu|reload|enchant|mace|netherite]");
+        sender.sendMessage(
+                "§c[SMP] Unknown subcommand. Usage: /smp [menu|reload|enchant|mace|netherite|infiniterestock]");
         return true;
     }
 
@@ -114,6 +126,9 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
             }
             if (sender.hasPermission("smpcore.netherite")) {
                 completions.add("netherite");
+            }
+            if (sender.hasPermission("smpcore.infiniterestock")) {
+                completions.add("infiniterestock");
             }
             if (sender.hasPermission("smpcore.reload")) {
                 completions.add("reload");
@@ -139,6 +154,13 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
             String[] netheriteArgs = new String[args.length - 1];
             System.arraycopy(args, 1, netheriteArgs, 0, args.length - 1);
             return netheriteCommand.onTabComplete(sender, command, alias, netheriteArgs);
+        }
+
+        if (args.length >= 2 && args[0].equalsIgnoreCase("infiniterestock")
+                && sender.hasPermission("smpcore.infiniterestock")) {
+            String[] irArgs = new String[args.length - 1];
+            System.arraycopy(args, 1, irArgs, 0, args.length - 1);
+            return infiniteRestockCommand.onTabComplete(sender, command, alias, irArgs);
         }
 
         return Collections.emptyList();

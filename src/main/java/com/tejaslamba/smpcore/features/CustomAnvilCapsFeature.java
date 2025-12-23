@@ -36,6 +36,7 @@ public class CustomAnvilCapsFeature extends BaseFeature {
     @Override
     public void onDisable() {
         listener = null;
+        super.onDisable();
     }
 
     @Override
@@ -47,21 +48,23 @@ public class CustomAnvilCapsFeature extends BaseFeature {
     public ItemStack getMenuItem() {
         ItemStack item = new ItemStack(Material.ANVIL);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6Custom Anvil Caps");
+        if (meta != null) {
+            meta.setDisplayName("§6Custom Anvil Caps");
 
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add(isEnabled() ? "§aEnabled" : "§cDisabled");
-        lore.add("");
-        lore.addAll(getMenuLore());
-        lore.add("");
-        lore.add("§eLeft-Click §7to toggle");
-        lore.add("§eRight-Click §7for more info");
-        lore.add("");
-        lore.add("§8Config: §7" + getConfigPath() + ".enabled");
+            List<String> lore = new ArrayList<>();
+            lore.add("");
+            lore.add(isEnabled() ? "§aEnabled" : "§cDisabled");
+            lore.add("");
+            lore.addAll(getMenuLore());
+            lore.add("");
+            lore.add("§eLeft-Click §7to toggle");
+            lore.add("§eRight-Click §7for more info");
+            lore.add("");
+            lore.add("§8Config: §7" + getConfigPath() + ".enabled");
 
-        meta.setLore(lore);
-        item.setItemMeta(meta);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
         return item;
     }
 
@@ -74,8 +77,9 @@ public class CustomAnvilCapsFeature extends BaseFeature {
         boolean keepBest = plugin.getConfigManager().get()
                 .getBoolean("features.custom-anvil-caps.keep-only-best-protection", true);
 
-        Map<String, Object> caps = plugin.getConfigManager().get()
-                .getConfigurationSection("features.custom-anvil-caps.caps").getValues(false);
+        var capsSection = plugin.getConfigManager().get()
+                .getConfigurationSection("features.custom-anvil-caps.caps");
+        Map<String, Object> caps = capsSection != null ? capsSection.getValues(false) : Map.of();
 
         player.sendMessage("§6§l=== Custom Anvil Caps ===");
         player.sendMessage("");
@@ -102,8 +106,8 @@ public class CustomAnvilCapsFeature extends BaseFeature {
     @Override
     public List<String> getMenuLore() {
         List<String> lore = new ArrayList<>();
-        lore.add("§7Cap enchantment levels on items");
-        lore.add("§7Works at enchanting tables and anvils");
+        lore.add("§7Blocks high-level enchants at");
+        lore.add("§7enchanting tables and anvils");
         lore.add("");
 
         boolean blockTable = plugin.getConfigManager().get()
@@ -111,13 +115,14 @@ public class CustomAnvilCapsFeature extends BaseFeature {
         boolean blockAnvil = plugin.getConfigManager().get()
                 .getBoolean("features.custom-anvil-caps.block-anvil", true);
 
-        lore.add("§7Block Enchanting Table: " + (blockTable ? "§aYes" : "§cNo"));
+        lore.add("§7Block Table: " + (blockTable ? "§aYes" : "§cNo"));
         lore.add("§7Block Anvil: " + (blockAnvil ? "§aYes" : "§cNo"));
 
-        Map<String, Object> caps = plugin.getConfigManager().get()
-                .getConfigurationSection("features.custom-anvil-caps.caps").getValues(false);
+        var capsSection = plugin.getConfigManager().get()
+                .getConfigurationSection("features.custom-anvil-caps.caps");
+        int capsCount = capsSection != null ? capsSection.getKeys(false).size() : 0;
 
-        lore.add("§7Configured Caps: §e" + caps.size());
+        lore.add("§7Configured Caps: §e" + capsCount);
 
         return lore;
     }
