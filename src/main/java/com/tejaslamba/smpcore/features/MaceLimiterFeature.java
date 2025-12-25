@@ -31,15 +31,14 @@ public class MaceLimiterFeature extends BaseFeature {
         macesCrafted = plugin.getConfigManager().get().getInt("features.mace-limiter.maces-crafted", 0);
         maxMaces = plugin.getConfigManager().get().getInt("features.mace-limiter.max-maces", 1);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info(
                     "[VERBOSE] Mace Limiter - Loaded state: macesCrafted=" + macesCrafted + ", maxMaces=" + maxMaces);
         }
 
         if (macesCrafted >= maxMaces) {
             removeAllMaceRecipes();
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mace Limiter - Removed mace recipes on enable (limit reached)");
             }
         }
@@ -192,8 +191,7 @@ public class MaceLimiterFeature extends BaseFeature {
         plugin.getConfigManager().get().set("features.mace-limiter.maces-crafted", macesCrafted);
         plugin.getConfigManager().save();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Maces crafted: " + macesCrafted + "/" + maxMaces);
         }
 
@@ -207,8 +205,7 @@ public class MaceLimiterFeature extends BaseFeature {
         plugin.getConfigManager().get().set("features.mace-limiter.max-maces", maxMaces);
         plugin.getConfigManager().save();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Max maces set to: " + maxMaces);
         }
 
@@ -224,13 +221,12 @@ public class MaceLimiterFeature extends BaseFeature {
         plugin.getConfigManager().get().set("features.mace-limiter.maces-crafted", macesCrafted);
         plugin.getConfigManager().save();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Craft count reset to 0");
         }
 
         Bukkit.resetRecipes();
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Recipes reset, mace crafting re-enabled");
         }
     }
@@ -247,15 +243,14 @@ public class MaceLimiterFeature extends BaseFeature {
             }
         }
 
-        if (recipesRemoved > 0 && plugin.getConfigManager().get().getBoolean("plugin.verbose", false)) {
+        if (recipesRemoved > 0 && plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Removed " + recipesRemoved + " Mace recipe(s)");
         }
     }
 
     public void restoreMaceRecipes() {
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         Bukkit.resetRecipes();
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Recipes restored (feature disabled or limit increased)");
         }
     }
@@ -267,21 +262,19 @@ public class MaceLimiterFeature extends BaseFeature {
         macesCrafted = plugin.getConfigManager().get().getInt("features.mace-limiter.maces-crafted", 0);
         maxMaces = plugin.getConfigManager().get().getInt("features.mace-limiter.max-maces", 1);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-
         if (wasEnabled && !enabled) {
             restoreMaceRecipes();
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mace Limiter - Feature disabled, recipes restored");
             }
         } else if (enabled && macesCrafted >= maxMaces) {
             removeAllMaceRecipes();
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mace Limiter - Limit reached, recipes removed");
             }
         } else if (enabled && macesCrafted < maxMaces) {
             restoreMaceRecipes();
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mace Limiter - Under limit, recipes available");
             }
         }

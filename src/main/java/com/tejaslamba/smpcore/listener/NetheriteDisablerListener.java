@@ -44,16 +44,14 @@ public class NetheriteDisablerListener implements Listener {
                     resultType.name().toLowerCase().replace("netherite_", "");
 
             if (player.hasPermission(permission)) {
-                boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger().info("[VERBOSE] Netherite Disabler - " + player.getName()
                             + " bypassed with permission: " + permission);
                 }
                 return;
             }
 
-            boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Netherite Disabler - Blocked " + player.getName() + " from crafting "
                         + resultType.name());
             }

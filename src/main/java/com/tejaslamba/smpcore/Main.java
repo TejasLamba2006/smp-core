@@ -5,6 +5,7 @@ import com.tejaslamba.smpcore.manager.CommandManager;
 import com.tejaslamba.smpcore.manager.ConfigManager;
 import com.tejaslamba.smpcore.manager.MenuManager;
 import com.tejaslamba.smpcore.manager.MenuConfigManager;
+import com.tejaslamba.smpcore.manager.MessageManager;
 import com.tejaslamba.smpcore.manager.CooldownManager;
 import com.tejaslamba.smpcore.manager.ChatInputManager;
 import com.tejaslamba.smpcore.manager.FeatureManager;
@@ -14,6 +15,7 @@ public class Main extends JavaPlugin {
     private static Main instance;
     private CommandManager commandManager;
     private ConfigManager configManager;
+    private MessageManager messageManager;
     private MenuManager menuManager;
     private MenuConfigManager menuConfigManager;
     private CooldownManager cooldownManager;
@@ -27,6 +29,8 @@ public class Main extends JavaPlugin {
         configManager = new ConfigManager(this);
         configManager.load();
         refreshVerbose();
+        messageManager = new MessageManager(this);
+        messageManager.load();
         menuConfigManager = new MenuConfigManager(this);
         menuConfigManager.load();
         cooldownManager = new CooldownManager();
@@ -97,6 +101,10 @@ public class Main extends JavaPlugin {
 
     public FeatureManager getFeatureManager() {
         return featureManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return messageManager;
     }
 
 }

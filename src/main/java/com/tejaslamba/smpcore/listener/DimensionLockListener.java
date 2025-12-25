@@ -20,8 +20,7 @@ public class DimensionLockListener implements Listener {
     @EventHandler
     public void onPlayerPortal(PlayerPortalEvent event) {
         Player player = event.getPlayer();
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger()
                     .info("[VERBOSE] Dimension Lock - " + player.getName() + " is attempting to enter "
                             + event.getTo().getWorld().getEnvironment().name());
@@ -44,7 +43,7 @@ public class DimensionLockListener implements Listener {
                         .getString("features.dimension-lock-end.locked-message", "§cThe End is currently locked!");
                 player.sendMessage(message);
 
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger()
                             .info("[VERBOSE] Dimension Lock - Blocked " + player.getName() + " from entering The End");
                 }
@@ -60,7 +59,7 @@ public class DimensionLockListener implements Listener {
                                 "§cThe Nether is currently locked!");
                 player.sendMessage(message);
 
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger().info(
                             "[VERBOSE] Dimension Lock - Blocked " + player.getName() + " from entering The Nether");
                 }

@@ -34,8 +34,7 @@ public class ItemExplosionImmunityListener implements Listener {
         if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
             event.setCancelled(true);
 
-            boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 Item item = (Item) event.getEntity();
                 plugin.getLogger().info("[VERBOSE] Item Explosion Immunity - Protected "
                         + item.getItemStack().getType().name() + " x" + item.getItemStack().getAmount()

@@ -1,0 +1,110 @@
+# ============================================
+# SMP Core Messages Configuration
+# ============================================
+# All plugin messages can be customized here.
+# Use & for color codes (e.g., &a = green)
+# Use {placeholder} for dynamic values
+# ============================================
+
+# General messages
+general:
+  prefix: "&8[&6SMP&8]&r"
+  reload: "&aConfiguration reloaded successfully!"
+  no-permission: "&cYou don't have permission to do that!"
+  player-only: "&cThis command can only be used by players!"
+  unknown-command: "&cUnknown subcommand. Usage: /smp [menu|reload|enchant|mace|netherite|infiniterestock]"
+  cancelled: "&cCancelled."
+  invalid-number: "&cPlease enter a valid number!"
+
+# Command messages
+commands:
+  menu:
+    no-permission: "&cYou don't have permission to open the settings menu!"
+  reload:
+    no-permission: "&cYou don't have permission to reload!"
+    success: "&aConfiguration reloaded successfully!"
+  enchant:
+    no-permission: "&cYou don't have permission to use enchant commands!"
+  mace:
+    no-permission: "&cYou don't have permission to use mace commands!"
+  netherite:
+    no-permission: "&cYou don't have permission to use netherite commands!"
+  infinite-restock:
+    no-permission: "&cYou don't have permission to manage Infinite Restock!"
+
+# Feature toggle messages
+feature:
+  toggled: "&7Toggled {feature} to {state}"
+  enabled: "&aEnabled"
+  disabled: "&cDisabled"
+
+# Custom Anvil Caps
+anvil-caps:
+  enchantments-limited: "&cSome enchantments were limited!"
+
+# Enchantment Limiter
+enchantment-limiter:
+  banned: "&c'{enchant}' is banned!"
+  limited: "&cMax level for '{enchant}' is {limit}"
+
+# Mace Limiter
+mace-limiter:
+  craft-limit-reached: "&cThe mace craft limit has been reached!"
+  max-maces-set: "&7Max maces set to &e{count}"
+  craft-count-reset: "&7Mace craft count reset! Recipes re-enabled."
+
+# Dimension Lock
+dimension-lock:
+  end-locked: "&cThe End is currently locked!"
+  nether-locked: "&cThe Nether is currently locked!"
+
+# Netherite Disabler
+netherite-disabler:
+  feature-disabled: "&cNetherite Disabler is disabled! Enable it first."
+
+# Mob Spawning
+mob-spawning:
+  feature-disabled: "&cMob Spawning Manager is disabled! Enable it first."
+  enabled-all: "&7Enabled spawning for all mobs!"
+  disabled-all: "&7Disabled spawning for all mobs!"
+
+# Infinite Restock
+infinite-restock:
+  enabled: "&7Infinite Restock enabled"
+  disabled: "&7Infinite Restock disabled"
+
+# Item Limiter
+item-limiter:
+  limit-exceeded: "&cYou have reached the limit of {limit} for this item"
+  item-banned: "&7Item banned successfully!"
+  item-limit-added: "&7Item limit added successfully!"
+  item-placed-ban: "&7Item placed! Click confirm to ban it."
+  item-placed-limit: "&7Item placed! Now set the limit amount."
+  item-removed: "&7Item removed."
+  limit-removed: "&7Item limit removed!"
+  banned-item-removed: "&7Banned item removed!"
+  banned-item-not-found: "&7Banned item not found!"
+  limit-not-found: "&7Item limit not found!"
+  limit-set: "&7Limit set to: {limit}"
+  limit-updated: "&7Limit updated to {limit}"
+  item-unbanned: "&7Item unbanned with limit: {limit}"
+  item-remains-banned: "&7Item remains banned"
+  please-set-item: "&7Please set an item first!"
+  # Chat input prompts
+  input:
+    unban-title: "&6Unban Item - Set Limit"
+    unban-current: "&7Current: &cBANNED (0)"
+    unban-prompt: "&aEnter a limit to unban (1-64000):"
+    set-limit-title: "&6Set Item Limit"
+    set-limit-prompt: "&aEnter the maximum amount (0-64000):"
+    edit-limit-title: "&6Edit Limit Amount"
+    edit-limit-current: "&7Current: &f{limit}"
+    edit-limit-prompt: "&aEnter the new limit amount (0-64000):"
+    cancel-hint: "&7Type &c'cancel' &7to cancel"
+    invalid-range: "&7Invalid number! Must be between 0 and 64000"
+
+# Enchantment level input (BaseMenu)
+enchant-input:
+  prompt: "&7Enter the max level for {enchant} (1-10, or 'cancel'):"
+  invalid-level: "&cInvalid level! Must be between 1-10."
+  level-set: "&a{enchant} limited to level {level}"

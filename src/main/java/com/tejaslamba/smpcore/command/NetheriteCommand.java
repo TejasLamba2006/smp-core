@@ -86,8 +86,7 @@ public class NetheriteCommand implements CommandExecutor, TabCompleter {
 
         feature.setDisabled(material, shouldDisable);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Netherite Command - " + sender.getName() + " "
                     + (shouldDisable ? "disabled" : "enabled") + " " + material.name());
         }
@@ -108,8 +107,7 @@ public class NetheriteCommand implements CommandExecutor, TabCompleter {
 
         feature.openNetheriteGUI(player);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Netherite Command - Opened GUI for " + player.getName());
         }
     }

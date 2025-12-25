@@ -52,8 +52,7 @@ public class InfiniteRestockListener implements Listener {
         InfiniteRestockManager manager = ((InfiniteRestockFeature) feature).getManager();
         manager.applyOnMerchantOpen(villager);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Infinite Restock - Set infinite trades on merchant open");
         }
     }

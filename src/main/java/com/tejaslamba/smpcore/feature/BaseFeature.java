@@ -26,8 +26,7 @@ public abstract class BaseFeature implements Feature {
 
     @Override
     public void onDisable() {
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Disabling feature: " + getName());
         }
         unregisterListener();
@@ -36,11 +35,10 @@ public abstract class BaseFeature implements Feature {
 
     @Override
     public void reload() {
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         boolean wasEnabled = this.enabled;
         this.enabled = plugin.getConfigManager().get().getBoolean(getConfigPath() + ".enabled", false);
 
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Reloading feature: " + getName());
             plugin.getLogger().info("[VERBOSE]   - Was Enabled: " + wasEnabled);
             plugin.getLogger().info("[VERBOSE]   - Now Enabled: " + enabled);
@@ -52,8 +50,7 @@ public abstract class BaseFeature implements Feature {
             plugin.getServer().getPluginManager().registerEvents(getListener(), plugin);
             listenerRegistered = true;
 
-            boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Registered listener for feature: " + getName());
                 plugin.getLogger().info("[VERBOSE]   - Listener Class: " + getListener().getClass().getSimpleName());
             }
@@ -62,8 +59,7 @@ public abstract class BaseFeature implements Feature {
 
     private void unregisterListener() {
         if (listenerRegistered && getListener() != null) {
-            boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Unregistering listener for feature: " + getName());
             }
 
@@ -93,10 +89,9 @@ public abstract class BaseFeature implements Feature {
     }
 
     protected void toggleDefault(Player player) {
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
         boolean current = plugin.getConfigManager().get().getBoolean(getConfigPath() + ".enabled", false);
 
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Player " + player.getName() + " toggling feature: " + getName());
             plugin.getLogger().info("[VERBOSE]   - Current State: " + (current ? "Enabled" : "Disabled"));
             plugin.getLogger().info("[VERBOSE]   - New State: " + (!current ? "Enabled" : "Disabled"));

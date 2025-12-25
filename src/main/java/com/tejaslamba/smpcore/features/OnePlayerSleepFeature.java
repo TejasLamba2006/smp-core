@@ -21,8 +21,7 @@ public class OnePlayerSleepFeature extends BaseFeature {
         super.onEnable(plugin);
         applySleepPercentage();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] One Player Sleep - Feature loaded");
         }
     }
@@ -40,8 +39,7 @@ public class OnePlayerSleepFeature extends BaseFeature {
             if (world.getEnvironment() == World.Environment.NORMAL) {
                 world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE, percentage);
 
-                boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger().info("[VERBOSE] One Player Sleep - Set playersSleepingPercentage to "
                             + percentage + " in " + world.getName());
                 }

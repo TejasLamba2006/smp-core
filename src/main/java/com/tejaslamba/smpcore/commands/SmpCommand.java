@@ -4,6 +4,7 @@ import com.tejaslamba.smpcore.Main;
 import com.tejaslamba.smpcore.command.EnchantCommand;
 import com.tejaslamba.smpcore.command.MaceCommand;
 import com.tejaslamba.smpcore.command.NetheriteCommand;
+import com.tejaslamba.smpcore.manager.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,15 +28,19 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
         this.infiniteRestockCommand = new com.tejaslamba.smpcore.command.InfiniteRestockCommand(Main.getInstance());
     }
 
+    private MessageManager msg() {
+        return Main.getInstance().getMessageManager();
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player p)) {
-                sender.sendMessage("§c[SMP] Menu can only be opened by a player");
+                msg().sendPrefixed(sender, "general.player-only");
                 return true;
             }
             if (!p.hasPermission("smpcore.menu")) {
-                p.sendMessage("§c[SMP] You don't have permission to open the settings menu!");
+                msg().sendPrefixed(p, "commands.menu.no-permission");
                 return true;
             }
             Main.getInstance().getMenuManager().openMainMenu(p);
@@ -44,7 +49,7 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("enchant")) {
             if (!sender.hasPermission("smpcore.enchant")) {
-                sender.sendMessage("§c[SMP] You don't have permission to use enchant commands!");
+                msg().sendPrefixed(sender, "commands.enchant.no-permission");
                 return true;
             }
             String[] enchantArgs = new String[args.length - 1];
@@ -54,7 +59,7 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("mace")) {
             if (!sender.hasPermission("smpcore.mace")) {
-                sender.sendMessage("§c[SMP] You don't have permission to use mace commands!");
+                msg().sendPrefixed(sender, "commands.mace.no-permission");
                 return true;
             }
             String[] maceArgs = new String[args.length - 1];
@@ -64,7 +69,7 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("netherite")) {
             if (!sender.hasPermission("smpcore.netherite")) {
-                sender.sendMessage("§c[SMP] You don't have permission to use netherite commands!");
+                msg().sendPrefixed(sender, "commands.netherite.no-permission");
                 return true;
             }
             String[] netheriteArgs = new String[args.length - 1];
@@ -74,7 +79,7 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("infiniterestock")) {
             if (!sender.hasPermission("smpcore.infiniterestock")) {
-                sender.sendMessage("§c[SMP] You don't have permission to manage Infinite Restock!");
+                msg().sendPrefixed(sender, "commands.infinite-restock.no-permission");
                 return true;
             }
             String[] irArgs = new String[args.length - 1];
@@ -84,11 +89,11 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("menu")) {
             if (!(sender instanceof Player p)) {
-                sender.sendMessage("§c[SMP] Menu can only be opened by a player");
+                msg().sendPrefixed(sender, "general.player-only");
                 return true;
             }
             if (!p.hasPermission("smpcore.menu")) {
-                p.sendMessage("§c[SMP] You don't have permission to open the settings menu!");
+                msg().sendPrefixed(p, "commands.menu.no-permission");
                 return true;
             }
             Main.getInstance().getMenuManager().openMainMenu(p);
@@ -97,17 +102,17 @@ public class SmpCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("smpcore.reload")) {
-                sender.sendMessage("§c[SMP] You don't have permission to reload");
+                msg().sendPrefixed(sender, "commands.reload.no-permission");
                 return true;
             }
             Main.getInstance().getConfigManager().load();
+            Main.getInstance().getMessageManager().reload();
             Main.getInstance().getMenuConfigManager().load();
-            sender.sendMessage("§a[SMP] Configuration reloaded successfully!");
+            msg().sendPrefixed(sender, "commands.reload.success");
             return true;
         }
 
-        sender.sendMessage(
-                "§c[SMP] Unknown subcommand. Usage: /smp [menu|reload|enchant|mace|netherite|infiniterestock]");
+        msg().sendPrefixed(sender, "general.unknown-command");
         return true;
     }
 

@@ -205,7 +205,7 @@ public class MenuClickListener implements Listener {
                 .getFeature("Netherite Disabler");
         if (feature == null || !feature.isEnabled()) {
             player.closeInventory();
-            player.sendMessage("§cNetherite Disabler is disabled!");
+            plugin.getMessageManager().sendPrefixed(player, "netherite-disabler.feature-disabled");
             return;
         }
 
@@ -242,7 +242,7 @@ public class MenuClickListener implements Listener {
                 .getFeature("Mob Spawning");
         if (feature == null || !feature.isEnabled()) {
             player.closeInventory();
-            player.sendMessage("§cMob Spawning Manager is disabled!");
+            plugin.getMessageManager().sendPrefixed(player, "mob-spawning.feature-disabled");
             return;
         }
 
@@ -294,14 +294,14 @@ public class MenuClickListener implements Listener {
             Material clickedType, int slot, int currentPage) {
         if (slot == 47 && clickedType == Material.LIME_DYE) {
             feature.setAllDisabled(false);
-            player.sendMessage("§a[SMP] §7Enabled spawning for all mobs!");
+            plugin.getMessageManager().sendPrefixed(player, "mob-spawning.enabled-all");
             plugin.getServer().getScheduler().runTask(plugin, () -> feature.openMobGUI(player, currentPage));
             return;
         }
 
         if (slot == 51 && clickedType == Material.RED_DYE) {
             feature.setAllDisabled(true);
-            player.sendMessage("§c[SMP] §7Disabled spawning for all mobs!");
+            plugin.getMessageManager().sendPrefixed(player, "mob-spawning.disabled-all");
             plugin.getServer().getScheduler().runTask(plugin, () -> feature.openMobGUI(player, currentPage));
             return;
         }
@@ -325,7 +325,7 @@ public class MenuClickListener implements Listener {
                 .getFeature("Mob Spawning");
         if (feature == null || !feature.isEnabled()) {
             player.closeInventory();
-            player.sendMessage("§cMob Spawning Manager is disabled!");
+            plugin.getMessageManager().sendPrefixed(player, "mob-spawning.feature-disabled");
             return;
         }
 

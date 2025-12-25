@@ -1,9 +1,7 @@
 package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -87,9 +85,7 @@ public class CustomAnvilCapsListener implements Listener {
         }
 
         if (hadViolations) {
-            String prefix = plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r");
-            event.getEnchanter().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    prefix + " &cSome enchantments were limited!"));
+            plugin.getMessageManager().sendPrefixed(event.getEnchanter(), "anvil-caps.enchantments-limited");
         }
     }
 

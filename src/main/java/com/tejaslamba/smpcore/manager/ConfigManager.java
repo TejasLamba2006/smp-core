@@ -64,7 +64,6 @@ public class ConfigManager {
         defaults.put("plugin.name", "SMP Core");
         defaults.put("plugin.prefix", "§8[§6SMP§8]§r");
         defaults.put("plugin.verbose", false);
-        defaults.put("messages.reload", "§aConfiguration reloaded successfully!");
 
         String[] features = {
 

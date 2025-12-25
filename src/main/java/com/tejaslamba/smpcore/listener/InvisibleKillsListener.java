@@ -38,8 +38,7 @@ public class InvisibleKillsListener implements Listener {
             return;
         }
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Invisible Kills - " + killer.getName()
                     + " killed " + victim.getName() + " while invisible, hiding killer name");
         }

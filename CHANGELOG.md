@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **MessageManager & messages.yml**: Centralized message system for all plugin strings
+  - All user-facing messages now configurable in `messages.yml`
+  - Supports color codes with `&` prefix
+  - Placeholder support with `{placeholder}` format
+  - Messages are cached for performance
+  - Hot-reload support with `/smp reload`
 - **Enchantment Limiter**: Completely rewritten from EnchantLimiter plugin approach
   - Efficient enchantment caching with cross-version name support
   - Handles both item enchantments and enchanted book stored enchants

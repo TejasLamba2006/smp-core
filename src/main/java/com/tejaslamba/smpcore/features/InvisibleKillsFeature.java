@@ -20,8 +20,7 @@ public class InvisibleKillsFeature extends BaseFeature {
         listener = new InvisibleKillsListener(plugin);
         super.onEnable(plugin);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Invisible Kills - Feature loaded");
         }
     }

@@ -30,8 +30,7 @@ public abstract class DimensionLockFeature extends BaseFeature {
         super.onEnable(plugin);
         locked = plugin.getConfigManager().get().getBoolean("features.dimension-lock-" + dimension + ".locked", false);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - Loaded state: locked=" + locked);
         }
     }
@@ -93,8 +92,7 @@ public abstract class DimensionLockFeature extends BaseFeature {
         String dimensionName = dimension.substring(0, 1).toUpperCase() + dimension.substring(1);
         player.sendMessage("§6[SMP] §7The " + dimensionName + " is now " + (locked ? "§cLocked" : "§aOpen"));
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - " + player.getName()
                     + " toggled to: locked=" + locked);
         }
@@ -109,8 +107,7 @@ public abstract class DimensionLockFeature extends BaseFeature {
         plugin.getConfigManager().get().set("features.dimension-lock-" + dimension + ".locked", locked);
         plugin.getConfigManager().save();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - State changed: locked=" + locked);
         }
     }

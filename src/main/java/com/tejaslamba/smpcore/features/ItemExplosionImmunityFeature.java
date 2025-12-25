@@ -20,8 +20,7 @@ public class ItemExplosionImmunityFeature extends BaseFeature {
         listener = new ItemExplosionImmunityListener(plugin);
         super.onEnable(plugin);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Item Explosion Immunity - Feature loaded");
         }
     }

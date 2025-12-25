@@ -1,7 +1,6 @@
 package com.tejaslamba.smpcore.enchantlimiter;
 
 import com.tejaslamba.smpcore.Main;
-import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -212,15 +211,14 @@ public class EnchantmentLimiterManager {
     }
 
     public void sendLimitMessage(HumanEntity human, Enchantment enchant, int maxLevel) {
-        String prefix = plugin.getConfigManager().get().getString("plugin.prefix", "§8[§6SMP§8]§r");
         String enchantName = getEnchantDisplayName(enchant);
 
         if (maxLevel == 0) {
-            human.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    prefix + " &c'" + enchantName + "' is banned!"));
+            plugin.getMessageManager().sendPrefixed(human, "enchantment-limiter.banned",
+                    "{enchant}", enchantName);
         } else {
-            human.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    prefix + " &cMax level for '" + enchantName + "' is " + maxLevel));
+            plugin.getMessageManager().sendPrefixed(human, "enchantment-limiter.limited",
+                    "{enchant}", enchantName, "{limit}", String.valueOf(maxLevel));
         }
     }
 

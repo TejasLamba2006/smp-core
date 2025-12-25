@@ -36,12 +36,11 @@ public class MaceLimiterListener implements Listener {
 
         if (!feature.canCraftMace()) {
             event.setCancelled(true);
-            event.getWhoClicked().sendMessage("§cThe mace craft limit has been reached!");
+            plugin.getMessageManager().sendPrefixed(event.getWhoClicked(), "mace-limiter.craft-limit-reached");
             return;
         }
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger()
                     .info("[VERBOSE] Mace Limiter - Player " + event.getWhoClicked().getName() + " is crafting a mace");
         }
@@ -62,14 +61,14 @@ public class MaceLimiterListener implements Listener {
 
         feature.incrementMacesCrafted();
 
-        broadcastMaceCraft(crafter, feature.getMacesCrafted(), verbose);
+        broadcastMaceCraft(crafter, feature.getMacesCrafted());
 
         if (!feature.canCraftMace()) {
             Bukkit.getScheduler().runTask(plugin, feature::removeAllMaceRecipes);
         }
     }
 
-    private void broadcastMaceCraft(Player crafter, int count, boolean verbose) {
+    private void broadcastMaceCraft(Player crafter, int count) {
         String crafterName = crafter.getName();
 
         boolean titleEnabled = plugin.getConfigManager().get().getBoolean("features.mace-limiter.title.enabled", true);
@@ -95,7 +94,7 @@ public class MaceLimiterListener implements Listener {
                 player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             }
 
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mace Limiter - Sent title announcement for " + crafterName);
             }
         }
@@ -108,7 +107,7 @@ public class MaceLimiterListener implements Listener {
 
             Bukkit.broadcastMessage(chatMessage);
 
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mace Limiter - Sent chat message for " + crafterName);
             }
         }
@@ -125,7 +124,7 @@ public class MaceLimiterListener implements Listener {
                     player.playSound(player.getLocation(), sound, volume, pitch);
                 }
 
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger().info("[VERBOSE] Mace Limiter - Played sound " + soundName + " for all players");
                 }
             } catch (IllegalArgumentException e) {
@@ -153,26 +152,27 @@ public class MaceLimiterListener implements Listener {
         }
 
         int slot = event.getRawSlot();
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
 
         switch (slot) {
             case 10 -> {
                 int change = event.isShiftClick() ? 5 : 1;
                 int newMax = Math.max(1, feature.getMaxMaces() - change);
                 feature.setMaxMaces(newMax);
-                player.sendMessage("§6[SMP] §7Max maces set to §e" + newMax);
+                plugin.getMessageManager().sendPrefixed(player, "mace-limiter.max-maces-set",
+                        "{count}", String.valueOf(newMax));
                 feature.openMaceGUI(player);
             }
             case 16 -> {
                 int change = event.isShiftClick() ? 5 : 1;
                 int newMax = feature.getMaxMaces() + change;
                 feature.setMaxMaces(newMax);
-                player.sendMessage("§6[SMP] §7Max maces set to §e" + newMax);
+                plugin.getMessageManager().sendPrefixed(player, "mace-limiter.max-maces-set",
+                        "{count}", String.valueOf(newMax));
                 feature.openMaceGUI(player);
             }
             case 22 -> {
                 feature.resetCraftCount();
-                player.sendMessage("§6[SMP] §7Mace craft count reset! Recipes re-enabled.");
+                plugin.getMessageManager().sendPrefixed(player, "mace-limiter.craft-count-reset");
                 feature.openMaceGUI(player);
             }
             case 18 -> {
@@ -183,7 +183,7 @@ public class MaceLimiterListener implements Listener {
             }
         }
 
-        if (verbose && (slot == 10 || slot == 16 || slot == 22)) {
+        if (plugin.isVerbose() && (slot == 10 || slot == 16 || slot == 22)) {
             plugin.getLogger().info("[VERBOSE] Mace Limiter GUI - " + player.getName() + " clicked slot " + slot);
         }
     }

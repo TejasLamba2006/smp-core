@@ -35,8 +35,7 @@ public class MobSpawningListener implements Listener {
 
             event.setCancelled(true);
 
-            boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-            if (verbose) {
+            if (plugin.isVerbose()) {
                 plugin.getLogger().info("[VERBOSE] Mob Spawning - Blocked spawn of " + entityType.name()
                         + " (reason: " + reason.name() + ")");
             }

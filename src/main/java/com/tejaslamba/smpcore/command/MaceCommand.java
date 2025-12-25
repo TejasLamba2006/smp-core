@@ -105,8 +105,7 @@ public class MaceCommand implements CommandExecutor, TabCompleter {
 
         feature.resetCraftCount();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Mace Command - " + sender.getName() + " reset the mace limiter");
         }
 

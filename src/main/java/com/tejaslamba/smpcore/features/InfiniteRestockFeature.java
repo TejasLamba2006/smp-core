@@ -29,8 +29,7 @@ public class InfiniteRestockFeature extends BaseFeature {
         manager = new InfiniteRestockManager(plugin);
         super.onEnable(plugin);
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Infinite Restock - Feature loaded");
         }
     }

@@ -46,8 +46,7 @@ public class NetheriteDisablerFeature extends BaseFeature {
         super.onEnable(plugin);
         loadDisabledItems();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             long disabledCount = disabledItems.values().stream().filter(b -> b).count();
             plugin.getLogger().info("[VERBOSE] Netherite Disabler - Loaded " + disabledCount + "/9 items as disabled");
         }
@@ -220,8 +219,7 @@ public class NetheriteDisablerFeature extends BaseFeature {
         plugin.getConfigManager().get().set("features.netherite-disabler.disabled-items." + itemName, disabled);
         plugin.getConfigManager().save();
 
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
-        if (verbose) {
+        if (plugin.isVerbose()) {
             plugin.getLogger()
                     .info("[VERBOSE] Netherite Disabler - " + material.name() + " state changed: disabled=" + disabled);
         }

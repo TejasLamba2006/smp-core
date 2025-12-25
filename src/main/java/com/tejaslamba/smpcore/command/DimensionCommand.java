@@ -51,13 +51,12 @@ public class DimensionCommand implements CommandExecutor, TabCompleter {
         }
 
         String action = args[0].toLowerCase();
-        boolean verbose = plugin.getConfigManager().get().getBoolean("plugin.verbose", false);
 
         switch (action) {
             case "open":
                 feature.setLocked(false);
                 sender.sendMessage(prefix + " §aThe " + dimensionName + " has been opened!");
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger()
                             .info("[VERBOSE] Dimension Command - " + sender.getName() + " opened " + dimensionName);
                 }
@@ -65,7 +64,7 @@ public class DimensionCommand implements CommandExecutor, TabCompleter {
             case "close":
                 feature.setLocked(true);
                 sender.sendMessage(prefix + " §aThe " + dimensionName + " has been closed!");
-                if (verbose) {
+                if (plugin.isVerbose()) {
                     plugin.getLogger()
                             .info("[VERBOSE] Dimension Command - " + sender.getName() + " closed " + dimensionName);
                 }
