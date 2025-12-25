@@ -33,7 +33,7 @@ public class MobSpawningFeature extends BaseFeature {
     private final Map<UUID, String> playerSelectedWorld = new HashMap<>();
     private final List<EntityType> spawnableEntities = new ArrayList<>();
     private final List<CreatureSpawnEvent.SpawnReason> allSpawnReasons = new ArrayList<>();
-    
+
     private boolean chunkCleanupEnabled = false;
     private boolean worldGuardBypass = true;
     private MobSpawningListener listener;
@@ -59,7 +59,7 @@ public class MobSpawningFeature extends BaseFeature {
 
     private void loadSpawnableEntities() {
         spawnableEntities.clear();
-        
+
         for (Material material : Material.values()) {
             if (material.name().endsWith("_SPAWN_EGG")) {
                 EntityType entityType = getEntityTypeFromSpawnEgg(material);
@@ -68,12 +68,12 @@ public class MobSpawningFeature extends BaseFeature {
                 }
             }
         }
-        
+
         addNonSpawnEggEntity(EntityType.IRON_GOLEM);
         addNonSpawnEggEntity(EntityType.SNOW_GOLEM);
         addNonSpawnEggEntity(EntityType.WITHER);
         addNonSpawnEggEntity(EntityType.ENDER_DRAGON);
-        
+
         spawnableEntities.sort(Comparator.comparing(Enum::name));
     }
 
@@ -111,12 +111,12 @@ public class MobSpawningFeature extends BaseFeature {
     public void onEnable(Main plugin) {
         listener = new MobSpawningListener(plugin, this);
         super.onEnable(plugin);
-        
+
         chunkCleanupEnabled = plugin.getConfigManager().get()
                 .getBoolean("features.mob-spawning.chunk-cleanup-enabled", false);
         worldGuardBypass = plugin.getConfigManager().get()
                 .getBoolean("features.mob-spawning.worldguard-bypass", true);
-        
+
         initializeWorldData();
         loadAllWorldDisabledMobs();
         loadAllowedSpawnReasons();
@@ -125,11 +125,13 @@ public class MobSpawningFeature extends BaseFeature {
             int totalDisabled = worldDisabledMobs.values().stream()
                     .mapToInt(map -> (int) map.values().stream().filter(b -> b).count())
                     .sum();
-            plugin.getLogger().info(VERBOSE_PREFIX + "Loaded " + totalDisabled + " disabled mobs across " 
+            plugin.getLogger().info(VERBOSE_PREFIX + "Loaded " + totalDisabled + " disabled mobs across "
                     + worldDisabledMobs.size() + " worlds");
             plugin.getLogger().info(VERBOSE_PREFIX + "Loaded " + allowedSpawnReasons.size() + " allowed spawn reasons");
-            plugin.getLogger().info(VERBOSE_PREFIX + "Chunk cleanup: " + (chunkCleanupEnabled ? "enabled" : "disabled"));
-            plugin.getLogger().info(VERBOSE_PREFIX + "WorldGuard bypass: " + (worldGuardBypass ? "enabled" : "disabled"));
+            plugin.getLogger()
+                    .info(VERBOSE_PREFIX + "Chunk cleanup: " + (chunkCleanupEnabled ? "enabled" : "disabled"));
+            plugin.getLogger()
+                    .info(VERBOSE_PREFIX + "WorldGuard bypass: " + (worldGuardBypass ? "enabled" : "disabled"));
         }
     }
 
@@ -202,8 +204,9 @@ public class MobSpawningFeature extends BaseFeature {
 
         int slot = 0;
         for (World world : worlds) {
-            if (slot >= size - 9) break;
-            
+            if (slot >= size - 9)
+                break;
+
             Material material = switch (world.getEnvironment()) {
                 case NORMAL -> Material.GRASS_BLOCK;
                 case NETHER -> Material.NETHERRACK;
@@ -219,8 +222,7 @@ public class MobSpawningFeature extends BaseFeature {
                 lore.add("");
                 lore.add("§7Environment: §e" + world.getEnvironment().name());
                 Map<EntityType, Boolean> worldMobs = worldDisabledMobs.get(world.getName());
-                long disabledCount = worldMobs != null ? 
-                        worldMobs.values().stream().filter(b -> b).count() : 0;
+                long disabledCount = worldMobs != null ? worldMobs.values().stream().filter(b -> b).count() : 0;
                 lore.add("§7Disabled Mobs: §e" + disabledCount);
                 lore.add("");
                 lore.add("§eClick to manage!");
@@ -278,7 +280,7 @@ public class MobSpawningFeature extends BaseFeature {
         playerSelectedWorld.put(player.getUniqueId(), worldName);
 
         String titleWorld = worldName == null ? "All Worlds" : worldName;
-        Inventory gui = Bukkit.createInventory(null, 54, 
+        Inventory gui = Bukkit.createInventory(null, 54,
                 GUI_TITLE + " §7[" + titleWorld + "] (" + (page + 1) + "/" + totalPages + ")");
 
         populateMobItems(gui, page, worldName);
@@ -326,12 +328,12 @@ public class MobSpawningFeature extends BaseFeature {
         } else {
             lore.add("§aSpawning: §2Enabled");
         }
-        
+
         if (!hasSpawnEgg(entityType)) {
             lore.add("");
             lore.add("§7§o(No spawn egg - special mob)");
         }
-        
+
         lore.add("");
         lore.add("§eClick to toggle!");
         return lore;
@@ -411,17 +413,17 @@ public class MobSpawningFeature extends BaseFeature {
 
     private void loadAllWorldDisabledMobs() {
         worldDisabledMobs.clear();
-        
+
         for (World world : Bukkit.getWorlds()) {
             Map<EntityType, Boolean> worldMobs = new EnumMap<>(EntityType.class);
             String worldConfigPath = CONFIG_PATH_PREFIX + world.getName() + ".disabled-mobs.";
-            
+
             for (EntityType entityType : spawnableEntities) {
                 String configKey = worldConfigPath + entityType.name().toLowerCase();
                 boolean isDisabled = plugin.getConfigManager().get().getBoolean(configKey, false);
                 worldMobs.put(entityType, isDisabled);
             }
-            
+
             worldDisabledMobs.put(world.getName(), worldMobs);
         }
     }
@@ -429,7 +431,7 @@ public class MobSpawningFeature extends BaseFeature {
     private void saveAllWorldDisabledMobs() {
         for (Map.Entry<String, Map<EntityType, Boolean>> worldEntry : worldDisabledMobs.entrySet()) {
             String worldConfigPath = CONFIG_PATH_PREFIX + worldEntry.getKey() + ".disabled-mobs.";
-            
+
             for (Map.Entry<EntityType, Boolean> mobEntry : worldEntry.getValue().entrySet()) {
                 String configKey = worldConfigPath + mobEntry.getKey().name().toLowerCase();
                 plugin.getConfigManager().get().set(configKey, mobEntry.getValue());
@@ -460,19 +462,19 @@ public class MobSpawningFeature extends BaseFeature {
         } else {
             setDisabledForWorld(entityType, disabled, worldName);
         }
-        
+
         if (plugin.isVerbose()) {
             String worldDisplay = worldName == null ? "all worlds" : worldName;
-            plugin.getLogger().info(VERBOSE_PREFIX + entityType.name() + " state changed: disabled=" 
+            plugin.getLogger().info(VERBOSE_PREFIX + entityType.name() + " state changed: disabled="
                     + disabled + " in " + worldDisplay);
         }
     }
 
     private void setDisabledForWorld(EntityType entityType, boolean disabled, String worldName) {
-        Map<EntityType, Boolean> worldMobs = worldDisabledMobs.computeIfAbsent(worldName, 
+        Map<EntityType, Boolean> worldMobs = worldDisabledMobs.computeIfAbsent(worldName,
                 k -> new EnumMap<>(EntityType.class));
         worldMobs.put(entityType, disabled);
-        
+
         String configKey = CONFIG_PATH_PREFIX + worldName + ".disabled-mobs." + entityType.name().toLowerCase();
         plugin.getConfigManager().get().set(configKey, disabled);
         plugin.getConfigManager().save();
@@ -486,7 +488,7 @@ public class MobSpawningFeature extends BaseFeature {
         } else {
             setAllDisabledForWorld(disabled, worldName);
         }
-        
+
         if (plugin.isVerbose()) {
             String worldDisplay = worldName == null ? "all worlds" : worldName;
             plugin.getLogger().info(VERBOSE_PREFIX + "All mobs set to disabled=" + disabled + " in " + worldDisplay);
@@ -494,10 +496,10 @@ public class MobSpawningFeature extends BaseFeature {
     }
 
     private void setAllDisabledForWorld(boolean disabled, String worldName) {
-        Map<EntityType, Boolean> worldMobs = worldDisabledMobs.computeIfAbsent(worldName, 
+        Map<EntityType, Boolean> worldMobs = worldDisabledMobs.computeIfAbsent(worldName,
                 k -> new EnumMap<>(EntityType.class));
         String worldConfigPath = CONFIG_PATH_PREFIX + worldName + ".disabled-mobs.";
-        
+
         for (EntityType entityType : spawnableEntities) {
             worldMobs.put(entityType, disabled);
             String configKey = worldConfigPath + entityType.name().toLowerCase();
@@ -577,7 +579,7 @@ public class MobSpawningFeature extends BaseFeature {
         saveAllowedSpawnReasons();
 
         if (plugin.isVerbose()) {
-            plugin.getLogger().info(VERBOSE_PREFIX + "Spawn reason " + reason.name() 
+            plugin.getLogger().info(VERBOSE_PREFIX + "Spawn reason " + reason.name()
                     + " state changed: allowed=" + allowed);
         }
     }
@@ -708,7 +710,7 @@ public class MobSpawningFeature extends BaseFeature {
         this.chunkCleanupEnabled = enabled;
         plugin.getConfigManager().get().set("features.mob-spawning.chunk-cleanup-enabled", enabled);
         plugin.getConfigManager().save();
-        
+
         if (plugin.isVerbose()) {
             plugin.getLogger().info(VERBOSE_PREFIX + "Chunk cleanup " + (enabled ? "enabled" : "disabled"));
         }
@@ -722,7 +724,7 @@ public class MobSpawningFeature extends BaseFeature {
         this.worldGuardBypass = enabled;
         plugin.getConfigManager().get().set("features.mob-spawning.worldguard-bypass", enabled);
         plugin.getConfigManager().save();
-        
+
         if (plugin.isVerbose()) {
             plugin.getLogger().info(VERBOSE_PREFIX + "WorldGuard bypass " + (enabled ? "enabled" : "disabled"));
         }
@@ -731,8 +733,8 @@ public class MobSpawningFeature extends BaseFeature {
     public void openGlobalSettingsGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 27, SETTINGS_GUI_TITLE);
 
-        ItemStack chunkCleanup = new ItemStack(chunkCleanupEnabled ? 
-                Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE);
+        ItemStack chunkCleanup = new ItemStack(
+                chunkCleanupEnabled ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE);
         ItemMeta chunkMeta = chunkCleanup.getItemMeta();
         if (chunkMeta != null) {
             chunkMeta.setDisplayName("§6Chunk Cleanup");
@@ -752,8 +754,8 @@ public class MobSpawningFeature extends BaseFeature {
         }
         gui.setItem(11, chunkCleanup);
 
-        ItemStack worldGuardItem = new ItemStack(worldGuardBypass ? 
-                Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE);
+        ItemStack worldGuardItem = new ItemStack(
+                worldGuardBypass ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE);
         ItemMeta wgMeta = worldGuardItem.getItemMeta();
         if (wgMeta != null) {
             wgMeta.setDisplayName("§6WorldGuard Bypass");

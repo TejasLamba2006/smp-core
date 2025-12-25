@@ -286,13 +286,13 @@ public class MenuClickListener implements Listener {
         }
 
         if (slot == 45 && clickedType == Material.ARROW) {
-            plugin.getServer().getScheduler().runTask(plugin, 
+            plugin.getServer().getScheduler().runTask(plugin,
                     () -> feature.openMobGUI(player, currentPage - 1, selectedWorld));
             return true;
         }
 
         if (slot == 53 && clickedType == Material.ARROW) {
-            plugin.getServer().getScheduler().runTask(plugin, 
+            plugin.getServer().getScheduler().runTask(plugin,
                     () -> feature.openMobGUI(player, currentPage + 1, selectedWorld));
             return true;
         }
@@ -308,11 +308,11 @@ public class MenuClickListener implements Listener {
     private void handleMobSpawningToggle(Player player, MobSpawningFeature feature,
             Material clickedType, int slot, int currentPage) {
         String selectedWorld = feature.getPlayerSelectedWorld(player);
-        
+
         if (slot == 47 && clickedType == Material.LIME_DYE) {
             feature.setAllDisabled(false, selectedWorld);
             plugin.getMessageManager().sendPrefixed(player, "mob-spawning.enabled-all");
-            plugin.getServer().getScheduler().runTask(plugin, 
+            plugin.getServer().getScheduler().runTask(plugin,
                     () -> feature.openMobGUI(player, currentPage, selectedWorld));
             return;
         }
@@ -320,7 +320,7 @@ public class MenuClickListener implements Listener {
         if (slot == 51 && clickedType == Material.RED_DYE) {
             feature.setAllDisabled(true, selectedWorld);
             plugin.getMessageManager().sendPrefixed(player, "mob-spawning.disabled-all");
-            plugin.getServer().getScheduler().runTask(plugin, 
+            plugin.getServer().getScheduler().runTask(plugin,
                     () -> feature.openMobGUI(player, currentPage, selectedWorld));
             return;
         }
@@ -330,7 +330,7 @@ public class MenuClickListener implements Listener {
             if (entityType != null) {
                 boolean newState = !feature.isDisabled(entityType, selectedWorld);
                 feature.setDisabled(entityType, newState, selectedWorld);
-                plugin.getServer().getScheduler().runTask(plugin, 
+                plugin.getServer().getScheduler().runTask(plugin,
                         () -> feature.openMobGUI(player, currentPage, selectedWorld));
             }
         }
@@ -368,15 +368,15 @@ public class MenuClickListener implements Listener {
             return;
         }
 
-        if (clickedType == Material.GRASS_BLOCK || clickedType == Material.NETHERRACK 
+        if (clickedType == Material.GRASS_BLOCK || clickedType == Material.NETHERRACK
                 || clickedType == Material.END_STONE || clickedType == Material.STONE) {
-            String worldName = event.getCurrentItem().getItemMeta() != null 
-                    ? event.getCurrentItem().getItemMeta().getDisplayName().substring(2) 
+            String worldName = event.getCurrentItem().getItemMeta() != null
+                    ? event.getCurrentItem().getItemMeta().getDisplayName().substring(2)
                     : null;
             if (worldName != null) {
                 World world = Bukkit.getWorld(worldName);
                 if (world != null) {
-                    plugin.getServer().getScheduler().runTask(plugin, 
+                    plugin.getServer().getScheduler().runTask(plugin,
                             () -> feature.openMobGUI(player, 0, worldName));
                 }
             }
@@ -451,7 +451,7 @@ public class MenuClickListener implements Listener {
 
         if (clickedType == Material.OAK_DOOR) {
             String selectedWorld = feature.getPlayerSelectedWorld(player);
-            plugin.getServer().getScheduler().runTask(plugin, 
+            plugin.getServer().getScheduler().runTask(plugin,
                     () -> feature.openMobGUI(player, 0, selectedWorld));
             return;
         }

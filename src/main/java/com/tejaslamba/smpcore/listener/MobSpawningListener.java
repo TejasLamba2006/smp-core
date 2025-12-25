@@ -16,7 +16,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 public class MobSpawningListener implements Listener {
 
     private static final String VERBOSE_PREFIX = "[VERBOSE] Mob Spawning - ";
-    
+
     private final Main plugin;
     private final MobSpawningFeature feature;
     private final WorldGuardHook worldGuardHook;
@@ -69,7 +69,7 @@ public class MobSpawningListener implements Listener {
         }
 
         World world = event.getWorld();
-        
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             int removedCount = 0;
             for (Entity entity : event.getChunk().getEntities()) {
@@ -78,10 +78,10 @@ public class MobSpawningListener implements Listener {
                     removedCount++;
                 }
             }
-            
+
             if (removedCount > 0 && plugin.isVerbose()) {
-                plugin.getLogger().info(VERBOSE_PREFIX + "Chunk cleanup removed " + removedCount 
-                        + " disabled mobs from chunk at " + event.getChunk().getX() + ", " 
+                plugin.getLogger().info(VERBOSE_PREFIX + "Chunk cleanup removed " + removedCount
+                        + " disabled mobs from chunk at " + event.getChunk().getX() + ", "
                         + event.getChunk().getZ() + " in world " + world.getName());
             }
         }, 1L);
@@ -89,7 +89,7 @@ public class MobSpawningListener implements Listener {
 
     private boolean shouldRemoveEntity(Entity entity, World world) {
         EntityType entityType = entity.getType();
-        
+
         if (!feature.isDisabledInWorld(entityType, world)) {
             return false;
         }
@@ -102,7 +102,7 @@ public class MobSpawningListener implements Listener {
     }
 
     private static class WorldGuardHook {
-        
+
         private final Main plugin;
         private final boolean worldGuardAvailable;
         private Object worldGuard;
@@ -110,7 +110,7 @@ public class MobSpawningListener implements Listener {
         public WorldGuardHook(Main plugin) {
             this.plugin = plugin;
             this.worldGuardAvailable = Bukkit.getPluginManager().getPlugin("WorldGuard") != null;
-            
+
             if (worldGuardAvailable) {
                 try {
                     Class<?> worldGuardClass = Class.forName("com.sk89q.worldguard.WorldGuard");
