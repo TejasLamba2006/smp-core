@@ -32,6 +32,7 @@ public class ItemLimiterFeature extends BaseFeature {
     private ItemLimiterManager manager;
     private final Map<UUID, GuiSession> sessions = new HashMap<>();
     private final Map<UUID, String> editingSessions = new HashMap<>();
+    private final Map<UUID, Boolean> keepSession = new HashMap<>();
 
     @Override
     public void onEnable(Main plugin) {
@@ -61,6 +62,7 @@ public class ItemLimiterFeature extends BaseFeature {
         }
         sessions.clear();
         editingSessions.clear();
+        keepSession.clear();
 
         if (manager != null) {
             manager.shutdown();
@@ -412,6 +414,7 @@ public class ItemLimiterFeature extends BaseFeature {
         switch (slot) {
             case 10 -> {
                 if (!session.banMode) {
+                    keepSession.put(player.getUniqueId(), true);
                     player.closeInventory();
                     openChatInput(player, session);
                 }
@@ -421,6 +424,7 @@ public class ItemLimiterFeature extends BaseFeature {
                 if (session.banMode) {
                     session.limit = 0;
                 }
+                keepSession.put(player.getUniqueId(), true);
                 openAddItemGui(player);
             }
             case 16 -> {
@@ -455,6 +459,7 @@ public class ItemLimiterFeature extends BaseFeature {
             event.setCancelled(true);
             session.item = cursor.clone();
             event.setCursor(null);
+            keepSession.put(player.getUniqueId(), true);
             openAddItemGui(player);
             if (session.banMode) {
                 player.sendMessage("§a[SMP Core] §7Item placed! Click confirm to ban it.");
@@ -468,6 +473,7 @@ public class ItemLimiterFeature extends BaseFeature {
                 event.setCancelled(true);
                 event.setCursor(session.item != null ? session.item.clone() : currentItem.clone());
                 session.item = null;
+                keepSession.put(player.getUniqueId(), true);
                 openAddItemGui(player);
                 player.sendMessage("§e[SMP Core] §7Item removed.");
                 player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 0.5F, 1.0F);
@@ -685,7 +691,9 @@ public class ItemLimiterFeature extends BaseFeature {
 
     public void handleInventoryClose(Player player, String title) {
         if (title.equals(ADD_GUI_TITLE)) {
-            sessions.remove(player.getUniqueId());
+            if (keepSession.remove(player.getUniqueId()) == null) {
+                sessions.remove(player.getUniqueId());
+            }
         }
         editingSessions.remove(player.getUniqueId());
     }
