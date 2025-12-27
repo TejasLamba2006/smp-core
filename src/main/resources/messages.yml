@@ -112,3 +112,14 @@ enchant-input:
   prompt: "&7Enter the max level for {enchant} (1-10, or 'cancel'):"
   invalid-level: "&cInvalid level! Must be between 1-10."
   level-set: "&a{enchant} limited to level {level}"
+
+# Minimap Control
+minimap-control:
+  feature-disabled: "&cMinimap Control is disabled! Enable it first."
+  mode-changed: "&7Global mode changed to: &e{mode}"
+  nether-fair-toggled: "&7Nether fair mode: {state}"
+  send-on-join-toggled: "&7Send on join: {state}"
+  send-on-world-change-toggled: "&7Send on world change: {state}"
+  applied-to-all: "&aApplied minimap settings to all online players!"
+  world-mode-changed: "&7World &e{world} &7mode changed to: &e{mode}"
+  world-mode-reset: "&7World &e{world} &7now uses global mode."

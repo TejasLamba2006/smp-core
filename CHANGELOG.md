@@ -5,6 +5,18 @@ All notable changes to SMP Core will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Minimap Control**: Control Xaero's Minimap/Worldmap features
+  - DISABLED mode: Completely disables minimap
+  - FAIR mode: Disables cave map and radar for competitive play
+  - FULL mode: Allows all minimap features
+  - Per-world mode configuration
+  - Send settings on player join and world change
+  - Full GUI configuration
+
 ## [1.1.0] - 2024-12-27
 
 ### Added

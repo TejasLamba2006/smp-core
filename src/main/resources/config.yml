@@ -217,6 +217,8 @@ features:
     #     customModelData: number (optional)
     #     displayName: "§cCustom Name" (optional)
     #     potionType: POTION_TYPE (optional, for potions only)
+    # Note: Item bans can be done via Item Limiter
+    # by setting an item's limit to 0
     limits:
       GOLDEN_APPLE:
         material: GOLDEN_APPLE
@@ -284,7 +286,35 @@ features:
     # When enabled, mobs in WorldGuard protected regions can spawn even if disabled.
     # Requires WorldGuard plugin to be installed.
     worldguard-bypass: true
-# ============================================
-# Note: Item bans can be done via Item Limiter
-# by setting an item's limit to 0
+
+  # ------------------------------------------
+  # Minimap Control
+  # ------------------------------------------
+  # Controls Xaero's Minimap/Worldmap features using
+  # special tellraw codes that the mod recognizes.
+  # Works with Xaero's Minimap only (not JourneyMap/VoxelMap).
+  #
+  # NOTE: Xaero's uses predefined codes for each mode.
+  # You cannot mix-and-match settings (e.g., radar on but cave map off).
+  # Use the mode that best fits your server's needs.
+  minimap-control:
+    enabled: false
+    # Global mode for all worlds (unless overridden per-world)
+    # DISABLED - Completely disable minimap
+    # FAIR - Disable cave map and radar (competitive/fair play)
+    # FULL - Allow all minimap features
+    global-mode: FAIR
+    # When in FAIR mode and player is in Nether, send extra
+    # Nether-specific restrictions
+    nether-fair-mode: true
+    # Send settings when player joins (2 second delay for mod to load)
+    send-on-join: true
+    # Send settings when player changes world
+    send-on-world-change: true
+    # Per-world mode overrides (optional)
+    # worlds:
+    #   world: FAIR
+    #   world_nether: DISABLED
+    #   world_the_end: FULL
+    worlds: {}
 # ============================================

@@ -115,12 +115,17 @@
 - [ ] Spectator Mode on Death
 - [ ] Death event handling
 
-### Anti-Cheat & Protection (ProtocolLib Required)
+### Anti-Cheat & Protection
 
-- [ ] Anti-Health Indicators
-- [ ] Built-in Health Indicators
-- [ ] Anti-Seed Cracking
-- [ ] Anti-Xaero Minimap
+- [x] Minimap Control (Xaero's)
+  - [x] Disable minimap entirely
+  - [x] Fair mode (no cave map, no radar)
+  - [x] Per-world settings
+  - [x] Send on join/world change
+  - [x] GUI configuration
+- [ ] Anti-Health Indicators (ProtocolLib Required)
+- [ ] Built-in Health Indicators (ProtocolLib Required)
+- [ ] Anti-Seed Cracking (ProtocolLib Required)
 
 ---
 
@@ -140,6 +145,7 @@
 | Item Limiter | Done | features.item-limiter |
 | One Player Sleep | Done | features.one-player-sleep |
 | Mob Manager | Done | features.mob-manager |
+| Minimap Control | Done | features.minimap-control |
 | Item Bans | Done | bans.items |
 | Effect Bans | Done | bans.effects |
 
