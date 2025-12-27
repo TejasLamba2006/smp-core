@@ -1,102 +1,138 @@
-**SMP Core**
+# SMP Core
+
 <center>
-A comprehensive <b>all-in-one SMP plugin</b> for PvP balance, custom mechanics, and server management.
+All-in-one plugin for SMP servers. PvP balance, item limits, mob control, and more.
   
 ![features](https://cdn.modrinth.com/data/cached_images/97e9b2b36d52ea26bad209b15d71b9c289e8e320.jpeg)
 </center>
 
 ---
 
-**What is SMP Core?**
+## What is this?
 
-SMP Core is designed to give server owners full control over their SMP experience. Whether you want to balance PvP, limit overpowered items, or add quality-of-life features - this plugin has you covered.
+Instead of running 10 different plugins, SMP Core handles most of what you need for an SMP:
 
-**All features are disabled by default** - enable only what you need!
+- PvP balancing (gap limits, mace limits, enchant caps)
+- Gear control (disable netherite, limit enchantments)
+- Dimension locks (keep Nether/End closed until you're ready)
+- Mob control (disable phantoms, creepers, whatever you want per world)
+- QoL stuff (infinite villager trades, one player sleep)
 
----
-
-**Combat & PvP Balance**
-
-| Feature | Description |
-|---------|-------------|
-| **Item Limiter** | Limit items like golden apples, totems, pearls per player |
-| **Mace Limiter** | Server-wide crafting limit with announcements |
-| **Netherite Disabler** | Block netherite gear usage |
+Everything is off by default. Turn on what you need, ignore the rest.
 
 ---
 
-**Enchantment Control**
+## Features
 
-| Feature | Description |
-|---------|-------------|
-| **Custom Anvil Caps** | Prevent enchants from exceeding set levels |
-| **Enchantment Replacement** | Auto-reduce overpowered enchants on existing items |
-| **Item Whitelist** | Exempt specific items from scans |
-| **Full Command Suite** | `/smp enchant limit/block/list/scan/whitelist` |
+### Combat & PvP
 
----
+**Item Limiter** (1.1.0)
 
-**Item & Material Bans**
+Limit how many of any item players can carry. Set it up through a GUI - drag an item in, type the max count. Works with gaps, totems, pearls, potions, whatever. Set to 0 to ban an item entirely. Extra items drop on the ground.
 
-- Ban **Maces, Anchors, Crystals, Pearls, Netherite**
-- Ban specific **Potion Effects**
-- Automatic enforcement on interact, pickup, damage, and inventory actions
+**Mace Limiter**
 
----
+Set a server-wide cap on how many maces can exist. When someone crafts one, it announces to everyone. Once the limit is hit, the recipe stops working.
 
-**Dimension Control**
+**Netherite Disabler**
 
-- **Nether Lock** - Toggle Nether access
-- **End Lock** - Toggle End access
-- Customizable lock messages
+If you want diamond meta back. Toggle armor and tools separately through the GUI.
 
 ---
 
-**Custom Mechanics**
+### Enchantments
 
-| Feature | Description |
-|---------|-------------|
-| **Invisible Kills** | Hide killer name when invisible |
-| **Item Explosion Immunity** | Protect dropped items from TNT/creepers |
-| **Infinite Restock** | Villagers never run out of trades |
-| **One Player Sleep** | Single player can skip night |
+**Custom Anvil Caps**
 
----
+Set max levels for enchantments. Sharpness 3 max, Protection 3 max, whatever you want. Blocks anvil combining and enchanting tables. You can also force one protection type per armor piece.
 
-**Easy Configuration**
+**Enchantment Limiter** (1.1.0)
 
-- **GUI Menu** - `/smp` opens an interactive settings menu
-- **Left-click** to toggle features on/off
-- **Right-click** for feature-specific settings
-- **Pagination** for easy navigation
-- **Hot reload** with `/smp reload`
+Scans items when players pick them up or open inventories. Automatically reduces enchantments that are above your limits. Useful for cleaning up items from exploits.
 
 ---
 
-**Commands**
+### Mob Manager (1.1.0)
 
-```
-/smp                    - Open settings menu
-/smp reload             - Reload configuration
-/smp enchant <args>     - Enchantment management
-/smp mace <args>        - Mace limiter settings
-/smp netherite <args>   - Netherite settings
-```
+Control which mobs can spawn, per world.
+
+- Toggle any mob type on/off
+- Spawn eggs still work for admins
+- WorldGuard regions can bypass the rules
+- Option to clean up disabled mobs from loaded chunks
 
 ---
 
-**Quick Start**
+### Dimension Locks
 
-1. Drop the jar in your `plugins` folder
+Lock the Nether or End until you decide to open them. Custom messages when players try to enter. Admins can bypass for setup.
+
+---
+
+### Infinite Restock (1.1.0)
+
+Villagers never run out of trades and prices don't increase. Works with wandering traders too. Has an uninstall mode if you want to revert.
+
+---
+
+### Other Stuff
+
+**One Player Sleep** - One person sleeping skips the night.
+
+**Item Explosion Immunity** - Dropped items survive creeper/TNT explosions.
+
+**Invisible Kills** - Your name is hidden in death messages when you kill someone while invisible.
+
+---
+
+## Setup
+
+1. Drop in `plugins` folder
 2. Restart server
-3. Run `/smp` to configure via GUI
-4. Or edit `config.yml` and `/smp reload`
+3. Run `/smp` to open settings
+4. Click to toggle features, right-click for settings
+
+Config files exist if you prefer editing those directly.
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `/smp` | Main settings menu |
+| `/smp reload` | Reload configs |
+| `/smp infiniterestock` | Villager trade settings |
+
+### Permissions
+
+| Permission | Description |
+|------------|-------------|
+| `smpcore.menu` | Access settings menu |
+| `smpcore.reload` | Reload configs |
+| `smpcore.bypass.*` | Bypass all restrictions |
 
 ---
 
-**Why SMP Core?**
+## 1.1.0 Changes
 
-- **All-in-one** - No need for multiple plugins  
-- **Lightweight** - No unnecessary dependencies  
-- **Configurable** - Every feature is toggleable  
-- **Performance** - Optimized with caching and cooldowns  
+- New GUI system for all settings
+- Item Limiter rewrite with drag-and-drop interface
+- Mob Manager with per-world control and WorldGuard support
+- Infinite Restock with uninstall option
+- Mace Limiter GUI
+- Performance improvements
+- All messages customizable in messages.yml
+
+---
+
+## Requirements
+
+- Minecraft 1.21.1+
+- Paper or Spigot
+- Java 21+
+- WorldGuard (optional, for Mob Manager region bypass)
+
+---
+
+## Support
+
+Bug reports and feature requests welcome. Links in the sidebar.
