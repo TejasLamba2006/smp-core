@@ -43,6 +43,15 @@
   - [x] Toggle Nether access
   - [x] Toggle End access
 
+### Mob Control
+- [x] Mob Manager
+  - [x] Per-world mob spawning control
+  - [x] Toggle any mob type on/off
+  - [x] Spawn egg bypass for admins
+  - [x] WorldGuard region integration
+  - [x] Chunk cleanup for disabled mobs
+  - [x] GUI configuration
+
 ### Custom Mechanics
 - [ ] Rituals System
   - [ ] Ritual configuration system
@@ -119,6 +128,7 @@
 | Infinite Restock | Done | features.infinite-restock |
 | Item Limiter | Done | features.item-limiter |
 | One Player Sleep | Done | features.one-player-sleep |
+| Mob Manager | Done | features.mob-manager |
 | Item Bans | Done | bans.items |
 | Effect Bans | Done | bans.effects |
 
