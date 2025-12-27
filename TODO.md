@@ -3,6 +3,7 @@
 ## Core Features (Must Implement)
 
 ### Combat & PvP Balance
+
 - [ ] Damage Modification System
   - [ ] Weapon damage balancing
   - [ ] Armor damage reduction tuning
@@ -24,12 +25,14 @@
   - [ ] Modify Shield disable duration
 
 ### Cooldowns
+
 - [ ] Mace Cooldown
 - [ ] Wind Charge Cooldown
 - [ ] Riptide Cooldown
 - [ ] Gap Cooldown
 
 ### Bans & Restrictions
+
 - [x] Effect Ban System
   - [x] Configurable potion effect blacklist
   - [x] Effect removal on application
@@ -44,6 +47,7 @@
   - [x] Toggle End access
 
 ### Mob Control
+
 - [x] Mob Manager
   - [x] Per-world mob spawning control
   - [x] Toggle any mob type on/off
@@ -53,6 +57,7 @@
   - [x] GUI configuration
 
 ### Custom Mechanics
+
 - [ ] Rituals System
   - [ ] Ritual configuration system
   - [ ] Ritual trigger detection
@@ -70,6 +75,7 @@
   - [x] Hidden death messages for invisible killers
 
 ### Server Management
+
 - [ ] SMP Start Command
   - [ ] /smp start command
   - [ ] Grace period system
@@ -82,6 +88,7 @@
 ## Secondary Features (Other Plugin Alternatives Exist)
 
 ### Quality of Life
+
 - [x] One Player Sleep
 - [x] Item Limiter System
 - [x] Item Explosion Immunity (Stop items from despawning due to explosions)
@@ -93,19 +100,23 @@
 - [ ] Pearl Cooldown
 
 ### Protection Features
+
 - [ ] Anti-Naked Killing
 - [ ] Anti-AFK Killing
 - [ ] Ban Killing Villagers
 
 ### PvP Toggle
+
 - [ ] Global PvP on/off
 - [ ] Command to toggle
 
 ### Doomsday Features
+
 - [ ] Spectator Mode on Death
 - [ ] Death event handling
 
 ### Anti-Cheat & Protection (ProtocolLib Required)
+
 - [ ] Anti-Health Indicators
 - [ ] Built-in Health Indicators
 - [ ] Anti-Seed Cracking
