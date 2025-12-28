@@ -5,45 +5,58 @@ import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
 
+import { GiCrossedSwords, GiAnvil, GiMapleLeaf, GiSkeletonKey } from 'react-icons/gi';
+import { MdOutlineInventory2, MdOutlineSettings } from 'react-icons/md';
+
 const features = [
     {
         title: 'Combat Balance',
-        icon: 'CB',
+        image: '/img/features/combat-balance.svg',
+        icon: GiCrossedSwords,
         description: 'Control maces, enchantments, and netherite to prevent overpowered gear from ruining your SMP experience.',
     },
     {
         title: 'Item Limiting',
-        icon: 'IL',
+        image: '/img/features/item-limiter.svg',
+        icon: MdOutlineInventory2,
         description: 'Set maximum quantities for any item per player. Perfect for limiting totems, gaps, and other powerful items.',
     },
     {
         title: 'Dimension Control',
-        icon: 'DC',
+        image: '/img/features/dimension-control.svg',
+        icon: GiMapleLeaf,
         description: 'Lock and unlock the Nether and End dimensions with commands. Schedule automatic unlocks for your server events.',
     },
     {
         title: 'Mob Management',
-        icon: 'MM',
+        image: '/img/features/mob-management.svg',
+        icon: GiSkeletonKey,
         description: 'Control mob spawning in specific regions with WorldGuard integration. Perfect for spawn areas and events.',
     },
     {
         title: 'Quality of Life',
-        icon: 'QoL',
+        image: '/img/features/qol.svg',
+        icon: GiAnvil,
         description: 'One-player sleep, infinite villager restocks, and invisible kill messages for a smoother experience.',
     },
     {
         title: 'In-Game GUI',
-        icon: 'GUI',
+        image: '/img/features/gui.svg',
+        icon: MdOutlineSettings,
         description: 'Manage all features through an intuitive in-game menu. No need to edit config files manually.',
     },
 ];
 
-function Feature({ title, icon, description }) {
+function Feature({ title, icon: IconComponent, image, description }) {
     return (
         <div className={clsx('col col--4')}>
             <div className="feature-card margin-bottom--lg">
                 <div className="feature-icon">
-                    {icon}
+                    {image ? (
+                        <img src={image} alt={`${title} icon`} className="feature-image" />
+                    ) : (
+                        <IconComponent size={34} />
+                    )}
                 </div>
                 <Heading as="h3" className="text--center">{title}</Heading>
                 <p className="text--center">{description}</p>

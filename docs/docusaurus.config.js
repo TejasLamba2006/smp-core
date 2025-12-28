@@ -5,7 +5,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 const config = {
     title: 'SMP Core',
     tagline: 'The Ultimate SMP Management Plugin for Minecraft',
-    favicon: 'img/favicon.ico',
+    favicon: 'img/logo.png',
 
     url: 'https://smpcore.tejaslamba.com',
     baseUrl: '/',
