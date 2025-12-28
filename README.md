@@ -167,4 +167,4 @@ Found a bug or have a feature request? Open an issue on GitHub!
 
 ## 📜 License
 
-This project is open source. Feel free to use and modify.
+This project is distributed under a custom license: **SMP Core Non-Redistribution & No-Derivatives License (SMP-NRND)**. The license file is bundled inside the plugin JAR at `META-INF/LICENSE` and is available in the repository as `LICENSE`. See `docs/license.md` for a short summary and the full terms.

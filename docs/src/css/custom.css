@@ -271,6 +271,34 @@ table tbody tr:hover {
   animation: slideInLeft 0.4s ease-out;
 }
 
+/* License page specific styling */
+.license-summary {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.06), transparent);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(99, 102, 241, 0.08);
+  margin: 1rem 0 1.5rem;
+}
+
+.license-full {
+  max-height: 38vh;
+  overflow: auto;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--ifm-table-border-color);
+  background: var(--ifm-code-background);
+  font-family: var(--ifm-font-family-monospace);
+  white-space: pre-wrap;
+}
+
+.admonition--danger {
+  border-left: 4px solid var(--ifm-color-danger, #ef4444);
+}
+
+.admonition--info {
+  border-left: 4px solid var(--ifm-color-primary, #6366f1);
+}
+
 /* Image placeholder styling */
 .img-placeholder {
   background: linear-gradient(
