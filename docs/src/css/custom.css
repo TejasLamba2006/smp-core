@@ -350,8 +350,7 @@ button:focus-visible {
    MOBILE RESPONSIVE FIXES
    ========================================== */
 
-/* Fix: Mobile sidebar toggle button not working */
-/* Ensure navbar toggle is properly displayed and clickable */
+/* Fix: Mobile sidebar not showing full content */
 @media screen and (max-width: 996px) {
   /* Make sure the hamburger menu is visible */
   .navbar__toggle {
@@ -373,36 +372,92 @@ button:focus-visible {
     height: 24px;
   }
 
-  /* Fix: Ensure sidebar container has proper z-index */
+  /* Fix: Navbar sidebar full height and proper display */
   .navbar-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 80vw !important;
+    max-width: 350px !important;
+    height: 100vh !important;
+    height: 100dvh !important;
     z-index: 200 !important;
+    background: var(--ifm-background-color) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4) !important;
+    overflow: hidden !important;
   }
 
   /* Ensure backdrop works properly */
   .navbar-sidebar__backdrop {
     position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    background: rgba(0, 0, 0, 0.6) !important;
     z-index: 199 !important;
-    opacity: 1;
   }
 
-  /* Fix for sidebar items */
-  .navbar-sidebar__items {
-    height: calc(100vh - var(--ifm-navbar-height));
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Ensure sidebar brand is visible */
+  /* Sidebar brand/header section */
   .navbar-sidebar__brand {
     height: var(--ifm-navbar-height);
-    display: flex;
+    min-height: 60px;
+    display: flex !important;
     align-items: center;
     padding: 0 1rem;
+    border-bottom: 1px solid var(--ifm-toc-border-color);
+    flex-shrink: 0;
+  }
+
+  /* Fix: Sidebar items container - THIS IS THE KEY FIX */
+  .navbar-sidebar__items {
+    flex: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Fix: Individual sidebar item sections */
+  .navbar-sidebar__item {
+    flex-shrink: 0;
+    padding: 0.5rem 0;
+  }
+
+  /* Fix: Menu inside sidebar */
+  .navbar-sidebar .menu {
+    padding: 0.5rem 0 !important;
+    overflow: visible !important;
+  }
+
+  .navbar-sidebar .menu__list {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .navbar-sidebar .menu__link {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 44px;
+  }
+
+  .navbar-sidebar .menu__link--sublist {
+    padding-right: 2.5rem !important;
+  }
+
+  .navbar-sidebar .menu__list-item-collapsible {
+    display: flex !important;
+    flex-wrap: wrap !important;
   }
 
   /* Close button styling */
@@ -411,6 +466,9 @@ button:focus-visible {
     align-items: center;
     justify-content: center;
     margin-left: auto;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
   }
 
   /* Make sure docs sidebar doesn't interfere */
@@ -424,8 +482,23 @@ button:focus-visible {
   }
 
   /* Prevent body scroll when sidebar is open */
-  html:has(.navbar-sidebar--show) {
-    overflow: hidden;
+  html:has(.navbar-sidebar--show),
+  body:has(.navbar-sidebar--show) {
+    overflow: hidden !important;
+  }
+
+  /* Secondary menu in sidebar (shown on docs pages) */
+  .navbar-sidebar__items--show-secondary .navbar-sidebar__item--secondary {
+    display: block !important;
+  }
+
+  .navbar-sidebar__back {
+    padding: 0.75rem 1.25rem !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 44px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--ifm-toc-border-color);
   }
 }
 
