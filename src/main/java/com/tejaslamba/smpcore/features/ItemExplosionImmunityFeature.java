@@ -31,6 +31,11 @@ public class ItemExplosionImmunityFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 32;
+    }
+
+    @Override
     public String getName() {
         return "Item Explosion Immunity";
     }

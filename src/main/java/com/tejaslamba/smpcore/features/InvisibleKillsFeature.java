@@ -31,6 +31,11 @@ public class InvisibleKillsFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 31;
+    }
+
+    @Override
     public String getName() {
         return "Invisible Kills";
     }

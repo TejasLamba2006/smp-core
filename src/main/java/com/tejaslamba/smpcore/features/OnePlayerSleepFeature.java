@@ -53,6 +53,11 @@ public class OnePlayerSleepFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 23;
+    }
+
+    @Override
     public String getName() {
         return "One Player Sleep";
     }

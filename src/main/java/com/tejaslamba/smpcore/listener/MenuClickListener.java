@@ -64,6 +64,12 @@ public class MenuClickListener implements Listener {
             return;
         }
 
+        if (title.equals(InfiniteRestockFeature.BLACKLIST_GUI_TITLE)) {
+            event.setCancelled(true);
+            handleInfiniteRestockBlacklistGUI(event, player);
+            return;
+        }
+
         if (title.equals(NetheriteDisablerFeature.GUI_TITLE)) {
             event.setCancelled(true);
             handleNetheriteGUI(event, player);
@@ -208,6 +214,20 @@ public class MenuClickListener implements Listener {
         }
 
         feature.handleRestockGUIClick(event, player);
+    }
+
+    private void handleInfiniteRestockBlacklistGUI(InventoryClickEvent event, Player player) {
+        if (event.getCurrentItem() == null) {
+            return;
+        }
+
+        InfiniteRestockFeature feature = plugin.getFeatureManager().getFeature(InfiniteRestockFeature.class);
+        if (feature == null) {
+            player.closeInventory();
+            return;
+        }
+
+        feature.handleBlacklistGUIClick(event, player);
     }
 
     private void handleNetheriteGUI(InventoryClickEvent event, Player player) {

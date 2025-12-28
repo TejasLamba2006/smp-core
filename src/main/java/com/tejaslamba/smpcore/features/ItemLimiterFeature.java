@@ -92,6 +92,11 @@ public class ItemLimiterFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 11;
+    }
+
+    @Override
     public String getName() {
         return "Item Limiter";
     }
@@ -481,10 +486,6 @@ public class ItemLimiterFeature extends BaseFeature {
         } else {
             event.setCancelled(true);
         }
-    }
-
-    private void updateAddItemGui(Player player, GuiSession session) {
-        openAddItemGui(player);
     }
 
     public void handleViewLimitsClick(int slot, int inventorySize, boolean isShiftClick, boolean isLeftClick,

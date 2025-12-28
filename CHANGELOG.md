@@ -16,6 +16,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Per-world mode configuration
   - Send settings on player join and world change
   - Full GUI configuration
+- **Enchantment Limiter GUI**: Full GUI for configuring enchantment limits
+  - Paginated view of all enchantments (vanilla + custom)
+  - Left/right click to adjust limits, shift+click for max/ban
+  - Middle click to remove limits
+  - Supports custom/modded enchantments via Registry.ENCHANTMENT
+  - Shows namespace for custom enchants (e.g., `customenchants:lifesteal`)
+- **Infinite Restock Villager Blacklist GUI**: Configure excluded professions via GUI
+  - Visual grid of all villager professions
+  - Toggle professions on/off with click
+  - Shows profession-specific icons
+- **Mob Manager Spawn Reason Descriptions**: Each spawn reason now has explanatory lore
+  - Descriptions explain when each spawn reason triggers
+  - Helps admins understand what each setting affects
+
+### Changed
+
+- **DimensionLock Simplified**: `enabled` now directly controls lock state
+  - Removed redundant `locked` variable
+  - If feature enabled = dimension locked
+  - If feature disabled = dimension open
+- **MaceLimiter Recipe Fix**: `restoreMaceRecipes()` now only adds mace recipe
+  - Previously used `Bukkit.resetRecipes()` which reset ALL recipes
+  - Now manually adds only the mace recipe back
+- **Netherite Disabler Documentation**: Clarified that it only blocks smithing table
+  - Added detailed config comments explaining behavior
+  - Notes about permission bypass (`smpcore.netherite.craft.<item>`)
+  - Recommendation to use Item Limiter for complete removal
+- **Enchantment Limiter Config Simplified**: Removed unused options
+  - Removed: `block-enchanting-table`, `block-anvil`, `check-on-pickup`
+  - Removed: `check-on-inventory-click`, `notify-player`, `limit-message`
+  - Only `enabled` and `limits` remain
+
+### Removed
+
+- **Custom Anvil Caps Feature**: Completely removed (redundant with Enchantment Limiter)
+  - Deleted `CustomAnvilCapsFeature.java`
+  - Deleted `CustomAnvilCapsListener.java`
+  - Removed `custom-anvil-caps` config section
+
+### Fixed
+
+- **DimensionLockListener NPE**: Fixed potential null pointer exception
+  - Null check for `event.getTo().getWorld()` now before verbose logging
 
 ## [1.1.0] - 2024-12-27
 

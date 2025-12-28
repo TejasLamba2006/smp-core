@@ -103,8 +103,11 @@ public class FeatureManager {
     }
 
     public List<ItemStack> getMenuItems() {
+        List<Feature> sortedFeatures = new ArrayList<>(features.values());
+        sortedFeatures.sort(Comparator.comparingInt(Feature::getDisplayOrder));
+
         List<ItemStack> items = new ArrayList<>();
-        for (Feature feature : features.values()) {
+        for (Feature feature : sortedFeatures) {
             ItemStack item = feature.getMenuItem();
             if (item != null) {
                 items.add(item);

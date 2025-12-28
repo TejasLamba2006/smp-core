@@ -213,4 +213,42 @@ public class InfiniteRestockManager {
         plugin.getConfigManager().get().set("features.infinite-restock.uninstall-mode", value);
         plugin.getConfigManager().save();
     }
+
+    public Set<String> getVillagerBlacklist() {
+        return new HashSet<>(villagerBlacklist);
+    }
+
+    public int getBlacklistCount() {
+        return villagerBlacklist.size();
+    }
+
+    public boolean isProfessionBlacklisted(String profession) {
+        return villagerBlacklist.contains(profession.toUpperCase());
+    }
+
+    public void toggleProfessionBlacklist(String profession) {
+        String upper = profession.toUpperCase();
+        if (villagerBlacklist.contains(upper)) {
+            villagerBlacklist.remove(upper);
+        } else {
+            villagerBlacklist.add(upper);
+        }
+        saveBlacklist();
+    }
+
+    public void addToBlacklist(String profession) {
+        villagerBlacklist.add(profession.toUpperCase());
+        saveBlacklist();
+    }
+
+    public void removeFromBlacklist(String profession) {
+        villagerBlacklist.remove(profession.toUpperCase());
+        saveBlacklist();
+    }
+
+    private void saveBlacklist() {
+        List<String> list = new ArrayList<>(villagerBlacklist);
+        plugin.getConfigManager().get().set("features.infinite-restock.villager-blacklist", list);
+        plugin.getConfigManager().save();
+    }
 }

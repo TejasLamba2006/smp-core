@@ -64,6 +64,11 @@ public class NetheriteDisablerFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 13;
+    }
+
+    @Override
     public String getName() {
         return "Netherite Disabler";
     }

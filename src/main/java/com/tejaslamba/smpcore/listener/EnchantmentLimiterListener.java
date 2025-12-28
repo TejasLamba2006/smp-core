@@ -2,6 +2,7 @@ package com.tejaslamba.smpcore.listener;
 
 import com.tejaslamba.smpcore.Main;
 import com.tejaslamba.smpcore.enchantlimiter.EnchantmentLimiterManager;
+import com.tejaslamba.smpcore.features.EnchantmentLimiterFeature;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -11,7 +12,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +27,55 @@ public class EnchantmentLimiterListener implements Listener {
     public EnchantmentLimiterListener(Main plugin, EnchantmentLimiterManager manager) {
         this.plugin = plugin;
         this.manager = manager;
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!(event.getPlayer() instanceof Player player)) {
+            return;
+        }
+
+        String title = event.getView().getTitle();
+        if (title.startsWith(EnchantmentLimiterFeature.CONFIG_GUI_TITLE)) {
+            EnchantmentLimiterFeature feature = (EnchantmentLimiterFeature) plugin.getFeatureManager()
+                    .getFeature("Enchantment Limiter");
+            if (feature != null) {
+                feature.cleanupPlayer(player.getUniqueId());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onConfigGUIClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        String title = event.getView().getTitle();
+        if (!title.startsWith(EnchantmentLimiterFeature.CONFIG_GUI_TITLE)) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+        EnchantmentLimiterFeature feature = (EnchantmentLimiterFeature) plugin.getFeatureManager()
+                .getFeature("Enchantment Limiter");
+        if (feature == null) {
+            return;
+        }
+
+        int slot = event.getRawSlot();
+        if (slot < 0 || slot >= 54) {
+            return;
+        }
+
+        int page = feature.getPlayerPage(player);
+        boolean isLeftClick = event.getClick() == ClickType.LEFT || event.getClick() == ClickType.SHIFT_LEFT;
+        boolean isRightClick = event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT;
+        boolean isShiftClick = event.isShiftClick();
+        boolean isMiddleClick = event.getClick() == ClickType.MIDDLE;
+
+        feature.handleConfigGUIClick(slot, page, isLeftClick, isRightClick, isShiftClick, isMiddleClick, player);
     }
 
     @EventHandler(ignoreCancelled = true)

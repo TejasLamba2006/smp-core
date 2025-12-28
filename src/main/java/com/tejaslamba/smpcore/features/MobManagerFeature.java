@@ -158,6 +158,11 @@ public class MobManagerFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 22;
+    }
+
+    @Override
     public String getName() {
         return "Mob Manager";
     }
@@ -618,16 +623,21 @@ public class MobManagerFeature extends BaseFeature {
         if (meta != null) {
             String reasonName = formatReasonName(reason);
             meta.setDisplayName((isAllowed ? "§a" : "§c") + reasonName);
-            meta.setLore(createSpawnReasonLore(isAllowed));
+            meta.setLore(createSpawnReasonLore(reason, isAllowed));
             item.setItemMeta(meta);
         }
 
         return item;
     }
 
-    private List<String> createSpawnReasonLore(boolean isAllowed) {
+    private List<String> createSpawnReasonLore(CreatureSpawnEvent.SpawnReason reason, boolean isAllowed) {
         List<String> lore = new ArrayList<>();
         lore.add("");
+
+        String description = getSpawnReasonDescription(reason);
+        lore.add("§8" + description);
+        lore.add("");
+
         if (isAllowed) {
             lore.add("§aBypass: §2Allowed");
             lore.add("§7Mobs CAN spawn via this reason");
@@ -640,6 +650,53 @@ public class MobManagerFeature extends BaseFeature {
         lore.add("");
         lore.add("§eClick to toggle!");
         return lore;
+    }
+
+    private String getSpawnReasonDescription(CreatureSpawnEvent.SpawnReason reason) {
+        return switch (reason) {
+            case NATURAL -> "Mob spawned naturally (random world spawn)";
+            case JOCKEY -> "Mob spawned as part of a jockey (e.g. skeleton on spider)";
+            case CHUNK_GEN -> "Mob spawned during chunk generation";
+            case SPAWNER -> "Mob spawned from a mob spawner block";
+            case EGG -> "Mob spawned from a thrown egg";
+            case SPAWNER_EGG -> "Mob spawned using a spawn egg item";
+            case LIGHTNING -> "Mob spawned from lightning strike (e.g. skeleton horse)";
+            case BUILD_SNOWMAN -> "Snow golem built by player";
+            case BUILD_IRONGOLEM -> "Iron golem built by player";
+            case BUILD_WITHER -> "Wither boss built by player";
+            case VILLAGE_DEFENSE -> "Iron golem spawned for village defense";
+            case VILLAGE_INVASION -> "Zombie spawned during village siege";
+            case BREEDING -> "Mob spawned from animal breeding";
+            case SLIME_SPLIT -> "Small slime spawned from larger slime death";
+            case REINFORCEMENTS -> "Zombie reinforcement spawned in combat";
+            case NETHER_PORTAL -> "Zombified piglin spawned near portal";
+            case DISPENSE_EGG -> "Mob spawned from dispensed spawn egg";
+            case INFECTION -> "Villager converted to zombie villager";
+            case CURED -> "Zombie villager cured back to villager";
+            case OCELOT_BABY -> "Ocelot baby spawned with parent";
+            case SILVERFISH_BLOCK -> "Silverfish emerged from infested block";
+            case MOUNT -> "Mob spawned as mount for another entity";
+            case TRAP -> "Skeleton trap horse spawned during storm";
+            case ENDER_PEARL -> "Endermite spawned from ender pearl";
+            case SHOULDER_ENTITY -> "Parrot spawned from player shoulder";
+            case DROWNED -> "Zombie converted to drowned in water";
+            case SHEARED -> "Mushroom spawned from sheared mooshroom";
+            case EXPLOSION -> "Mob spawned from explosion (e.g. creeper)";
+            case RAID -> "Mob spawned as part of a raid";
+            case PATROL -> "Pillager patrol spawned in world";
+            case BEEHIVE -> "Bee spawned from beehive/nest";
+            case PIGLIN_ZOMBIFIED -> "Piglin converted to zombified piglin";
+            case SPELL -> "Mob spawned by magic spell (e.g. evoker)";
+            case FROZEN -> "Entity frozen (stray from skeleton)";
+            case COMMAND -> "Mob spawned via /summon command";
+            case CUSTOM -> "Mob spawned by plugin/custom code";
+            case DEFAULT -> "Default spawn (unknown reason)";
+            case METAMORPHOSIS -> "Mob transformed (e.g. tadpole to frog)";
+            case TRIAL_SPAWNER -> "Mob spawned from trial spawner";
+            case DUPLICATION -> "Mob duplicated (e.g. allay duplication)";
+            case ENCHANTMENT -> "Mob spawned via enchantment effect";
+            default -> "Unknown spawn reason";
+        };
     }
 
     private void addSpawnReasonNavigationButtons(Inventory gui) {

@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -57,6 +58,11 @@ public class MaceLimiterFeature extends BaseFeature {
     @Override
     public Listener getListener() {
         return listener;
+    }
+
+    @Override
+    public int getDisplayOrder() {
+        return 12;
     }
 
     @Override
@@ -225,10 +231,7 @@ public class MaceLimiterFeature extends BaseFeature {
             plugin.getLogger().info("[VERBOSE] Mace Limiter - Craft count reset to 0");
         }
 
-        Bukkit.resetRecipes();
-        if (plugin.isVerbose()) {
-            plugin.getLogger().info("[VERBOSE] Mace Limiter - Recipes reset, mace crafting re-enabled");
-        }
+        restoreMaceRecipes();
     }
 
     public void removeAllMaceRecipes() {
@@ -249,9 +252,36 @@ public class MaceLimiterFeature extends BaseFeature {
     }
 
     public void restoreMaceRecipes() {
-        Bukkit.resetRecipes();
-        if (plugin.isVerbose()) {
-            plugin.getLogger().info("[VERBOSE] Mace Limiter - Recipes restored (feature disabled or limit increased)");
+        boolean alreadyHasMaceRecipe = false;
+        Iterator<Recipe> iterator = Bukkit.recipeIterator();
+        while (iterator.hasNext()) {
+            Recipe recipe = iterator.next();
+            if (recipe.getResult().getType() == Material.MACE) {
+                alreadyHasMaceRecipe = true;
+                break;
+            }
+        }
+
+        if (!alreadyHasMaceRecipe) {
+            ShapedRecipe maceRecipe = new ShapedRecipe(
+                    new org.bukkit.NamespacedKey(plugin, "mace_recipe"),
+                    new ItemStack(Material.MACE));
+            maceRecipe.shape(" B ", " R ", " R ");
+            maceRecipe.setIngredient('B', Material.BREEZE_ROD);
+            maceRecipe.setIngredient('R', Material.HEAVY_CORE);
+
+            try {
+                Bukkit.addRecipe(maceRecipe);
+                if (plugin.isVerbose()) {
+                    plugin.getLogger().info("[VERBOSE] Mace Limiter - Mace recipe restored");
+                }
+            } catch (IllegalStateException e) {
+                if (plugin.isVerbose()) {
+                    plugin.getLogger().info("[VERBOSE] Mace Limiter - Mace recipe already exists");
+                }
+            }
+        } else if (plugin.isVerbose()) {
+            plugin.getLogger().info("[VERBOSE] Mace Limiter - Mace recipe already present, skipping restore");
         }
     }
 

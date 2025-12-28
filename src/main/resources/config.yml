@@ -22,57 +22,19 @@ plugin:
 # ============================================
 features:
   # ------------------------------------------
-  # Custom Anvil Caps
-  # ------------------------------------------
-  # Prevents enchantments from exceeding set levels
-  # when using anvils or enchanting tables.
-  # Items with higher levels will be blocked.
-  custom-anvil-caps:
-    enabled: false
-    # Block enchanting table from giving higher enchants
-    block-enchanting-table: true
-    # Block anvil from combining to higher enchants
-    block-anvil: true
-    # When item has multiple protection types, keep only the highest level one
-    # (removes protection stacking exploits)
-    keep-only-best-protection: true
-    # Maximum enchantment levels allowed
-    # Add any enchantment name in lowercase with underscores
-    caps:
-      sharpness: 4
-      protection: 3
-      fire_protection: 3
-      blast_protection: 3
-      projectile_protection: 3
-      feather_falling: 3
-      power: 4
-      unbreaking: 2
-
-  # ------------------------------------------
   # Enchantment Limiter
   # ------------------------------------------
   # Limits enchantments on items by checking and modifying them
   # when players pick up, craft, or receive items.
-  # Uses efficient caching and cross-version enchantment name support.
+  # Supports both vanilla and custom/modded enchantments.
+  # Configure via GUI (/smp menu -> Enchantment Limiter -> Right Click)
   enchantment-limiter:
     enabled: false
-    # Check items at enchanting table
-    block-enchanting-table: true
-    # Check anvil results
-    block-anvil: true
-    # Check items when players pick them up
-    check-on-pickup: true
-    # Check items when clicking in inventory
-    check-on-inventory-click: true
-    # Notify player when enchantments are limited
-    notify-player: true
-    # Message when enchantments are limited
-    # {enchant} = enchantment name, {limit} = max level
-    limit-message: "&cEnchantment {enchant} has been limited to level {limit}!"
-    # Enchantment limits (name: max_level)
+    # Enchantment limits (key: max_level)
     # Set to 0 to completely ban an enchantment
     # Use -1 or remove from list to allow unlimited
-    # Supports both key names (sharpness) and internal names (damage_all)
+    # Supports custom enchantments using namespace:key format
+    # Example: minecraft:sharpness, customenchants:lifesteal
     limits:
       sharpness: 4
       protection: 3
@@ -141,11 +103,20 @@ features:
   # ------------------------------------------
   # Netherite Disabler
   # ------------------------------------------
-  # Prevents players from using netherite items.
-  # Disabled items will be removed/blocked from use.
+  # Prevents players from upgrading diamond items to netherite
+  # via the smithing table. This ONLY blocks the crafting/upgrading
+  # process - it does NOT remove existing netherite items from
+  # player inventories or prevent them from being used.
+  #
+  # Players with permission: smpcore.netherite.craft.<item>
+  # (e.g., smpcore.netherite.craft.sword) can bypass the restriction.
+  #
+  # NOTE: This feature is intentionally limited to smithing table
+  # blocking. For complete netherite item removal, use Item Limiter
+  # with limit set to 0.
   netherite-disabler:
     enabled: false
-    # Which netherite items to disable
+    # Which netherite items to block from being crafted
     disabled-items:
       sword: true
       axe: true

@@ -19,17 +19,17 @@ public class DimensionLockListener implements Listener {
 
     @EventHandler
     public void onPlayerPortal(PlayerPortalEvent event) {
-        Player player = event.getPlayer();
-        if (plugin.isVerbose()) {
-            plugin.getLogger()
-                    .info("[VERBOSE] Dimension Lock - " + player.getName() + " is attempting to enter "
-                            + event.getTo().getWorld().getEnvironment().name());
-        }
         if (event.getTo() == null || event.getTo().getWorld() == null) {
             return;
         }
 
+        Player player = event.getPlayer();
         World.Environment toEnvironment = event.getTo().getWorld().getEnvironment();
+
+        if (plugin.isVerbose()) {
+            plugin.getLogger().info("[VERBOSE] Dimension Lock - " + player.getName()
+                    + " is attempting to enter " + toEnvironment.name());
+        }
 
         boolean hasBypass = player.hasPermission("smpcore.dimension.bypass");
 

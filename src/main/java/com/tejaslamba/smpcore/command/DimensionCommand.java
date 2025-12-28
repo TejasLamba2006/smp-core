@@ -63,7 +63,7 @@ public class DimensionCommand implements CommandExecutor, TabCompleter {
                 break;
             case "close":
                 feature.setLocked(true);
-                sender.sendMessage(prefix + " §aThe " + dimensionName + " has been closed!");
+                sender.sendMessage(prefix + " §cThe " + dimensionName + " has been closed!");
                 if (plugin.isVerbose()) {
                     plugin.getLogger()
                             .info("[VERBOSE] Dimension Command - " + sender.getName() + " closed " + dimensionName);
@@ -71,9 +71,7 @@ public class DimensionCommand implements CommandExecutor, TabCompleter {
                 break;
             case "status":
                 boolean isLocked = feature.isLocked();
-                boolean isEnabled = feature.isEnabled();
                 sender.sendMessage("§e§l=== " + dimensionName + " Status ===");
-                sender.sendMessage("§eFeature: " + (isEnabled ? "§aEnabled" : "§cDisabled"));
                 sender.sendMessage("§eAccess: " + (isLocked ? "§cLocked" : "§aOpen"));
                 break;
             default:

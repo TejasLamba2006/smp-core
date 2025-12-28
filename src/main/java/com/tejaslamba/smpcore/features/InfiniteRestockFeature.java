@@ -7,14 +7,14 @@ import com.tejaslamba.smpcore.infiniterestock.InfiniteRestockManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InfiniteRestockFeature extends BaseFeature {
 
@@ -22,6 +22,27 @@ public class InfiniteRestockFeature extends BaseFeature {
     private InfiniteRestockManager manager;
 
     public static final String GUI_TITLE = "§6Infinite Restock Manager";
+    public static final String BLACKLIST_GUI_TITLE = "§6Villager Blacklist";
+
+    private static final Map<Villager.Profession, Material> PROFESSION_MATERIALS = new HashMap<>();
+
+    static {
+        PROFESSION_MATERIALS.put(Villager.Profession.ARMORER, Material.BLAST_FURNACE);
+        PROFESSION_MATERIALS.put(Villager.Profession.BUTCHER, Material.SMOKER);
+        PROFESSION_MATERIALS.put(Villager.Profession.CARTOGRAPHER, Material.CARTOGRAPHY_TABLE);
+        PROFESSION_MATERIALS.put(Villager.Profession.CLERIC, Material.BREWING_STAND);
+        PROFESSION_MATERIALS.put(Villager.Profession.FARMER, Material.COMPOSTER);
+        PROFESSION_MATERIALS.put(Villager.Profession.FISHERMAN, Material.BARREL);
+        PROFESSION_MATERIALS.put(Villager.Profession.FLETCHER, Material.FLETCHING_TABLE);
+        PROFESSION_MATERIALS.put(Villager.Profession.LEATHERWORKER, Material.CAULDRON);
+        PROFESSION_MATERIALS.put(Villager.Profession.LIBRARIAN, Material.LECTERN);
+        PROFESSION_MATERIALS.put(Villager.Profession.MASON, Material.STONECUTTER);
+        PROFESSION_MATERIALS.put(Villager.Profession.SHEPHERD, Material.LOOM);
+        PROFESSION_MATERIALS.put(Villager.Profession.TOOLSMITH, Material.SMITHING_TABLE);
+        PROFESSION_MATERIALS.put(Villager.Profession.WEAPONSMITH, Material.GRINDSTONE);
+        PROFESSION_MATERIALS.put(Villager.Profession.NITWIT, Material.DEAD_BUSH);
+        PROFESSION_MATERIALS.put(Villager.Profession.NONE, Material.VILLAGER_SPAWN_EGG);
+    }
 
     @Override
     public void onEnable(Main plugin) {
@@ -37,6 +58,11 @@ public class InfiniteRestockFeature extends BaseFeature {
     @Override
     public Listener getListener() {
         return listener;
+    }
+
+    @Override
+    public int getDisplayOrder() {
+        return 30;
     }
 
     @Override
@@ -89,29 +115,36 @@ public class InfiniteRestockFeature extends BaseFeature {
             return;
         }
 
-        Inventory gui = Bukkit.createInventory(null, 27, GUI_TITLE);
+        Inventory gui = Bukkit.createInventory(null, 36, GUI_TITLE);
 
         ItemStack maxTrades = createGuiItem(Material.ANVIL, "§eSet Max Trades",
                 "§7Current: §f" + manager.getMaxTrades(),
-                "§70 = Unlimited");
+                "§70 = Unlimited",
+                "",
+                "§eClick to change");
 
         ItemStack pricePenalty = createToggleItem(
                 manager.isDisablePricePenalty(),
-                Material.GOLD_NUGGET,
                 "§eDisable Price Penalty",
                 new String[] { "§7Villager demand reset to 0" });
 
         ItemStack allowWT = createToggleItem(
                 manager.isAllowWanderingTraders(),
-                Material.EMERALD_BLOCK,
                 "§eAllow Wandering Traders",
                 new String[] { "§7Apply to travelling merchants" });
 
+        ItemStack blacklist = createGuiItem(Material.BARRIER, "§eVillager Blacklist",
+                "§7Exclude specific professions",
+                "§7from infinite restock",
+                "",
+                "§7Blacklisted: §c" + manager.getBlacklistCount(),
+                "",
+                "§eClick to manage");
+
         ItemStack uninstall = createToggleItem(
                 manager.isUninstallMode(),
-                Material.BARRIER,
-                "§eUninstall Mode",
-                new String[] { "§7Restore original villager trades" });
+                "§cUninstall Mode",
+                new String[] { "§7Restore original villager trades", "", "§c⚠ Will reset all villagers!" });
 
         ItemStack back = createGuiItem(Material.ARROW, "§cBack",
                 "§7Return to main menu");
@@ -119,11 +152,82 @@ public class InfiniteRestockFeature extends BaseFeature {
         gui.setItem(10, maxTrades);
         gui.setItem(12, pricePenalty);
         gui.setItem(14, allowWT);
-        gui.setItem(16, uninstall);
-        gui.setItem(22, back);
+        gui.setItem(16, blacklist);
+        gui.setItem(22, uninstall);
+        gui.setItem(31, back);
 
         fillBorder(gui, Material.GRAY_STAINED_GLASS_PANE);
         player.openInventory(gui);
+    }
+
+    public void openBlacklistGUI(Player player) {
+        if (player == null || !player.isOnline()) {
+            return;
+        }
+
+        Inventory gui = Bukkit.createInventory(null, 45, BLACKLIST_GUI_TITLE);
+
+        int slot = 10;
+        for (Villager.Profession profession : Villager.Profession.values()) {
+            if (profession == Villager.Profession.NONE || profession == Villager.Profession.NITWIT) {
+                continue;
+            }
+
+            boolean isBlacklisted = manager.isProfessionBlacklisted(profession.name());
+            Material material = PROFESSION_MATERIALS.getOrDefault(profession, Material.PLAYER_HEAD);
+
+            String professionName = formatProfessionName(profession.name());
+            String statusColor = isBlacklisted ? "§c" : "§a";
+            String statusText = isBlacklisted ? "§cBlacklisted" : "§aAllowed";
+
+            ItemStack item = new ItemStack(isBlacklisted ? Material.BARRIER : material);
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(statusColor + professionName);
+                List<String> lore = new ArrayList<>();
+                lore.add("");
+                lore.add("§7Status: " + statusText);
+                lore.add("");
+                if (isBlacklisted) {
+                    lore.add("§7This profession will NOT");
+                    lore.add("§7receive infinite restock");
+                } else {
+                    lore.add("§7This profession will");
+                    lore.add("§7receive infinite restock");
+                }
+                lore.add("");
+                lore.add("§eClick to toggle");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+            }
+
+            gui.setItem(slot, item);
+            slot++;
+            if (slot == 17)
+                slot = 19;
+            if (slot == 26)
+                slot = 28;
+            if (slot == 35)
+                break;
+        }
+
+        gui.setItem(40, createGuiItem(Material.ARROW, "§cBack", "§7Return to Restock Manager"));
+
+        fillBorder(gui, Material.PURPLE_STAINED_GLASS_PANE);
+        player.openInventory(gui);
+    }
+
+    private String formatProfessionName(String name) {
+        String[] parts = name.toLowerCase().split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                sb.append(Character.toUpperCase(part.charAt(0)))
+                        .append(part.substring(1))
+                        .append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     public void handleRestockGUIClick(InventoryClickEvent event, Player player) {
@@ -153,15 +257,65 @@ public class InfiniteRestockFeature extends BaseFeature {
                 Bukkit.getScheduler().runTask(plugin, () -> openRestockGUI(player));
             }
             case 16 -> {
+                player.closeInventory();
+                Bukkit.getScheduler().runTask(plugin, () -> openBlacklistGUI(player));
+            }
+            case 22 -> {
                 boolean v = !manager.isUninstallMode();
                 manager.setUninstallMode(v);
                 Bukkit.getScheduler().runTask(plugin, () -> openRestockGUI(player));
             }
-            case 22 -> {
+            case 31 -> {
                 player.closeInventory();
                 plugin.getMenuManager().openMainMenu(player);
             }
         }
+    }
+
+    public void handleBlacklistGUIClick(InventoryClickEvent event, Player player) {
+        int raw = event.getRawSlot();
+        if (raw >= event.getView().getTopInventory().getSize()) {
+            return;
+        }
+        event.setCancelled(true);
+
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+            return;
+        }
+
+        if (raw == 40) {
+            player.closeInventory();
+            Bukkit.getScheduler().runTask(plugin, () -> openRestockGUI(player));
+            return;
+        }
+
+        int[] validSlots = { 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34 };
+        int index = -1;
+        for (int i = 0; i < validSlots.length; i++) {
+            if (validSlots[i] == raw) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            return;
+        }
+
+        List<Villager.Profession> professions = new ArrayList<>();
+        for (Villager.Profession profession : Villager.Profession.values()) {
+            if (profession != Villager.Profession.NONE && profession != Villager.Profession.NITWIT) {
+                professions.add(profession);
+            }
+        }
+
+        if (index >= professions.size()) {
+            return;
+        }
+
+        Villager.Profession profession = professions.get(index);
+        manager.toggleProfessionBlacklist(profession.name());
+        Bukkit.getScheduler().runTask(plugin, () -> openBlacklistGUI(player));
     }
 
     private void openChatInput(Player player) {
@@ -213,7 +367,7 @@ public class InfiniteRestockFeature extends BaseFeature {
         return item;
     }
 
-    private ItemStack createToggleItem(boolean enabled, Material base, String name, String[] details) {
+    private ItemStack createToggleItem(boolean enabled, String name, String[] details) {
         Material mat = enabled ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
         List<String> lore = new ArrayList<>();
         lore.add(enabled ? "§aEnabled" : "§cDisabled");

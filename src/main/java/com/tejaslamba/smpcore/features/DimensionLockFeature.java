@@ -14,7 +14,6 @@ import java.util.List;
 public abstract class DimensionLockFeature extends BaseFeature {
 
     private final String dimension;
-    private boolean locked;
     private DimensionLockListener sharedListener;
 
     public DimensionLockFeature(String dimension) {
@@ -28,18 +27,10 @@ public abstract class DimensionLockFeature extends BaseFeature {
         }
 
         super.onEnable(plugin);
-        locked = plugin.getConfigManager().get().getBoolean("features.dimension-lock-" + dimension + ".locked", false);
 
         if (plugin.isVerbose()) {
-            plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - Loaded state: locked=" + locked);
+            plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - Enabled: " + enabled);
         }
-    }
-
-    @Override
-    public void onDisable() {
-        super.onDisable();
-        plugin.getConfigManager().get().set("features.dimension-lock-" + dimension + ".locked", locked);
-        plugin.getConfigManager().save();
     }
 
     @Override
@@ -68,47 +59,47 @@ public abstract class DimensionLockFeature extends BaseFeature {
     @Override
     public List<String> getMenuLore() {
         List<String> lore = new ArrayList<>();
-        lore.add(locked ? "§cCurrently: Locked" : "§aCurrently: Open");
+        lore.add(enabled ? "§cCurrently: Locked" : "§aCurrently: Open");
         lore.add("");
-        lore.add("§eClick to " + (locked ? "Open" : "Lock"));
+        lore.add("§eClick to " + (enabled ? "Unlock" : "Lock"));
         return lore;
     }
 
     @Override
     public void onLeftClick(Player player) {
-        toggleLock(player);
+        toggle(player);
     }
 
     @Override
     public void onRightClick(Player player) {
-        toggleLock(player);
+        toggle(player);
     }
 
-    private void toggleLock(Player player) {
-        locked = !locked;
-        plugin.getConfigManager().get().set("features.dimension-lock-" + dimension + ".locked", locked);
+    private void toggle(Player player) {
+        enabled = !enabled;
+        plugin.getConfigManager().get().set(getConfigPath() + ".enabled", enabled);
         plugin.getConfigManager().save();
 
         String dimensionName = dimension.substring(0, 1).toUpperCase() + dimension.substring(1);
-        player.sendMessage("§6[SMP] §7The " + dimensionName + " is now " + (locked ? "§cLocked" : "§aOpen"));
+        player.sendMessage("§6[SMP] §7The " + dimensionName + " is now " + (enabled ? "§cLocked" : "§aOpen"));
 
         if (plugin.isVerbose()) {
             plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - " + player.getName()
-                    + " toggled to: locked=" + locked);
+                    + " toggled to: enabled=" + enabled);
         }
     }
 
     public boolean isLocked() {
-        return locked;
+        return enabled;
     }
 
     public void setLocked(boolean locked) {
-        this.locked = locked;
-        plugin.getConfigManager().get().set("features.dimension-lock-" + dimension + ".locked", locked);
+        this.enabled = locked;
+        plugin.getConfigManager().get().set(getConfigPath() + ".enabled", locked);
         plugin.getConfigManager().save();
 
         if (plugin.isVerbose()) {
-            plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - State changed: locked=" + locked);
+            plugin.getLogger().info("[VERBOSE] Dimension Lock (" + dimension + ") - Set locked=" + locked);
         }
     }
 

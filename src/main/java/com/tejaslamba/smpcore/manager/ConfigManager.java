@@ -73,34 +73,7 @@ public class ConfigManager {
             defaults.put("features." + feature + ".enabled", false);
         }
 
-        defaults.put("features.custom-anvil-caps.enabled", false);
-        defaults.put("features.custom-anvil-caps.block-enchanting-table", true);
-        defaults.put("features.custom-anvil-caps.block-anvil", true);
-        defaults.put("features.custom-anvil-caps.keep-only-best-protection", true);
-        defaults.put("features.custom-anvil-caps.caps.sharpness", 4);
-        defaults.put("features.custom-anvil-caps.caps.protection", 3);
-        defaults.put("features.custom-anvil-caps.caps.fire_protection", 3);
-        defaults.put("features.custom-anvil-caps.caps.blast_protection", 3);
-        defaults.put("features.custom-anvil-caps.caps.projectile_protection", 3);
-        defaults.put("features.custom-anvil-caps.caps.feather_falling", 3);
-        defaults.put("features.custom-anvil-caps.caps.power", 4);
-        defaults.put("features.custom-anvil-caps.caps.unbreaking", 2);
-
-        defaults.put("features.enchantment-replacement.enabled", false);
-        defaults.put("features.enchantment-replacement.scan-on-join", true);
-        defaults.put("features.enchantment-replacement.scan-on-inventory-open", true);
-        defaults.put("features.enchantment-replacement.scan-on-villager-trade", true);
-        defaults.put("features.enchantment-replacement.scan-on-pickup", false);
-        defaults.put("features.enchantment-replacement.scan-on-craft", true);
-        defaults.put("features.enchantment-replacement.keep-only-best-protection", true);
-        defaults.put("features.enchantment-replacement.caps.sharpness", 4);
-        defaults.put("features.enchantment-replacement.caps.protection", 3);
-        defaults.put("features.enchantment-replacement.caps.fire_protection", 3);
-        defaults.put("features.enchantment-replacement.caps.blast_protection", 3);
-        defaults.put("features.enchantment-replacement.caps.projectile_protection", 3);
-        defaults.put("features.enchantment-replacement.caps.feather_falling", 3);
-        defaults.put("features.enchantment-replacement.caps.power", 4);
-        defaults.put("features.enchantment-replacement.caps.unbreaking", 2);
+        defaults.put("features.enchantment-limiter.enabled", false);
 
         defaults.put("features.mace-limiter.enabled", false);
         defaults.put("features.mace-limiter.mace-crafted", false);

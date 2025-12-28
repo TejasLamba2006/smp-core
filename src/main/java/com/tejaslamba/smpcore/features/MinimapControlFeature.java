@@ -108,6 +108,11 @@ public class MinimapControlFeature extends BaseFeature {
     }
 
     @Override
+    public int getDisplayOrder() {
+        return 33;
+    }
+
+    @Override
     public String getName() {
         return "Minimap Control";
     }

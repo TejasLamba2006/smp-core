@@ -30,4 +30,8 @@ public interface Feature {
     void onRightClick(Player player);
 
     List<String> getMenuLore();
+
+    default int getDisplayOrder() {
+        return 100;
+    }
 }
