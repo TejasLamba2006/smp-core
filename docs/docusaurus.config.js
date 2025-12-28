@@ -11,7 +11,7 @@ const config = {
     baseUrl: '/',
 
     organizationName: 'TejasLamba2006',
-    projectName: 'smp-core',
+    projectName: 'smpcore',
     trailingSlash: false,
 
     onBrokenLinks: 'throw',
@@ -41,7 +41,7 @@ const config = {
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
-            image: 'img/smp-core-social-card.png',
+            image: 'img/smpcore-social-card.png',
             navbar: {
                 title: 'SMP Core',
                 logo: {
@@ -56,7 +56,7 @@ const config = {
                         label: 'Documentation',
                     },
                     {
-                        href: 'https://modrinth.com/plugin/smp-core',
+                        href: 'https://modrinth.com/plugin/smpcore',
                         label: 'Modrinth',
                         position: 'right',
                     },
@@ -101,7 +101,7 @@ const config = {
                         items: [
                             {
                                 label: 'Modrinth',
-                                href: 'https://modrinth.com/plugin/smp-core',
+                                href: 'https://modrinth.com/plugin/smpcore',
                             },
                         ],
                     },
