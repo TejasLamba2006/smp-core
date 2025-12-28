@@ -74,18 +74,25 @@ function HomepageHeader() {
                     {siteConfig.title}
                 </Heading>
                 <p className="hero__subtitle">{siteConfig.tagline}</p>
-                <div className={styles.buttons}>
-                    <Link
-                        className="button button--secondary button--lg"
-                        to="/docs">
-                        Get Started →
-                    </Link>
-                    <Link
-                        className="button button--outline button--lg margin-left--md"
-                        style={{ color: 'white', borderColor: 'white' }}
-                        href="https://modrinth.com/plugin/smp-core">
-                        Download on Modrinth
-                    </Link>
+                <div className={styles.heroRow}>
+                    <div className={styles.heroLeft}>
+                        <div className={styles.buttons}>
+                            <Link
+                                className="button button--secondary button--lg"
+                                to="/docs">
+                                Get Started →
+                            </Link>
+                            <Link
+                                className="button button--outline button--lg margin-left--md"
+                                style={{ color: 'white', borderColor: 'white' }}
+                                href="https://modrinth.com/plugin/smp-core">
+                                Download on Modrinth
+                            </Link>
+                        </div>
+                    </div>
+                    <div className={styles.heroRight}>
+                        <img src="/gifs/main-gui.gif" alt="Main GUI demo" className={styles.heroGif} />
+                    </div>
                 </div>
             </div>
         </header>

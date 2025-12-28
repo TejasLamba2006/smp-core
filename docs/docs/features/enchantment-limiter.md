@@ -6,6 +6,8 @@ sidebar_position: 1
 
 The Enchantment Limiter allows you to cap the maximum level of any enchantment on your server. This is essential for preventing overpowered gear from dominating PvP.
 
+![Enchantment Limiter demo](/gifs/enchantment-limiter.gif)
+
 ## Why Limit Enchantments?
 
 Vanilla Minecraft enchantments at maximum level create significant power imbalances:

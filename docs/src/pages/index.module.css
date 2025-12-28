@@ -23,3 +23,29 @@
     flex-direction: column;
   }
 }
+
+.heroGif {
+  max-width: 720px;
+  width: 100%;
+  margin: 2rem auto 0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: fadeInUp 0.8s ease both;
+}
+
+@media (min-width: 996px) {
+  .heroRow {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    justify-content: center;
+  }
+  .heroLeft {
+    flex: 1;
+  }
+  .heroRight {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+}

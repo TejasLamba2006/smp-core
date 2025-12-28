@@ -7,6 +7,10 @@ slug: /
 
 SMP Core is a comprehensive Minecraft plugin designed for SMP (Survival Multiplayer) servers, focusing on PvP balance, custom mechanics, and server management features. Instead of installing dozens of plugins, SMP Core provides everything you need in a single, lightweight package.
 
+<div style={{textAlign: 'center', margin: '1.5rem 0'}}>
+  <img src="/gifs/main-gui.gif" alt="SMP Core main GUI demo" style={{maxWidth: '720px', width: '100%', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.35)'}} />
+</div>
+
 ## What Does SMP Core Do?
 
 SMP Core addresses common problems that SMP server owners face:

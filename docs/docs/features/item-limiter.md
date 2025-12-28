@@ -10,6 +10,8 @@ Restrict how many of a specific item type a player can have in their inventory.
 
 The Item Limiter allows you to set maximum quantities for any item type. This is essential for PvP balance - preventing players from carrying 10 totems or unlimited golden apples. You can also **ban items entirely** by setting their limit to 0.
 
+![Item Limiter demo](/gifs/item-limiter.gif)
+
 ## Configuration
 
 ```yaml
