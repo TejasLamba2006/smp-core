@@ -345,3 +345,367 @@ button:focus-visible {
   outline: 2px solid var(--ifm-color-primary);
   outline-offset: 2px;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE FIXES
+   ========================================== */
+
+/* Fix: Mobile sidebar toggle button not working */
+/* Ensure navbar toggle is properly displayed and clickable */
+@media screen and (max-width: 996px) {
+  /* Make sure the hamburger menu is visible */
+  .navbar__toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 100;
+    background: transparent;
+    border: none;
+  }
+
+  /* Hamburger icon visibility */
+  .navbar__toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Fix: Ensure sidebar container has proper z-index */
+  .navbar-sidebar {
+    z-index: 200 !important;
+  }
+
+  /* Ensure backdrop works properly */
+  .navbar-sidebar__backdrop {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 199 !important;
+    opacity: 1;
+  }
+
+  /* Fix for sidebar items */
+  .navbar-sidebar__items {
+    height: calc(100vh - var(--ifm-navbar-height));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ensure sidebar brand is visible */
+  .navbar-sidebar__brand {
+    height: var(--ifm-navbar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  /* Close button styling */
+  .navbar-sidebar__close {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+  }
+
+  /* Make sure docs sidebar doesn't interfere */
+  .theme-doc-sidebar-container {
+    display: none !important;
+  }
+
+  /* Main content should take full width on mobile */
+  .docMainContainer {
+    max-width: 100% !important;
+  }
+
+  /* Prevent body scroll when sidebar is open */
+  html:has(.navbar-sidebar--show) {
+    overflow: hidden;
+  }
+}
+
+/* Mobile-friendly hero section */
+@media screen and (max-width: 768px) {
+  .hero__title {
+    font-size: 2rem !important;
+    line-height: 1.2;
+  }
+
+  .hero__subtitle {
+    font-size: 1.1rem !important;
+  }
+
+  .hero {
+    padding: 3rem 1rem !important;
+  }
+}
+
+/* Mobile-friendly feature cards */
+@media screen and (max-width: 768px) {
+  .feature-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.9rem;
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+}
+
+/* Mobile-friendly tables */
+@media screen and (max-width: 768px) {
+  .config-table,
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.85rem;
+  }
+
+  .config-table th,
+  .config-table td,
+  table th,
+  table td {
+    padding: 0.5rem;
+    min-width: 100px;
+  }
+
+  /* Permission nodes on mobile */
+  .permission-node {
+    font-size: 0.8em;
+    word-break: break-all;
+  }
+}
+
+/* Mobile-friendly code blocks */
+@media screen and (max-width: 768px) {
+  pre {
+    font-size: 0.8rem !important;
+    padding: 0.75rem !important;
+    border-radius: 6px !important;
+  }
+
+  code {
+    word-break: break-word;
+  }
+}
+
+/* Mobile-friendly navbar */
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem;
+  }
+
+  .navbar__title {
+    font-size: 1rem;
+  }
+
+  .navbar__logo {
+    height: 28px;
+  }
+
+  /* Hide navbar items that are in sidebar on mobile */
+  .navbar__items--right .navbar__link {
+    display: none;
+  }
+
+  .navbar__items--right .navbar__toggle {
+    display: flex !important;
+  }
+}
+
+/* Mobile-friendly footer */
+@media screen and (max-width: 768px) {
+  .footer {
+    padding: 2rem 1rem !important;
+  }
+
+  .footer__links {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .footer__col {
+    margin-bottom: 1rem;
+  }
+
+  .footer__title {
+    font-size: 1rem;
+  }
+
+  .footer__item {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile-friendly buttons */
+@media screen and (max-width: 768px) {
+  .button--lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile-friendly markdown content */
+@media screen and (max-width: 768px) {
+  .markdown h1 {
+    font-size: 1.75rem;
+  }
+
+  .markdown h2 {
+    font-size: 1.4rem;
+  }
+
+  .markdown h3 {
+    font-size: 1.2rem;
+  }
+
+  .markdown p,
+  .markdown li {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* License page specific */
+  .license-full {
+    max-height: 50vh;
+    font-size: 0.75rem;
+  }
+
+  .license-summary {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Mobile-friendly admonitions */
+@media screen and (max-width: 768px) {
+  .alert,
+  .admonition {
+    padding: 0.75rem 1rem;
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile-friendly announcement bar */
+@media screen and (max-width: 768px) {
+  [class*="announcementBar"] {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  [class*="announcementBar"] a {
+    display: inline;
+  }
+}
+
+/* Mobile-friendly TOC (Table of Contents) */
+@media screen and (max-width: 996px) {
+  .table-of-contents {
+    display: none;
+  }
+}
+
+/* Mobile-friendly breadcrumbs */
+@media screen and (max-width: 768px) {
+  .breadcrumbs {
+    font-size: 0.85rem;
+  }
+
+  .breadcrumbs__item {
+    padding: 0;
+  }
+}
+
+/* Fix touch targets for mobile */
+@media screen and (max-width: 768px) {
+  .menu__link {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .pagination-nav__link {
+    padding: 1rem;
+  }
+}
+
+/* Improve tap highlighting on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .feature-card:hover {
+    transform: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .feature-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  .button:hover {
+    transform: none;
+  }
+
+  .button:active {
+    transform: scale(0.98);
+  }
+
+  .menu__link:hover {
+    transform: none;
+  }
+}
+
+/* Fix horizontal overflow on mobile */
+@media screen and (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .main-wrapper {
+    overflow-x: hidden;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Mobile doc page layout fixes */
+@media screen and (max-width: 996px) {
+  .docMainContainer {
+    padding: 1rem;
+  }
+
+  .col--3 {
+    display: none;
+  }
+
+  article {
+    padding: 0;
+  }
+}

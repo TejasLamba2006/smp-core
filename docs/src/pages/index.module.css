@@ -21,6 +21,24 @@
 
   .buttons {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .heroBanner {
+    padding: 2.5rem 1rem;
+  }
+
+  .buttons {
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .buttons a {
+    width: 100%;
+    text-align: center;
+    margin: 0 !important;
   }
 }
 
@@ -31,6 +49,14 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   animation: fadeInUp 0.8s ease both;
+}
+
+@media screen and (max-width: 768px) {
+  .heroGif {
+    margin: 1.5rem auto 0;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
 }
 
 @media (min-width: 996px) {
@@ -45,6 +71,25 @@
   }
   .heroRight {
     flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 996px) {
+  .heroRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .heroLeft,
+  .heroRight {
+    width: 100%;
+  }
+
+  .heroRight {
     display: flex;
     justify-content: center;
   }
