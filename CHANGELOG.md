@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **One Player Sleep Messages**: Configurable broadcast messages
+  - `sleep-message`: Broadcast when a player starts sleeping (supports {player}, {displayname})
+  - `skip-message`: Broadcast when night is skipped
+  - Leave empty to disable either message
+- **Item Limiter Notification Options**: Customizable feedback when items are removed
+  - `notify-player`: Toggle player notifications (default: true)
+  - `notify-message`: Customizable message with {item}, {amount}, {limit} placeholders
+  - `drop-excess`: Choose to drop items (true) or delete them (false)
 - **Minimap Control**: Control Xaero's Minimap/Worldmap features
   - DISABLED mode: Completely disables minimap
   - FAIR mode: Disables cave map and radar for competitive play

@@ -22,6 +22,9 @@ public class ItemLimiterManager {
     private final Map<UUID, Long> lastMessageTime = new ConcurrentHashMap<>();
     private static final long MESSAGE_COOLDOWN = 5000L;
     private int taskId = -1;
+    private boolean notifyPlayer = true;
+    private String notifyMessage = "§c[SMP Core] §7Excess items removed: {item} x{amount} (limit: {limit})";
+    private boolean dropExcess = true;
 
     public ItemLimiterManager(Main plugin) {
         this.plugin = plugin;
@@ -29,6 +32,11 @@ public class ItemLimiterManager {
 
     public void load() {
         itemLimits.clear();
+
+        notifyPlayer = plugin.getConfigManager().get().getBoolean("features.item-limiter.notify-player", true);
+        notifyMessage = plugin.getConfigManager().get().getString("features.item-limiter.notify-message",
+                "§c[SMP Core] §7Excess items removed: {item} x{amount} (limit: {limit})");
+        dropExcess = plugin.getConfigManager().get().getBoolean("features.item-limiter.drop-excess", true);
 
         ConfigurationSection limitsSection = plugin.getConfigManager().get()
                 .getConfigurationSection("features.item-limiter.limits");
@@ -308,11 +316,60 @@ public class ItemLimiterManager {
             ItemLimit itemLimit = itemLimits.get(itemKey);
             if (itemLimit != null && currentCount > itemLimit.getLimit()) {
                 int excessAmount = currentCount - itemLimit.getLimit();
-                dropExcessItems(player, itemLimit, excessAmount);
-                sendCooldownMessage(player, "§c[SMP Core] §7Dropped " + excessAmount + " excess items (limit: "
-                        + itemLimit.getLimit() + ")");
+                if (dropExcess) {
+                    dropExcessItems(player, itemLimit, excessAmount);
+                } else {
+                    removeExcessItems(player, itemLimit, excessAmount);
+                }
+                if (notifyPlayer) {
+                    String message = notifyMessage
+                            .replace("{item}", formatMaterialName(itemLimit.getMaterial().name()))
+                            .replace("{amount}", String.valueOf(excessAmount))
+                            .replace("{limit}", String.valueOf(itemLimit.getLimit()));
+                    sendCooldownMessage(player, message);
+                }
             }
         }
+    }
+
+    private String formatMaterialName(String materialName) {
+        String[] parts = materialName.toLowerCase().split("_");
+        StringBuilder result = new StringBuilder();
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                result.append(Character.toUpperCase(part.charAt(0)))
+                        .append(part.substring(1))
+                        .append(" ");
+            }
+        }
+        return result.toString().trim();
+    }
+
+    private void removeExcessItems(Player player, ItemLimit itemLimit, int excessAmount) {
+        if (player == null || itemLimit == null || excessAmount <= 0) {
+            return;
+        }
+
+        ItemStack[] contents = player.getInventory().getContents();
+
+        for (int i = contents.length - 1; i >= 0 && excessAmount > 0; i--) {
+            ItemStack item = contents[i];
+            if (item == null || !itemLimit.matches(item)) {
+                continue;
+            }
+
+            int amountToRemove = Math.min(item.getAmount(), excessAmount);
+
+            if (amountToRemove >= item.getAmount()) {
+                player.getInventory().setItem(i, null);
+            } else {
+                item.setAmount(item.getAmount() - amountToRemove);
+            }
+
+            excessAmount -= amountToRemove;
+        }
+
+        player.updateInventory();
     }
 
     private void dropExcessItems(Player player, ItemLimit itemLimit, int excessAmount) {

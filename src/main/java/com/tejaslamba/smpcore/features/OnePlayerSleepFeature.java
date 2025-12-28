@@ -2,6 +2,7 @@ package com.tejaslamba.smpcore.features;
 
 import com.tejaslamba.smpcore.Main;
 import com.tejaslamba.smpcore.feature.BaseFeature;
+import com.tejaslamba.smpcore.listener.OnePlayerSleepListener;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,10 +16,12 @@ import java.util.List;
 public class OnePlayerSleepFeature extends BaseFeature {
 
     private static final int DEFAULT_SLEEP_PERCENTAGE = 100;
+    private OnePlayerSleepListener listener;
 
     @Override
     public void onEnable(Main plugin) {
         super.onEnable(plugin);
+        listener = new OnePlayerSleepListener(plugin);
         applySleepPercentage();
 
         if (plugin.isVerbose()) {
@@ -49,7 +52,7 @@ public class OnePlayerSleepFeature extends BaseFeature {
 
     @Override
     public Listener getListener() {
-        return null;
+        return listener;
     }
 
     @Override
@@ -81,7 +84,10 @@ public class OnePlayerSleepFeature extends BaseFeature {
         lore.add("§7When enabled, only one player");
         lore.add("§7needs to sleep to skip the night");
         lore.add("");
-        lore.add("§7Uses: §eplayersSleepingPercentage");
+        String sleepMsg = plugin.getConfigManager().get().getString("features.one-player-sleep.sleep-message", "");
+        String skipMsg = plugin.getConfigManager().get().getString("features.one-player-sleep.skip-message", "");
+        lore.add("§7Sleep Message: " + (sleepMsg.isEmpty() ? "§8None" : "§a✓"));
+        lore.add("§7Skip Message: " + (skipMsg.isEmpty() ? "§8None" : "§a✓"));
         lore.add("");
         lore.add("§eLeft Click: Toggle");
         return lore;
