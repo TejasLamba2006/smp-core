@@ -263,9 +263,8 @@ public class MaceLimiterFeature extends BaseFeature {
         }
 
         if (!alreadyHasMaceRecipe) {
-            ShapedRecipe maceRecipe = new ShapedRecipe(
-                    new org.bukkit.NamespacedKey(plugin, "mace_recipe"),
-                    new ItemStack(Material.MACE));
+            org.bukkit.NamespacedKey vanillaKey = org.bukkit.NamespacedKey.minecraft("mace");
+            ShapedRecipe maceRecipe = new ShapedRecipe(vanillaKey, new ItemStack(Material.MACE));
             maceRecipe.shape(" B ", " R ");
             maceRecipe.setIngredient('R', Material.BREEZE_ROD);
             maceRecipe.setIngredient('B', Material.HEAVY_CORE);
@@ -273,7 +272,7 @@ public class MaceLimiterFeature extends BaseFeature {
             try {
                 Bukkit.addRecipe(maceRecipe);
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.discoverRecipe(new org.bukkit.NamespacedKey(plugin, "mace_recipe"));
+                    p.discoverRecipe(vanillaKey);
                 }
 
                 if (plugin.isVerbose()) {

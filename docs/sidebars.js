@@ -42,6 +42,7 @@ const sidebars = {
                         'features/invisible-kills',
                         'features/item-explosion-immunity',
                         'features/minimap-control',
+                        'features/server-restart',
                     ],
                 },
             ],

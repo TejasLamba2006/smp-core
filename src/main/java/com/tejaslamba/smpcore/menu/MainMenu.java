@@ -353,11 +353,11 @@ public class MainMenu extends BaseMenu {
             player.closeInventory();
             return;
         }
-        ItemStack clickedItem = event.getCurrentItem();
+        ItemStack item = event.getCurrentItem();
 
-        if (slot == 51 || clickedItem != null && clickedItem.getType() == Material.PLAYER_HEAD &&
-                clickedItem.getItemMeta() != null &&
-                "§6§lDonate".equals(clickedItem.getItemMeta().getDisplayName())) {
+        if (slot == 51 || item != null && item.getType() == Material.PLAYER_HEAD &&
+                item.getItemMeta() != null &&
+                "§6§lDonate".equals(item.getItemMeta().getDisplayName())) {
             player.closeInventory();
             player.sendMessage("§6§l[SMP Core] §7Thank you for considering a donation!");
             player.sendMessage("§6§l[SMP Core] §7PayPal: §e" + PAYPAL_URL);
@@ -370,11 +370,12 @@ public class MainMenu extends BaseMenu {
             return;
         }
 
-        if (clickedItem != null && clickedItem.getType() == Material.CLOCK) {
+        if (item != null && item.getType() == Material.CLOCK &&
+                item.getItemMeta() != null &&
+                "§e§lMore Features Coming Soon!".equals(item.getItemMeta().getDisplayName())) {
             return;
         }
 
-        ItemStack item = event.getCurrentItem();
         if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
             List<String> lore = item.getItemMeta().getLore();
             if (lore != null) {

@@ -16,6 +16,7 @@ Instead of running 10+ different plugins, SMP Core handles most of what you need
 - **Gear Control** - Disable netherite, limit enchantments
 - **Dimension Locks** - Keep Nether/End closed until you're ready
 - **Mob Control** - Disable specific mobs per world with WorldGuard support
+- **Server Restart** - Scheduled restarts with countdown warnings
 - **QoL Features** - Infinite villager trades, one player sleep, minimap control
 
 Everything is off by default. Turn on what you need, ignore the rest.

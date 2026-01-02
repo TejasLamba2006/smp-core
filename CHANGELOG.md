@@ -7,8 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-02
+
 ### Added
 
+- **Server Restart Feature**: Complete server restart management with GUI configuration
+  - Restart Now: Immediate server restart with confirmation (Shift+Click required)
+  - Countdown System: Start restart countdown with configurable duration
+  - Cancel Restart: Cancel any active restart countdown
+  - Scheduled Restarts: Support for daily, weekly, and one-time scheduled restarts
+    - Daily format: `HH:mm:ss` (e.g., "04:00:00" for 4 AM daily)
+    - Weekly format: `MON HH:mm:ss` (e.g., "SUN 03:00:00" for Sunday 3 AM)
+    - One-time format: `yyyy-MM-dd HH:mm:ss` (e.g., "2024-12-25 06:00:00")
+  - Multiple Notification Types: Chat, ActionBar, BossBar, Title (configurable)
+  - Customizable Countdown Announcements: Configure which seconds show warnings
+  - BossBar Color: Cycle through RED, BLUE, GREEN, YELLOW, PURPLE, PINK, WHITE
+  - Pre-Restart Commands: Execute commands before server restart (e.g., save-all)
+  - Warning Sounds: Configurable sound on countdown announcements
+  - Timezone Support: Set timezone for scheduled restarts
+  - Full GUI Management: Configure all settings via right-click menu
+  - Schedule Management GUI: Add/remove scheduled restart times
+  - Chat Input System: Add custom schedules via chat input
+  - Customizable Messages: All messages configurable with placeholders
+  - Admin Join Notification: Admins notified when joining during active restart
 - **Main Menu Redesign**: Improved GUI layout with quick links and donation support
   - Discord link with custom skull head (bottom row, slot 46)
   - Wiki/Documentation link with custom skull head (bottom row, slot 47)
@@ -298,5 +319,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Release Date | Highlights |
 |---------|--------------|------------|
+| 1.2.0 | 2026-01-02 | Server Restart, Main Menu Redesign, CDN Integration |
 | 1.1.0 | 2024-12-27 | GUI overhaul, Mob Manager, Infinite Restock, Item Limiter rewrite |
 | 1.0.0 | 2024-12-01 | Initial release |

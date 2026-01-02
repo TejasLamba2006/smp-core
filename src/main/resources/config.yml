@@ -308,4 +308,68 @@ features:
     #   world_nether: DISABLED
     #   world_the_end: FULL
     worlds: {}
+
+  # ------------------------------------------
+  # Server Restart
+  # ------------------------------------------
+  # Schedule automatic server restarts with countdown warnings.
+  # Supports daily, weekly, and one-time scheduled restarts.
+  # Configure via GUI (/smp menu -> Server Restart -> Right Click)
+  server-restart:
+    enabled: false
+    # Default countdown time in seconds (used for scheduled restarts)
+    countdown-time: 60
+    # Times (in seconds) when countdown announcements are shown
+    # Example: [300, 120, 60, 30, 10, 5, 4, 3, 2, 1] for 5min, 2min, 1min, etc.
+    countdown-announcements:
+      - 300
+      - 120
+      - 60
+      - 30
+      - 10
+      - 5
+      - 4
+      - 3
+      - 2
+      - 1
+    # Notification types: chat, actionbar, bossbar, title
+    # Can use multiple types together
+    notification-types:
+      - chat
+      - bossbar
+    # BossBar color for countdown (RED, BLUE, GREEN, YELLOW, PURPLE, PINK, WHITE)
+    bossbar-color: RED
+    # Timezone for scheduled restarts (leave empty for server timezone)
+    # Example: America/New_York, Europe/London, Asia/Tokyo
+    timezone: ""
+    # Enable scheduled automatic restarts
+    scheduled-restarts-enabled: false
+    # Scheduled restart times - supports multiple formats:
+    # - "HH:mm:ss" for daily restarts (e.g., "04:00:00" = 4 AM daily)
+    # - "MON HH:mm:ss" for weekly restarts (e.g., "SUN 03:00:00" = Sunday 3 AM)
+    # - "yyyy-MM-dd HH:mm:ss" for one-time restarts (e.g., "2024-12-25 06:00:00")
+    scheduled-times:
+      - "04:00:00"
+    # Execute commands before server restart
+    execute-pre-commands: true
+    # Commands to run before restart (without leading slash)
+    pre-restart-commands:
+      - "save-all"
+    # Sound settings for countdown warnings
+    sound:
+      enabled: true
+      sound: "BLOCK_NOTE_BLOCK_PLING"
+      volume: 1.0
+      pitch: 1.0
+    # Customizable messages (supports color codes with §)
+    # {time} = seconds remaining, {player} = executor name
+    messages:
+      countdown-message: "§c⚠ Server restarting in §e{time} §cseconds!"
+      actionbar-message: "§cRestarting in {time}s"
+      bossbar-message: "§cServer Restart: {time}s"
+      title-message: "§c⚠ Server Restart"
+      subtitle-message: "§e{time} seconds remaining"
+      restart-now-message: "§c⚠ Server restart initiated by {player}!"
+      restart-done-message: "§c⚠ Server is restarting now!"
+      cancelled-message: "§a✔ Server restart has been cancelled."
 # ============================================
