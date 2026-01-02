@@ -1,4 +1,3 @@
-// @ts-check
 import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
@@ -85,6 +84,10 @@ const config = {
                                 label: 'Configuration',
                                 to: '/docs/configuration',
                             },
+                            {
+                                label: 'Config Builder',
+                                to: '/config-builder',
+                            },
                         ],
                     },
                     {
@@ -105,7 +108,7 @@ const config = {
                             },
                             {
                                 label: 'Downloads Page',
-                                to: '/docs/downloads',
+                                to: '/downloads',
                             },
                         ],
                     },

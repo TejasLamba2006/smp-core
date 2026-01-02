@@ -2,6 +2,10 @@
 sidebar_position: 1
 ---
 
+import {FeatureBadgeGroup} from '@site/src/components/FeatureBadge';
+
+<FeatureBadgeGroup badges={['popular', 'recommended']} />
+
 # Enchantment Limiter
 
 The Enchantment Limiter allows you to cap the maximum level of any enchantment on your server. This is essential for preventing overpowered gear from dominating PvP.

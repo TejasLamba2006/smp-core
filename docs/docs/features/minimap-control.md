@@ -2,6 +2,10 @@
 sidebar_position: 11
 ---
 
+import {FeatureBadgeGroup} from '@site/src/components/FeatureBadge';
+
+<FeatureBadgeGroup badges={['new']} />
+
 # Minimap Control
 
 Control minimap mod features using Xaero's minimap protocol.

@@ -2,6 +2,10 @@
 sidebar_position: 3
 ---
 
+import {FeatureBadgeGroup} from '@site/src/components/FeatureBadge';
+
+<FeatureBadgeGroup badges={['popular', 'recommended']} />
+
 # Mace Limiter
 
 Control how many maces can be crafted on your server.

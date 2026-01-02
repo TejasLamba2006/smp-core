@@ -1,0 +1,105 @@
+{
+    "version": "1.1.0",
+    "description": "Menu configuration for SMP Core GUI",
+    "mainMenu": {
+        "title": "SMP Core Settings",
+        "size": 54,
+        "layout": {
+            "featureSlots": [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34
+            ],
+            "previousPageSlot": 45,
+            "pageIndicatorSlot": 49,
+            "nextPageSlot": 53,
+            "closeSlot": 49
+        },
+        "items": {
+            "previousPage": {
+                "material": "ARROW",
+                "name": "Previous Page",
+                "lore": [
+                    "",
+                    "Page {current}/{total}",
+                    "Click to navigate"
+                ]
+            },
+            "nextPage": {
+                "material": "ARROW",
+                "name": "Next Page",
+                "lore": [
+                    "",
+                    "Page {current}/{total}",
+                    "Click to navigate"
+                ]
+            },
+            "pageIndicator": {
+                "material": "BOOK",
+                "name": "Page {current}/{total}",
+                "lore": [
+                    "",
+                    "Use arrows to navigate",
+                    "",
+                    "Click to close menu"
+                ]
+            },
+            "close": {
+                "material": "OAK_DOOR",
+                "name": "Close Menu",
+                "lore": [
+                    "Close this menu"
+                ]
+            }
+        }
+    },
+    "featureItemTemplate": {
+        "nameFormat": "{name}",
+        "loreFormat": [
+            "{description}",
+            "",
+            "Config: features.{id}.enabled",
+            "",
+            "{status}",
+            "Left Click: Toggle On/Off",
+            "Right Click: Settings"
+        ],
+        "enabledStatus": "Enabled",
+        "disabledStatus": "Disabled",
+        "statusColors": {
+            "enabled": "a",
+            "disabled": "c"
+        }
+    },
+    "updateNotification": {
+        "enabled": true,
+        "permission": "smpcore.admin",
+        "title": "SMP Core Update",
+        "message": "A new configuration version is available! Current: {current}, Latest: {latest}",
+        "actionMessage": "Visit {url} to see what's new"
+    },
+    "featureControl": {
+        "disabledFeatures": [],
+        "disabledMessage": "This feature has been temporarily disabled by the plugin author.",
+        "maintenanceMode": false,
+        "maintenanceMessage": "SMP Core is currently in maintenance mode. Please try again later."
+    }
+}

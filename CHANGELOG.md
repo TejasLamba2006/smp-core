@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **CDN Integration (Plugin-Side)**: Server-side CDN integration for remote management
+  - `CDNManager`: Fetches manifest and feature config from CDN with 5-minute cache
+  - `UpdateNotificationListener`: Notifies admins/ops on join when updates available
+  - Remote feature kill-switch capability via CDN config
+  - Maintenance mode detection and warning system
+  - Clickable update notifications with download and changelog links
+  - Update indicator in main menu (Nether Star) when new version available
+- **CDN-Based Config System**: Dynamic configuration system hosted via CDN
+  - Features, enchantments, and presets fetched dynamically from CDN
+  - Versioned configs at `/cdn/config/{version}/`
+  - Manifest file for version discovery
+  - Supports feature kill-switch via remote config
+  - Future-proofing for remote GUI control
+- **Dynamic Config Builder**: Completely rewritten config builder page
+  - All data fetched from CDN (no hardcoded arrays)
+  - Loading states and error handling
+  - Enchantment configuration modal with category tabs
+  - Version badge showing latest config version
+  - Documentation links per feature
+  - Purple theme update
+  - Removed all emoji icons for cleaner UI
+- **Config Builder URL Advertisement**: Added config builder URL to config.yml header
+  - Users directed to <https://smpcore.tejaslamba.com/config-builder>
+- **bStats Integration**: Server metrics tracking via bStats
+  - Plugin ID: 28654
+  - Automatic server count and usage tracking
+  - No configuration required, works out of the box
 - **One Player Sleep Messages**: Configurable broadcast messages
   - `sleep-message`: Broadcast when a player starts sleeping (supports {player}, {displayname})
   - `skip-message`: Broadcast when night is skipped

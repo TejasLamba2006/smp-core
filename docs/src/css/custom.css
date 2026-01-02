@@ -363,22 +363,54 @@ code {
 .modrinth-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
-  background: linear-gradient(
-    135deg,
-    rgba(99, 102, 241, 0.08),
-    rgba(76, 29, 149, 0.05)
-  );
-  border-radius: 10px;
-  margin: 1rem 0;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
 }
 .modrinth-stats .stat {
-  padding: 0.4rem 0.8rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.15),
+    rgba(76, 29, 149, 0.1)
+  );
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 999px;
   font-size: 0.9rem;
-  font-weight: 500;
+  color: white;
+  transition: all 200ms ease;
+}
+.modrinth-stats .stat:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.25),
+    rgba(76, 29, 149, 0.15)
+  );
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+.modrinth-stats .stat-icon {
+  color: #a78bfa;
+  flex-shrink: 0;
+}
+.modrinth-stats .stat-value {
+  font-weight: 700;
+  color: white;
+}
+.modrinth-stats .stat-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+/* Center stats on mobile */
+@media (max-width: 996px) {
+  .modrinth-stats {
+    justify-content: center;
+  }
 }
 
 .version-card {

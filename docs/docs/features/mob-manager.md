@@ -2,6 +2,10 @@
 sidebar_position: 6
 ---
 
+import {FeatureBadgeGroup} from '@site/src/components/FeatureBadge';
+
+<FeatureBadgeGroup badges={['popular']} />
+
 # Mob Manager
 
 Control mob spawning on a per-world basis with spawn reason filtering.

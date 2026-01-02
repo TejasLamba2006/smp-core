@@ -2,6 +2,10 @@
 sidebar_position: 2
 ---
 
+import {FeatureBadgeGroup} from '@site/src/components/FeatureBadge';
+
+<FeatureBadgeGroup badges={['popular', 'recommended']} />
+
 # Item Limiter
 
 Restrict how many of a specific item type a player can have in their inventory.

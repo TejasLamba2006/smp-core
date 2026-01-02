@@ -77,7 +77,7 @@ You need Java 21 or newer. If you're on an older version, upgrade before install
 
 ## Quick Start
 
-1. Download from [Modrinth](https://modrinth.com/plugin/smpcore) or the [Downloads page](/docs/downloads)
+1. Download from [Modrinth](https://modrinth.com/plugin/smpcore) or the [Downloads page](/downloads)
 2. Drop the JAR in your `plugins` folder
 3. Restart the server
 4. Run `/smp` to open the settings GUI
