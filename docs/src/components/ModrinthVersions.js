@@ -175,9 +175,9 @@ export function VersionHistory() {
                         <td>{v.gameVersions[0]} - {v.gameVersions[v.gameVersions.length - 1]}</td>
                         <td>{v.downloads.toLocaleString()}</td>
                         <td>
-                            <a 
-                                href={`${MODRINTH_BASE}/${PROJECT_SLUG}/version/${v.id}`} 
-                                target="_blank" 
+                            <a
+                                href={`${MODRINTH_BASE}/${PROJECT_SLUG}/version/${v.id}`}
+                                target="_blank"
                                 rel="noopener noreferrer"
                             >
                                 View on Modrinth
@@ -226,7 +226,7 @@ export function VersionChangelog() {
                         <span className="version-badge">v{v.number}</span>
                         <span className="version-date">{v.date}</span>
                         <span className={`version-type-badge ${v.type}`}>{v.type}</span>
-                        <a 
+                        <a
                             href={`${MODRINTH_BASE}/${PROJECT_SLUG}/version/${v.id}`}
                             className="changelog-link"
                             target="_blank"
@@ -235,7 +235,7 @@ export function VersionChangelog() {
                             View on Modrinth
                         </a>
                     </div>
-                    <div 
+                    <div
                         className="changelog-content"
                         dangerouslySetInnerHTML={{ __html: parseMarkdown(v.changelog) }}
                     />
