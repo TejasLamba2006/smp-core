@@ -1,46 +1,5 @@
 {
     "version": "1.1.0",
-    "description": "Menu configuration for SMP Core GUI",
-    "mainMenu": {
-        "title": "SMP Core Settings",
-        "items": {
-            "previousPage": {
-                "material": "ARROW",
-                "name": "Previous Page",
-                "lore": [
-                    "",
-                    "Page {current}/{total}",
-                    "Click to navigate"
-                ]
-            },
-            "nextPage": {
-                "material": "ARROW",
-                "name": "Next Page",
-                "lore": [
-                    "",
-                    "Page {current}/{total}",
-                    "Click to navigate"
-                ]
-            },
-            "pageIndicator": {
-                "material": "BOOK",
-                "name": "Page {current}/{total}",
-                "lore": [
-                    "",
-                    "Use arrows to navigate",
-                    "",
-                    "Click to close menu"
-                ]
-            },
-            "close": {
-                "material": "OAK_DOOR",
-                "name": "Close Menu",
-                "lore": [
-                    "Close this menu"
-                ]
-            }
-        }
-    },
     "updateNotification": {
         "enabled": true,
         "permission": "smpcore.admin",
