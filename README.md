@@ -8,7 +8,7 @@
 
 A comprehensive Minecraft plugin for SMP servers focused on **PvP balance**, **custom mechanics**, and **server management**. Built for Paper/Spigot 1.21.1+.
 
-![SMP Core Feature List](features.png)
+<!-- ![SMP Core Feature List](features.png) -->
 
 > **🎉 Open Source!** This project is now open source. We welcome contributions from the community!
 
