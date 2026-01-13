@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-01-13
+
+### Changed
+
+- **Open Source Migration**: Project is now fully open source under MIT License
+  - Changed from custom restrictive license to MIT License
+  - Source code now publicly available on GitHub
+  - Community contributions now welcome via pull requests
+  - Added comprehensive contributing guidelines (CONTRIBUTING.md)
+  - Added Code of Conduct (CODE_OF_CONDUCT.md)
+  - Added Security Policy (SECURITY.md)
+  - Added Support documentation (SUPPORT.md)
+- **GitHub Workflows**: Added professional CI/CD automation
+  - Build & test automation on every push/PR
+  - CodeQL security scanning
+  - Dependency vulnerability review
+  - Automatic PR labeling
+  - Stale issue/PR management
+- **CodeRabbit Integration**: AI-powered code review configured
+  - Custom rules for project coding standards
+  - Path-based review instructions
+  - Enforces "no comments" rule for Java code
+- **Issue Templates**: Structured bug reports and feature requests
+  - YAML-based bug report template
+  - Feature request template with categories
+  - Configuration redirects to Discord/documentation
+- **Documentation Updates**: Comprehensive open source documentation
+  - Updated README with badges, contribution section, build instructions
+  - Updated MODRINTH.md to highlight open source nature
+  - Created detailed launch checklist for maintainers
+  - Enhanced .gitignore for open source development
+
 ## [1.2.0] - 2026-01-02
 
 ### Added
@@ -319,6 +351,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Release Date | Highlights |
 |---------|--------------|------------|
+| 1.2.1 | 2026-01-13 | Open Source Migration, MIT License, CI/CD Workflows |
 | 1.2.0 | 2026-01-02 | Server Restart, Main Menu Redesign, CDN Integration |
 | 1.1.0 | 2024-12-27 | GUI overhaul, Mob Manager, Infinite Restock, Item Limiter rewrite |
 | 1.0.0 | 2024-12-01 | Initial release |

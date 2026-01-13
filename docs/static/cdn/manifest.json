@@ -1,10 +1,15 @@
 {
-    "latestVersion": "1.2.0",
+    "latestVersion": "1.2.1",
     "configBuilderUrl": "https://smpcore.tejaslamba.com/config-builder",
     "documentationUrl": "https://smpcore.tejaslamba.com/docs",
     "modrinthUrl": "https://modrinth.com/plugin/smpcore",
     "discordUrl": "https://discord.gg/7fQPG4Grwt",
     "versions": {
+        "1.2.1": {
+            "minPluginVersion": "1.2.1",
+            "releaseDate": "2026-01-13",
+            "changelog": "Open Source Migration - MIT License, GitHub workflows, CodeRabbit AI, comprehensive documentation"
+        },
         "1.2.0": {
             "minPluginVersion": "1.2.0",
             "releaseDate": "2026-01-02",
