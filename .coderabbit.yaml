@@ -1,0 +1,131 @@
+# CodeRabbit Configuration for SMP Core
+
+# Language configuration
+language: java
+
+# Review settings
+reviews:
+  # Request changes for critical issues
+  request_changes_workflow: true
+
+  # High-level settings
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  # Auto-review settings
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+
+# Chat settings
+chat:
+  auto_reply: true
+
+# Path-based instructions
+path_instructions:
+  - path: "src/main/java/**/*.java"
+    instructions: |
+      - Ensure no comments in production code (code should be self-documenting)
+      - Verify clean, descriptive method and variable names
+      - Check that features are modular and can be enabled/disabled
+      - Ensure proper package structure: com.tejaslamba.smpcore.[feature].[type]
+      - Verify proper error handling and null checks
+      - Check for memory leaks (proper cleanup on player quit)
+      - Ensure thread-safety where needed (ConcurrentHashMap for concurrent access)
+      - Verify early returns in event listeners for performance
+
+  - path: "src/main/resources/config.yml"
+    instructions: |
+      - Ensure all new features have enabled: false by default
+      - Verify config options are well-documented in comments
+      - Check that config-version is updated if structure changes
+      - Ensure consistent indentation and structure
+
+  - path: "docs/**/*.md"
+    instructions: |
+      - Verify documentation is clear and accurate
+      - Check that all features are properly documented
+      - Ensure examples are correct and tested
+      - Verify links are working
+
+  - path: "CHANGELOG.md"
+    instructions: |
+      - Follow Keep a Changelog format
+      - Ensure all changes are documented
+      - Verify no hallucinated features are listed
+      - Check that version numbers are correct
+
+# Review profile
+tone_instructions: |
+  - Be constructive and helpful
+  - Focus on code quality, performance, and maintainability
+  - Highlight security concerns if any
+  - Suggest improvements for better patterns
+  - Be specific with examples
+
+# Knowledge base
+knowledge_base:
+  learnings:
+    scope: global
+
+  # Project-specific rules
+  custom_rules:
+    - name: "No Comments Rule"
+      description: "Production Java code should not contain comments. Code should be self-documenting with clear names."
+      severity: error
+      pattern: "//.*|/\\*.*\\*/"
+      paths: ["src/main/java/**/*.java"]
+
+    - name: "Feature Toggle Required"
+      description: "All features must be toggleable via config.yml"
+      severity: warning
+
+    - name: "Manager Pattern"
+      description: "Follow manager pattern for feature domains"
+      severity: info
+
+    - name: "Config-Driven"
+      description: "Features should be config-driven with proper defaults"
+      severity: warning
+
+# Ignore patterns
+ignore:
+  - "target/**"
+  - "*.class"
+  - "*.jar"
+  - "dependency-reduced-pom.xml"
+  - "proguard*"
+  - "docs/build/**"
+  - "docs/node_modules/**"
+  - ".vscode/**"
+  - ".git/**"
+
+# Early access features
+early_access: true
+
+# Enable all tools
+tools:
+  ruff:
+    enabled: false
+  shellcheck:
+    enabled: false
+  biome:
+    enabled: false
+  hadolint:
+    enabled: false
+  swiftlint:
+    enabled: false
+  golangci-lint:
+    enabled: false
+  yamllint:
+    enabled: true
+  markdownlint:
+    enabled: true
+    config:
+      MD013: false # Line length
+      MD033: false # Inline HTML
+      MD041: false # First line heading

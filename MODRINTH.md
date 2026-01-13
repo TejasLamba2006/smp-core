@@ -1,8 +1,10 @@
 # SMP Core
 
 <center>
-All-in-one plugin for SMP servers. PvP balance, item limits, mob control, and more.
+All-in-one **open source** plugin for SMP servers. PvP balance, item limits, mob control, and more.
 </center>
+
+> **🎉 This is an open source project!** View the source code, contribute, or report issues on [GitHub](https://github.com/TejasLamba2006/smp-core).
 
 ---
 
@@ -59,5 +61,20 @@ The wiki includes:
 ## Support
 
 - **Discord**: [Join for support](https://discord.gg/7fQPG4Grwt)
-- **Issues**: Use the Discord server for help and bug reports
-- **Donate**: [PayPal](https://paypal.me/tejaslamba)
+- **Documentation**: [Full wiki and guides](https://smpcore.tejaslamba.com)
+- **Issues**: [Report bugs on GitHub](https://github.com/TejasLamba2006/smp-core/issues)
+- **Contribute**: [Open source on GitHub](https://github.com/TejasLamba2006/smp-core)
+- **Donate**: [Support development](https://paypal.me/tejaslamba)
+
+---
+
+## Open Source
+
+This plugin is open source! You can:
+
+- View and contribute to the code on [GitHub](https://github.com/TejasLamba2006/smp-core)
+- Report bugs and request features
+- Submit pull requests
+- Help improve documentation
+
+**License**: Custom Non-Redistribution & No-Derivatives License (see [LICENSE](https://github.com/TejasLamba2006/smp-core/blob/main/LICENSE))

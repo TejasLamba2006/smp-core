@@ -1,8 +1,16 @@
 # SMP Core
 
+[![Build Status](https://github.com/TejasLamba2006/smp-core/actions/workflows/build.yml/badge.svg)](https://github.com/TejasLamba2006/smp-core/actions/workflows/build.yml)
+[![CodeQL](https://github.com/TejasLamba2006/smp-core/actions/workflows/codeql.yml/badge.svg)](https://github.com/TejasLamba2006/smp-core/actions/workflows/codeql.yml)
+[![License](https://img.shields.io/badge/License-Custom-blue.svg)](LICENSE)
+[![Modrinth](https://img.shields.io/modrinth/dt/GH4H8ndx?logo=modrinth&label=downloads)](https://modrinth.com/plugin/smpcore)
+[![Discord](https://img.shields.io/discord/YOUR_DISCORD_ID?logo=discord&label=discord)](https://discord.gg/7fQPG4Grwt)
+
 A comprehensive Minecraft plugin for SMP servers focused on **PvP balance**, **custom mechanics**, and **server management**. Built for Paper/Spigot 1.21.1+.
 
 ![SMP Core Feature List](features.png)
+
+> **🎉 Open Source!** This project is now open source. We welcome contributions from the community!
 
 ---
 
@@ -70,11 +78,28 @@ A comprehensive Minecraft plugin for SMP servers focused on **PvP balance**, **c
 
 ## 📥 Installation
 
-1. Download the latest release
+### For Server Owners
+
+1. Download from [Modrinth](https://modrinth.com/plugin/smpcore)
 2. Place `SMP-Core.jar` in your server's `plugins` folder
 3. Restart or reload your server
 4. Configure features in `plugins/SMP-Core/config.yml`
 5. Use `/smp reload` to apply changes or `/smp` to use the GUI
+
+### For Developers
+
+```bash
+# Clone the repository
+git clone https://github.com/TejasLamba2006/smp-core.git
+cd smp-core
+
+# Build with Maven
+mvn clean package
+
+# The compiled JAR will be in target/
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ---
 
@@ -159,9 +184,45 @@ features:
 
 ---
 
-## 🐛 Issues & Suggestions
+## 🤝 Contributing
 
-Found a bug or have a feature request? Open an issue on GitHub!
+We welcome contributions! Here's how you can help:
+
+- 🐛 **Report bugs** using [issue templates](.github/ISSUE_TEMPLATE/bug_report.yml)
+- ✨ **Suggest features** using [feature requests](.github/ISSUE_TEMPLATE/feature_request.yml)
+- 💻 **Submit pull requests** following our [contributing guidelines](CONTRIBUTING.md)
+- 📖 **Improve documentation** in the [docs folder](docs/)
+- ⭐ **Star the repository** if you find it useful!
+
+### Development
+
+```bash
+# Fork and clone the repository
+git clone https://github.com/YOUR_USERNAME/smp-core.git
+
+# Create a feature branch
+git checkout -b feature/amazing-feature
+
+# Make your changes and test
+mvn clean package
+
+# Commit and push
+git commit -m "Add amazing feature"
+git push origin feature/amazing-feature
+
+# Open a Pull Request
+```
+
+Read the full [Contributing Guide](CONTRIBUTING.md) for detailed information.
+
+---
+
+## 🐛 Issues & Support
+
+- **Bug Reports**: Use our [bug report template](.github/ISSUE_TEMPLATE/bug_report.yml)
+- **Feature Requests**: Use our [feature request template](.github/ISSUE_TEMPLATE/feature_request.yml)
+- **Discord**: Join our [Discord server](https://discord.gg/7fQPG4Grwt) for quick help
+- **Documentation**: Check the [full documentation](https://smpcore.tejaslamba.com)
 
 ---
 

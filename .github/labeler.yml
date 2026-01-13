@@ -1,0 +1,33 @@
+# Label configuration for PR auto-labeling
+
+documentation:
+  - docs/**/*
+  - "*.md"
+  - .github/**/*.md
+
+dependencies:
+  - pom.xml
+  - lib/**/*
+
+configuration:
+  - src/main/resources/**/*.yml
+  - src/main/resources/**/*.yaml
+
+feature:
+  - src/main/java/**/features/**/*
+
+listener:
+  - src/main/java/**/listener/**/*
+
+manager:
+  - src/main/java/**/manager/**/*
+
+gui:
+  - src/main/java/**/menu/**/*
+
+workflow:
+  - .github/workflows/**/*
+
+build:
+  - pom.xml
+  - proguard*
