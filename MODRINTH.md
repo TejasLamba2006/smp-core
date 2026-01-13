@@ -77,4 +77,4 @@ This plugin is open source! You can:
 - Submit pull requests
 - Help improve documentation
 
-**License**: Custom Non-Redistribution & No-Derivatives License (see [LICENSE](https://github.com/TejasLamba2006/smp-core/blob/main/LICENSE))
+**License**: MIT License (see [LICENSE](https://github.com/TejasLamba2006/smp-core/blob/main/LICENSE))

@@ -60,3 +60,4 @@ docs/.cache/
 # Environment files
 .env
 .env.local
+VIDEO-SCRIPTS.md

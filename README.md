@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/TejasLamba2006/smp-core/actions/workflows/build.yml/badge.svg)](https://github.com/TejasLamba2006/smp-core/actions/workflows/build.yml)
 [![CodeQL](https://github.com/TejasLamba2006/smp-core/actions/workflows/codeql.yml/badge.svg)](https://github.com/TejasLamba2006/smp-core/actions/workflows/codeql.yml)
-[![License](https://img.shields.io/badge/License-Custom-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Modrinth](https://img.shields.io/modrinth/dt/GH4H8ndx?logo=modrinth&label=downloads)](https://modrinth.com/plugin/smpcore)
 [![Discord](https://img.shields.io/discord/YOUR_DISCORD_ID?logo=discord&label=discord)](https://discord.gg/7fQPG4Grwt)
 
@@ -228,4 +228,6 @@ Read the full [Contributing Guide](CONTRIBUTING.md) for detailed information.
 
 ## 📜 License
 
-This project is distributed under a custom license: **SMP Core Non-Redistribution & No-Derivatives License (SMP-NRND)**. The license file is bundled inside the plugin JAR at `META-INF/LICENSE` and is available in the repository as `LICENSE`. See `docs/license.md` for a short summary and the full terms.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+You are free to use, modify, and distribute this software. See [docs/license.md](docs/docs/license.md) for more information.
